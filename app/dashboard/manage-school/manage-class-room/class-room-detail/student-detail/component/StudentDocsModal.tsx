@@ -21,7 +21,7 @@ const StudentDocsModal: React.FC<StudentDocsModalProps> = ({ isOpen, onClose, do
   return (
     <div className="fixed inset-0 bg-gray-500/75 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg w-full max-w-2xl">
-        <h2 className="text-lg font-semibold mb-4">Student Documents</h2>
+        <h2 className="text-lg font-semibold mb-4">Student Documentsssssssss</h2>
         <div className="overflow-x-auto block">
           <table className="min-w-full border border-gray-300 rounded-xl mt-2">
             <thead className="bg-gray-100">
