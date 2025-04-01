@@ -20,7 +20,7 @@ const TeacherNavDashborad = () => {
             className={`flex items-center p-2 justify-between rounded hover:bg-gray-100 ${
               pathname === item.href
                 ? 'bg-blue-100 text-blue-600'
-                : pathname.startsWith(item.href + '/') && item.href !== '/dashboard'
+                : pathname.startsWith(item.href + '/') && item.href !== '/teacher-dashboard'
                 ? 'bg-blue-100 text-blue-600'
                 : ''
             }`}

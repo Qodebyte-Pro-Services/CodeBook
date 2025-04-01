@@ -35,7 +35,7 @@ const MobileNavBar: React.FC<MobileNavBarProp> = ({ onClose }) => {
               className={`flex items-center justify-between p-2 rounded hover:bg-gray-100 ${
                 pathname === item.href
                   ? 'bg-blue-100 text-blue-600'
-                  : pathname.startsWith(item.href + '/') && item.href !== '/dashboard'
+                  : pathname.startsWith(item.href + '/') && item.href !== '/teacher-dashboard'
                   ? 'bg-blue-100 text-blue-600'
                   : ''
               }`}
