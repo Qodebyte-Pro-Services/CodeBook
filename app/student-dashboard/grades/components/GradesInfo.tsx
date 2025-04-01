@@ -37,7 +37,7 @@ const GradesInfo = () => {
             <table className="min-w-full border-collapse border border-gray-300"> 
           <thead className="bg-gray-100">
             <tr>
-            <th className="px-3 py-3 border border-gray-300 text-left font-medium">#</th>
+            <th className="px-3 py-3 border border-gray-300 text-left font-medium"></th>
             <th className="px-3 py-3 border border-gray-300 text-left font-medium">Subject Name</th>
             <th className="px-3 py-3 border border-gray-300 text-left font-medium">Quiz Assessment</th>
             <th className="px-3 py-3 border border-gray-300 text-left font-medium">Assignment</th>
