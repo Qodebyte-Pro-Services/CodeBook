@@ -34,33 +34,32 @@ const GradesInfo = () => {
             </div>
 
             <div className="overflow-x-auto block"> 
-          <table className=" min-w-full"> 
-        <thead>
-          <tr >
-            <th className="px-3 py-3 border-1  tracking-wider"></th>
-            <th className="px-3 py-3 border-1 tracking-wider">Subject Name</th>
-            <th className="px-3 py-3 border-1 tracking-wider">Quiz Assessment</th>
-            <th className="px-3 py-3 border-1 tracking-wider">Assignment</th>
-            <th className="px-3 py-3 border-1 tracking-wider">Exam Score</th>
-            <th className="px-3 py-3 border-1 tracking-wider">Total Score</th>
-            <th className="px-3 py-3 border-1 tracking-wider">Grade</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y ">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <tr key={index}>
-              <td className="py-2 border-1 px-3">1</td>
-              <td className="py-2 border-1 px-3">Geography</td>
-              <td className="py-2 border-1 px-3">20</td>
-              <td className="py-2 border-1 px-3">30</td>
-              <td className="py-2 border-1 px-3 ">60</td>
-              <td className="py-2 border-1 px-3">90</td>
-              <td className="py-2 border-1 px-3">A</td>
-           
+            <table className="min-w-full border-collapse border border-gray-300"> 
+          <thead className="bg-gray-100">
+            <tr>
+            <th className="px-3 py-3 border border-gray-300 text-left font-medium">#</th>
+            <th className="px-3 py-3 border border-gray-300 text-left font-medium">Subject Name</th>
+            <th className="px-3 py-3 border border-gray-300 text-left font-medium">Quiz Assessment</th>
+            <th className="px-3 py-3 border border-gray-300 text-left font-medium">Assignment</th>
+            <th className="px-3 py-3 border border-gray-300 text-left font-medium">Exam Score</th>
+            <th className="px-3 py-3 border border-gray-300 text-left font-medium">Total Score</th>
+            <th className="px-3 py-3 border border-gray-300 text-left font-medium">Grade</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {Array.from({ length: 8 }).map((_, index) => (
+            <tr key={index} className="hover:bg-gray-50">
+              <td className="py-2 border border-gray-300 text-center px-3">{index + 1}</td>
+              <td className="py-2 border border-gray-300 text-center px-3">Geography</td>
+              <td className="py-2 border border-gray-300 text-center px-3">20</td>
+              <td className="py-2 border border-gray-300 text-center px-3">30</td>
+              <td className="py-2 border border-gray-300 text-center px-3">60</td>
+              <td className="py-2 border border-gray-300 text-center px-3">90</td>
+              <td className="py-2 border border-gray-300 text-center px-3">A</td>
+            </tr>
+            ))}
+          </tbody>
+          </table>
     </div>
 
             <div className="mt-4 flex justify-end">
