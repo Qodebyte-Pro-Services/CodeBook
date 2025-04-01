@@ -1,10 +1,10 @@
 "use client";
 
-import {ChevronRight, CircleX} from 'lucide-react';
+import { ChevronRight, CircleX,} from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { navItems } from '@/utils/dashboardnav';
+import { navItems } from '@/utils/nav';
 
 interface MobileNavBarProp {
   onClose: () => void;
@@ -41,7 +41,7 @@ const MobileNavBar: React.FC<MobileNavBarProp> = ({ onClose }) => {
               }`}
             >
                <div className='gap-3 flex '>
-               {React.createElement(item.icon)}
+                {React.createElement(item.icon)}
                <span className="mr-2">{item.label}</span>
                </div>
 

@@ -1,10 +1,10 @@
 "use client";
 
-import {ChevronRight, CircleX} from 'lucide-react';
+import {ChevronRight, CircleX, } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { navItems } from '@/utils/dashboardnav';
+import { navItems } from '@/utils/teacher-nav';
 
 interface MobileNavBarProp {
   onClose: () => void;
@@ -13,7 +13,7 @@ interface MobileNavBarProp {
 const MobileNavBar: React.FC<MobileNavBarProp> = ({ onClose }) => {
   const pathname = usePathname();
 
-
+   
 
   return (
     <div className="fixed top-0 left-0 w-[80%] min-h-screen bg-white z-50 p-4">

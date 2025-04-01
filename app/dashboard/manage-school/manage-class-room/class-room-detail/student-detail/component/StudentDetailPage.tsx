@@ -1,14 +1,36 @@
+"use client";
+
 import { ChevronsLeft } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import StudentInfoCard from './StudentInfoCard'
 import FeesPaymentChart from './FeesPaymentChart'
 import ParentInfoCard from './ParentInfoCard'
 import AttendanceCard from './AttendanceCard'
 import UnpaidFeesCard from './UnpaidFeesCard'
 import TermlyAssessmentTable from './TermlyAssessmentTable'
+import StudentDocsModal from './StudentDocsModal';
+import ViewDocumentModal from './ViewDocumentModal';
 
 const StudentDetailPage = () => {
+  const [isDocsModalOpen, setIsDocsModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<{
+    id: number;
+    documentName: string;
+    fileName: string;
+  } | null>(null);
+
+  const documents = [
+    { id: 1, documentName: "Medical Certificate", fileName: "Med.doc" },
+    { id: 2, documentName: "Birth Certificate", fileName: "Bc.doc" },
+  ];
+
+  const handleViewDocument = (doc: { id: number; documentName: string; fileName: string }) => {
+    setSelectedDocument(doc);
+    setIsViewModalOpen(true);
+  };
+
   return (
     <>
        <div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'> 
@@ -17,6 +39,13 @@ const StudentDetailPage = () => {
               <ChevronsLeft />
               <p>ClassRoom Detail</p>
           </Link>
+
+          <button
+          onClick={() => setIsDocsModalOpen(true)}
+          className="flex gap-2 bg-blue-500 px-2 rounded-xl text-white items-center md:text-md text-[12px]"
+        >
+          <p>View Student Docs</p>
+        </button>
         
       </div>
 
@@ -46,6 +75,19 @@ const StudentDetailPage = () => {
         <TermlyAssessmentTable />
       </div>
     </div>
+
+    <StudentDocsModal
+        isOpen={isDocsModalOpen}
+        onClose={() => setIsDocsModalOpen(false)}
+        documents={documents}
+        onViewDocument={handleViewDocument}
+      />
+
+    <ViewDocumentModal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        document={selectedDocument}
+      />
     </>
   )
 }

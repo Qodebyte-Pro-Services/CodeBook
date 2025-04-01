@@ -1,25 +1,15 @@
 
 "use client";
 
-import { BadgeDollarSign, Boxes, Calendar, ChevronRight, Cog, GraduationCap, House } from 'lucide-react';
+import {  ChevronRight} from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { usePathname } from 'next/navigation';
+import { navItems } from '@/utils/dashboardnav';
 
 const DashboardNavBar = () => {
   const pathname = usePathname();
 
-  const navItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: <House /> },
-    { href: '/dashboard/teachers', label: 'Teachers', icon: <GraduationCap /> },
-    { href: '/dashboard/manage-school', label: 'Manage School', icon: <GraduationCap /> },
-    { href: '/dashboard/non-teaching-staff', label: 'Non - Teaching Staff', icon: <Boxes /> },
-    { href: '/dashboard/finance', label: 'Finance', icon: <BadgeDollarSign /> },
-    { href: '/dashboard/calendar', label: 'Calendar', icon: <Calendar /> },
-    { href: '/dashboard/time-table', label: 'Time Table', icon: <Calendar /> },
-    // { href: '/dashboard/message', label: 'Message', icon: <Mail /> },
-    { href: '/dashboard/settings', label: 'Settings', icon: <Cog /> },
-  ];
 
   return (
     <nav className="bg-white w-64 max-h-[650px] p-4 rounded-lg flex-col hidden lg:flex">
@@ -37,7 +27,7 @@ const DashboardNavBar = () => {
               }`}
             >
                <div className='gap-3 flex '>
-               {item.icon}
+                {React.createElement(item.icon)}
                <span className="mr-2 text-sm">{item.label}</span>
                </div>
 

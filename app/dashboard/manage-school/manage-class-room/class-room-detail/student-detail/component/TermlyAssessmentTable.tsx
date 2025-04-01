@@ -27,6 +27,10 @@ const TermlyAssessmentTable = () => {
           <select className="border rounded px-2 py-1 text-sm">
             <option>Select Session</option>
           </select>
+
+          <select className="border rounded-md p-2">
+                <option>Select Term</option>
+              </select>
           <button className="flex items-center text-sm ">
           <Printer className='text-gray-400' />
            <p> Print</p>
