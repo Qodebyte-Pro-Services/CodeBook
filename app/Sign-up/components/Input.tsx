@@ -10,10 +10,11 @@ interface InputProps extends HTMLAttributes<HTMLInputElement | HTMLSelectElement
   type?: string;
   children?: React.ReactNode;
   onChange?: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
-  value?: string | number | File | undefined; // Allow File type
+  value?: string | number | File | string[] | undefined;
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  options?: { value: string; label: string }[]; 
 }
 
 const Input: React.FC<InputProps> = ({
@@ -26,6 +27,7 @@ const Input: React.FC<InputProps> = ({
   disabled = false,
   className = '',
   onChange,
+  options = [],
   ...rest
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -48,7 +50,7 @@ const Input: React.FC<InputProps> = ({
     }
   };
 
-  const inputClassName = `mt-1 outline-none block xl:w-3/3 lg:w-full md:w-1/2 w-full h-[50px]  text-gray-950 rounded-md border-[#ADADAD] px-3 border-2 shadow-sm focus:border-blue-400 focus:ring-blue-400 ${
+  const inputClassName = `mt-1 outline-none block xl:w-3/3 lg:w-full md:w-1/2 w-full h-[50px] text-gray-950 rounded-md border-[#ADADAD] px-3 border-2 shadow-sm focus:border-blue-400 focus:ring-blue-400 ${
     error ? 'border-red-500' : ''
   } ${className}`;
 
@@ -101,9 +103,49 @@ const Input: React.FC<InputProps> = ({
     );
   }
 
+  if (type === 'checkbox') {
+    return (
+      <div className="mb-4 w-full">
+        {label && <label className="block text-sm text-left font-medium text-gray-700 mb-2">{label}</label>}
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-3 space-y-2">
+          {options.map((option) => (
+            <label key={option.value} className="inline-flex items-center">
+              <input
+                type="checkbox"
+                className="form-checkbox h-4 w-4 text-blue-600"
+                name={rest.name}
+                value={option.value}
+                checked={Array.isArray(value) ? value.includes(option.value) : false}
+                onChange={(e) => {
+                  const isChecked = e.target.checked;
+                  if (onChange) {
+                    const customEvent = {
+                      ...e,
+                      target: {
+                        ...e.target,
+                        name: rest.name || '',
+                        value: option.value,
+                        checked: isChecked,
+                        type: 'checkbox'
+                      }
+                    } as unknown as ChangeEvent<HTMLInputElement>;
+                    onChange(customEvent);
+                  }
+                }}
+                disabled={disabled}
+              />
+              <span className="ml-2 text-gray-700">{option.label}</span>
+            </label>
+          ))}
+        </div>
+        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      </div>
+    );
+  }
+
   return (
     <div className="mb-4 w-full">
-      {label && <label className="block text-sm font-medium   text-left text-gray-700">{label}</label>}
+      {label && <label className="block text-sm font-medium text-left text-gray-700">{label}</label>}
       <input
         type={type}
         className={inputClassName}

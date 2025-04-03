@@ -21,9 +21,24 @@ const FormStep3: React.FC<FormStep3Props> = ({ currentStep, onNext, formData, up
   const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('warning');
 
   const fields = useMemo(() => [
-    { name: 'ownerName', label: 'Owner Name', type: 'text', required: true },
+    { name: 'schoolName', label: 'School Name', type: 'text', required: true },
+    { name: 'schoolDescription', label: 'School Description', type: 'text', required: true },
+    { 
+      name: 'schoolType', 
+      label: 'School Type', 
+      type: 'checkbox', 
+      required: true,
+      options: [
+        { value: 'nursery', label: 'Nursery School' },
+        { value: 'primary', label: 'Primary School' },
+        { value: 'secondary', label: 'Secondary School' }
+      ]
+    },
     { name: 'schoolEmail', label: 'School Email Address', type: 'email', required: true },
-    { name: 'schoolMotto', label: 'School Motto', type: 'text', required: true },
+    { name: 'schoolPhone', label: 'School  Phone Number', type: 'text', required: true },
+    { name: 'schoolAddress', label: 'School  Address', type: 'text', required: true },
+    { name: 'schoolCity', label: 'School  City', type: 'text', required: true },
+    { name: 'schoolState', label: 'School  State', type: 'text', required: true },
     { name: 'establishmentDate', label: 'Establishment Date', type: 'date', required: true },
     { name: 'schoolLogo', label: 'School Logo', type: 'file', required: true  }, 
   ], []);

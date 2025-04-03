@@ -45,16 +45,44 @@ const Form: React.FC<FormProps> = ({
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
+    
     if (name) {
       setFormData((prevFormData) => {
         const updatedFormData = { ...prevFormData };
-        if (type === 'file' && e.target instanceof HTMLInputElement) {
+        
+        if (type === 'checkbox') {
+          const checkboxEvent = e as ChangeEvent<HTMLInputElement>;
+          const checkboxValue = checkboxEvent.target.value;
+          const isChecked = checkboxEvent.target.checked;
+          
+          // Initialize as array if not already
+          const currentValues = Array.isArray(updatedFormData[name]) 
+            ? [...updatedFormData[name] as string[]] 
+            : [];
+          
+          if (isChecked) {
+            if (!currentValues.includes(checkboxValue)) {
+              currentValues.push(checkboxValue);
+            }
+          } else {
+            const index = currentValues.indexOf(checkboxValue);
+            if (index > -1) {
+              currentValues.splice(index, 1);
+            }
+          }
+          
+          updatedFormData[name] = currentValues;
+        } 
+        else if (type === 'file' && e.target instanceof HTMLInputElement) {
           updatedFormData[name] = e.target.files?.[0];
-        } else {
+        } 
+        else {
           updatedFormData[name] = value;
         }
+        
         return updatedFormData;
       });
+      
       setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
     }
   };
@@ -67,9 +95,16 @@ const Form: React.FC<FormProps> = ({
     fields.forEach((field) => {
       if (field.name) {
         const value = formData[field.name];
-        if (field.required && !value) {
-          newErrors[field.name] = `${field.label || field.name} is required.`;
-          hasErrors = true;
+        if (field.required) {
+          if (field.type === 'checkbox') {
+            if (!value || (Array.isArray(value) && value.length === 0)) {
+              newErrors[field.name] = `${field.label || field.name} is required.`;
+              hasErrors = true;
+            }
+          } else if (!value) {
+            newErrors[field.name] = `${field.label || field.name} is required.`;
+            hasErrors = true;
+          }
         }
         if (field.validate) {
           const validationError = field.validate(value as string | number | undefined);
@@ -90,13 +125,9 @@ const Form: React.FC<FormProps> = ({
     setErrors({});
   };
 
-  const getValue = (fieldName: string | undefined): string | number | undefined => {
-    if (!fieldName) return "";
-    const value = formData[fieldName];
-    if (typeof value === 'object' && value !== null) {
-      return "";
-    }
-    return value as string | number | undefined;
+  const getValue = (fieldName: string | undefined): string | number | File | string[] | undefined => {
+    if (!fieldName) return undefined;
+    return formData[fieldName] as string | number | File | string[] | undefined;
   };
 
   return (
