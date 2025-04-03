@@ -82,7 +82,7 @@ const FormStep1: React.FC<FormStep1Props> = ({ currentStep, onNext, formData, up
               <h4 className="text-gray-950 font-medium md:text-lg text-md mb-4">
                 Already onboard?{' '}
                 <span className="text-[#0A92DD]">
-                  <Link href="/Sign-in">Sign in to your</Link>
+                  <Link href="/Sign-in">Sign in to your account</Link>
                 </span>
               </h4>
               <FormStepsNavigation
