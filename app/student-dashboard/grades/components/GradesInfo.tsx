@@ -39,7 +39,7 @@ const GradesInfo = () => {
             <tr>
             <th className="px-3 py-3 border border-gray-300 text-left font-medium"></th>
             <th className="px-3 py-3 border border-gray-300 text-left font-medium">Subject Name</th>
-            <th className="px-3 py-3 border border-gray-300 text-left font-medium">Tests</th>
+            <th className="px-3 py-3 border border-gray-300 text-left font-medium">Test</th>
             <th className="px-3 py-3 border border-gray-300 text-left font-medium">Assignment</th>
             <th className="px-3 py-3 border border-gray-300 text-left font-medium">Exam Score</th>
             <th className="px-3 py-3 border border-gray-300 text-left font-medium">Total Score</th>
