@@ -20,11 +20,11 @@ const SchoolDetail = () => {
     <div className="w-full px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-3">
       <div className="w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll">
       <Link
-            href="/dashboard/manage-school"
+            href="/dashboard"
             className="flex items-center gap-2 rounded-lg md:px-4 md:py-2 py-0 px-0 text-[12px] md:text-md"
           >
             <ChevronLeft className="text-blue-500" />
-            <p className="text-[10px] md:text-md">Manage School</p>
+            <p className="text-[10px] md:text-md">Dashboard</p>
       </Link>
       <div className="flex gap-3 w-1/2 items-center justify-end text-md">
          

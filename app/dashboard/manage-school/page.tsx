@@ -1,7 +1,8 @@
 import MaxWidthWrapper from '@/app/components/MaxWidthWrapper'
 import React from 'react'
 import DashboardNavBar from '../components/DashboardNavBar'
-import ManageSchools from './components/ManageSchools'
+
+import SchoolDetail from './school-detail/components/SchoolDetail'
 
 const ManageSchool = () => {
   return (
@@ -9,7 +10,7 @@ const ManageSchool = () => {
     <MaxWidthWrapper>
         <div className='flex py-2 px-2 text-gray-950 overflow-hidden'>
         <DashboardNavBar />
-        <ManageSchools/>
+        <SchoolDetail/>
         </div>
     </MaxWidthWrapper>
       

@@ -14,17 +14,17 @@ const ViewStudentComp = () => {
         </div>
 
         <div className='flex flex-col gap-5 w-full'>
-            <Link href='/dashboard/manage-school/school-detail/view-students/view-session-classes' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
+            <Link href='/dashboard/students/view-session-classes' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
                 <p>Session 2021/2022</p>
                 <ChevronsRight />
             </Link>
 
-            <Link href='/dashboard/manage-school/school-detail/view-students/view-session-classes' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
+            <Link href='/dashboard/students/view-session-classes' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
                 <p>Session 2021/2022</p>
                 <ChevronsRight />
             </Link>
 
-            <Link href='/dashboard/manage-school/school-detail/view-students/view-session-classes' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
+            <Link href='/dashboard/students/view-session-classes' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
                 <p>Session 2021/2022</p>
                 <ChevronsRight />
             </Link>

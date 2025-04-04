@@ -9,7 +9,7 @@ const ViewSessionClass = () => {
     <>
          <div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'> 
         
-        <Link href='/dashboard/manage-school/school-detail/view-session-classes/student-list' className='flex gap-2  w-1/2 items-center justify-start md:text-md text-[12px] '>
+        <Link href='/dashboard/students/view-students/view-session-classes/student-list' className='flex gap-2  w-1/2 items-center justify-start md:text-md text-[12px] '>
               <ChevronsLeft />
               <p>View Session</p>
           </Link>
@@ -26,17 +26,17 @@ const ViewSessionClass = () => {
                   onChange={(value) => console.log(value)}
                 />
       </div>
-            <Link href='/dashboard/manage-school/school-detail/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
+            <Link href='/dashboard/students/view-students/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
                 <p>Nursery 1</p>
                 <ChevronsRight />
             </Link>
 
-            <Link href='/dashboard/manage-school/school-detail/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
+            <Link href='/dashboard/students/view-students/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
             <p>Nursery 1</p>
                 <ChevronsRight />
             </Link>
 
-            <Link href='/dashboard/manage-school/school-detail/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
+            <Link href='/dashboard/students/view-students/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
             <p>Nursery 1</p>
                 <ChevronsRight />
             </Link>
