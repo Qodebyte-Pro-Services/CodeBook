@@ -147,7 +147,7 @@ const SignUpForm = () => {
   return (
     <>
       <MaxWidthWrapper>
-      {isLoading && currentStep < 4 ? <Loading /> : renderFormStep()}
+      {isLoading && currentStep < 3 ? <Loading /> : renderFormStep()}
       </MaxWidthWrapper>
 
       
