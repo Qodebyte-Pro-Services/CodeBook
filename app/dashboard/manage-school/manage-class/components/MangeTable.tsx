@@ -6,12 +6,26 @@ import { ChevronsLeft, Edit, Plus, Trash } from 'lucide-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import AddClassModal from './AddClassModal';
+import Select from '@/app/dashboard/teachers/add-teacher/compoenent/Select';
 const MangeTable = () => {
+
+  const [activeTab, setActiveTab] = useState('Classes');
+
+  const tabs = [
+    { name: 'General', href: '/dashboard/manage-school'},
+    { name: 'Classes', href: '/dashboard/manage-school/manage-class'},
+    { name: 'Subjects', href: '/dashboard/manage-school/manage-class/mange-class-subects' },
+    { name: 'Timetable', href: '/dashboard/manage-school/timetable' },
+    { name: 'Fee Mangement', href: '/dashboard/manage-school/fee-management' },
+    { name: 'Grading', href: '/dashboard/manage-school/grading' },
+  ];
+
+
   const initialClasses = [
     {
-      className: 'Primary 1',
+      className: 'Primary 1B',
       headTeacher: 'Mrs Tochukwu',
-      classRoomNumber: '5',
+      studentNumber: '45',
       schoolType: 'Primary School',
     },
   ];
@@ -36,7 +50,7 @@ const MangeTable = () => {
           (klass) =>
             klass.className.toLowerCase().includes(term) ||
             klass.headTeacher.toLowerCase().includes(term) ||
-            klass.classRoomNumber.toLowerCase().includes(term) ||
+            klass.studentNumber.toLowerCase().includes(term) ||
             klass.schoolType.toLowerCase().includes(term)
         );
         setClasses(filteredClasses);
@@ -46,13 +60,41 @@ const MangeTable = () => {
         setCurrentPage(page);
       };
             const handleAddClass = (newClass: { schooltype: string; className: string; headTeacher: string }) => {
-              setClasses([...klasses, { ...newClass, classRoomNumber: 'N/A', schoolType: newClass.schooltype }]);
+              setClasses([...klasses, { ...newClass, studentNumber: 'N/A', schoolType: newClass.schooltype }]);
             };
           
 
   return (
     <>
-     <div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'> 
+    
+
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="border-b border-gray-200">
+          <nav className="flex -mb-px xl:overflow-hidden overflow-x-scroll  justify-between">
+            {tabs.map((tab) => (
+              <Link
+                key={tab.name}
+                href={tab.href}
+                onClick={() => setActiveTab(tab.name)}
+                className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
+                  activeTab === tab.name
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {tab.name}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        <div className='flex flex-col gap-1 px-2 py-2'>
+          <p className='font-medium text-sm'>Classes</p>
+          <span className='text-gray-700 text-xs'>Manage & edit your classes</span>
+        </div>
+      </div>
+
+      <div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'> 
         
         <Link href='/dashboard/manage-school' className='flex gap-2  w-1/2 items-center justify-start md:text-md text-[10px] '>
               <ChevronsLeft />
@@ -82,9 +124,7 @@ const MangeTable = () => {
                     <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2">
                     <Plus className='text-blue-500' />
                     <p className='text-[10px] md:text-md'>Add Class</p>
-                  </button>
-
-                  
+           </button>    
           </div>
 
           <AddClassModal
@@ -97,6 +137,27 @@ const MangeTable = () => {
 
 
         <div className="overflow-x-auto mt-4">
+        <div className='flex justify-between flex-col md:flex-row bg-white w-full rounded-tl-lg  rounded-tr-lg px-3 py-3'>
+        <Select
+                  label=""
+                  options={[
+                    { value: 'nursery', label: 'Nursery School' },
+                    { value: 'primary', label: 'Primary School' },
+                  ]}
+                  value="Nursery"
+                  onChange={(value) => console.log(value)}
+                />
+
+          <Select
+                  label=""
+                  options={[
+                    { value: 'nursery1', label: 'Nursery 1' },
+                    { value: 'primary2', label: 'Primary 2' },
+                  ]}
+                  value="Nursery"
+                  onChange={(value) => console.log(value)}
+                />  
+        </div>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
                   <tr>
@@ -142,7 +203,7 @@ const MangeTable = () => {
 
 <td className="px-6 py-4 whitespace-nowrap">
 
- <div className="text-sm text-gray-900">{klass.classRoomNumber}</div>
+ <div className="text-sm text-gray-900">{klass.studentNumber}</div>
 
 </td>
 

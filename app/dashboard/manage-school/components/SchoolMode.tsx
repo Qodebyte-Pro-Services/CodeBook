@@ -40,7 +40,7 @@ const SchoolMode = () => {
           <p>All School Type</p>
         </div>
 
-        <Link href='/dashboard/manage-school/add-school-type' className='flex items-center gap-2 rounded-lg md:px-4 md:py-2 py-0 px-0 text-[12px] md:text-md'>       
+        <Link hidden href='/dashboard/manage-school/add-school-type' className='flex items-center gap-2 rounded-lg md:px-4 md:py-2 py-0 px-0 text-[12px] md:text-md'>       
                     <Plus className='text-blue-500' />
                     <p className='text-[10px] md:text-md'>Create School Type</p>    
         </Link>
@@ -122,10 +122,10 @@ const SchoolMode = () => {
          </div>
 
               <div className='flex flex-col md:flex-row gap-4 w-1/2'>
-    <Link href="/dashboard/manage-school/school-detail" className='p-4  h-[50px] md:h-[40px]  flex items-center text-[12px] rounded-lg bg-blue-400 text-white transition-all duration-300 ease-in-out hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border-2 hover:-translate-y-1 hover:shadow-md hover:scale-105'>
-          <p >View School details</p>
+    <Link href="/dashboard/manage-school/school-detail" className='p-4  h-[50px] md:h-[40px]  flex items-center text-[12px] w-full rounded-lg bg-blue-400 text-white transition-all duration-300 ease-in-out hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border-2 hover:-translate-y-1 hover:shadow-md hover:scale-105'>
+          <p >View School Details</p>
     </Link>
-    <Link href="/dashboard/manage-school/manage-class" className='p-4 rounded-lg h-[50px] md:h-[40px]  flex items-center text-[12px] bg-blue-400 text-white transition-all duration-300 ease-in-out hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border-2 hover:-translate-y-1 hover:shadow-md hover:scale-105'>
+    <Link hidden href="/dashboard/manage-school/manage-class" className='p-4 rounded-lg h-[50px] md:h-[40px]  flex items-center text-[12px] bg-blue-400 text-white transition-all duration-300 ease-in-out hover:bg-white hover:text-blue-400 hover:border-blue-400 hover:border-2 hover:-translate-y-1 hover:shadow-md hover:scale-105'>
          <p> Manage Classes</p>
     </Link>
             </div>

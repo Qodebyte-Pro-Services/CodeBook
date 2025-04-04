@@ -4,9 +4,22 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { ChevronsLeft, Edit, Plus, Trash } from "lucide-react";
 import Pagination from "@/app/dashboard/teachers/components/Pagination";
+import Select from "@/app/dashboard/teachers/add-teacher/compoenent/Select";
 
 
 const SubjectTable = () => {
+   const [activeTab, setActiveTab] = useState('Subjects');
+  
+    const tabs = [
+      { name: 'General', href: '/dashboard/manage-school'},
+      { name: 'Classes', href: '/dashboard/manage-school/manage-class'},
+      { name: 'Subjects', href: '/dashboard/manage-school/mange-clss-subects' },
+      { name: 'Timetable', href: '/dashboard/manage-school/timetable' },
+      { name: 'Fee Mangement', href: '/dashboard/manage-school/fee-management' },
+      { name: 'Grading', href: '/dashboard/manage-school/grading' },
+    ];
+
+
   const initialSubjects = [
     {
       subjectName: "Mathematics",
@@ -46,7 +59,33 @@ const SubjectTable = () => {
 
   return (
     <>
-      <div className="w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll">
+    <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="border-b border-gray-200">
+        <nav className="flex -mb-px xl:overflow-hidden overflow-x-scroll  justify-between">
+          {tabs.map((tab) => (
+            <Link
+              key={tab.name}
+              href={tab.href}
+              onClick={() => setActiveTab(tab.name)}
+              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
+                activeTab === tab.name
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {tab.name}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      <div className='flex flex-col gap-1 px-2 py-2'>
+        <p className='font-medium text-sm'>General</p>
+        <span className='text-gray-700 text-xs'>Manage & edit the details of your school</span>
+      </div>
+    </div>
+
+      <div className="w-full bg-[#FFFFFF] h-[55px] mt-3 py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll">
         <div className="flex gap-2 w-1/2 items-center justify-start md:text-md text-[12px]">
           <ChevronsLeft />
           <p>All Subjects List</p>
@@ -94,6 +133,17 @@ const SubjectTable = () => {
       </div>
 
       <div className="overflow-x-auto mt-4">
+      <div className='flex justify-between flex-col md:flex-row bg-white w-full rounded-tl-lg  rounded-tr-lg px-3 py-3'>
+        <Select
+                  label=""
+                  options={[
+                    { value: 'nursery', label: 'Nursery School' },
+                    { value: 'primary', label: 'Primary School' },
+                  ]}
+                  value="Nursery"
+                  onChange={(value) => console.log(value)}
+                />
+        </div>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
