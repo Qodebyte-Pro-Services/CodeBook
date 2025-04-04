@@ -266,18 +266,6 @@ const DashboardSection = () => {
                     </div>
                 </div>
 
-                <div className='bg-[#D8F1FF] flex flex-col h-[107px] w-full justify-between rounded-xl'>
-                    <div className='flex items-start justify-between p-3 w-full'>
-                        <h2>School Type</h2>
-                        <Link href='/dashboard/manage-school'>
-                        <Ellipsis />
-                        </Link>
-                    </div>
-
-                    <div className='flex items-end p-3 font-bold text-xl' >
-                        <p>3</p>
-                    </div>
-                </div>
                 </div>
 
                 <div className='flex xl:w-[90%] w-full'>
@@ -292,7 +280,7 @@ const DashboardSection = () => {
                     <Link className='text-blue-500 underline' href="/board">view all</Link>
                 </div>
 
-                <div className="flex flex-col gap-2 p-2 w-full overflow-y-scroll max-h-[200px]">
+                <div className="flex flex-col gap-2 p-2 w-full overflow-y-scroll max-h-[305px]">
       <div className="w-full h-[90px] border-2 border-[#F5F4F9] rounded-md flex gap-2 items-center p-2">
         <div className="w-[30px] h-[41px] bg-[#FFED9F] flex justify-center items-center rounded-md p-2">
           <Bell className="" />
