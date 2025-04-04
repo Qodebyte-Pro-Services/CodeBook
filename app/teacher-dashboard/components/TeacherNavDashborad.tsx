@@ -11,7 +11,7 @@ const TeacherNavDashborad = () => {
 
      
   return (
-    <nav className="bg-white w-64 max-h-[650px] p-4 rounded-lg flex-col hidden lg:flex">
+    <nav className="bg-white w-64 max-h-auto p-4 rounded-lg flex-col hidden lg:flex">
     <ul className="space-y-2">
       {navItems.map((item) => (
         <li key={item.href}>
