@@ -58,7 +58,7 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
         />
         <Input
           label="Class Name"
-          placeholder="Nursery 1A"
+          placeholder="Nursery 1"
           type="text"
           value={className}
         onChange={(e: { target: { value: React.SetStateAction<string>; }; })  => setClassName(e.target.value)}
