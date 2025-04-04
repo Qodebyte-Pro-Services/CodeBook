@@ -38,7 +38,7 @@ const FormStep3: React.FC<FormStep3Props> = ({ currentStep, onNext, formData, up
       label: 'School Description', 
       type: 'textarea', 
       required: true,
-      placeholder: 'Enter a detailed description of your school...'
+      placeholder: 'eg”(Little stars academy is a nursery and primary school that focuses on nurturing young learners through creativity and play-based education.)”'
     },
     { name: 'schoolAddress', label: 'School  Address', type: 'text', required: true },
   ], []);
