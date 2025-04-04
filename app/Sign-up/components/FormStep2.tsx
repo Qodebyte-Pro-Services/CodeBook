@@ -20,7 +20,8 @@ const FormStep2: React.FC<FormStep2Props> = ({ currentStep, onNext, formData, up
    const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('warning');
  
   const fields = useMemo(() => [
-    { name: 'confirmationCode', label: 'Confirmation Code', required: true },
+    { name: 'confirmationCode', label: 'Confirmation Code', required: true, placeholder: 'Enter Confirmation Code' },
+    
   ], []); 
  
    const defaultValues = useMemo(() => formData, [formData]);

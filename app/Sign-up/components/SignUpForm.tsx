@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React, { useEffect, useState } from 'react';
@@ -10,7 +8,7 @@ import FormStep4 from './FormStep4';
 import SuccessPage from './SuccessPage';
 import MaxWidthWrapper from '@/app/components/MaxWidthWrapper';
 import Loading from '@/app/components/Loading';
-import Toast from '@/app/components/Toast'; 
+import Toast from '@/app/components/Toast';
 
 const SignUpForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -18,13 +16,11 @@ const SignUpForm = () => {
   const [formData, setFormData] = useState({});
   const [completedSteps, setCompletedSteps] = useState([false, false, false, false]);
 
-
   const [toast, setToast] = useState<{
     message: string;
     type: 'success' | 'error' | 'warning' | 'info';
   } | null>(null);
 
- 
   useEffect(() => {
     const savedFormData = localStorage.getItem('formData');
     if (savedFormData) {
@@ -32,10 +28,23 @@ const SignUpForm = () => {
     }
   }, []);
 
-
   useEffect(() => {
     localStorage.setItem('formData', JSON.stringify(formData));
   }, [formData]);
+
+  // Timeout logic for inactivity
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      clearStorage();
+      setToast({
+        message: 'Session expired due to inactivity. Please start again.',
+        type: 'warning',
+      });
+      setCurrentStep(1); // Reset to the first step
+    }, 2 * 60 * 1000); // 2 minutes
+
+    return () => clearTimeout(timeout); // Clear timeout on component unmount or when dependencies change
+  }, [currentStep, formData]); // Reset timeout on step or form data change
 
   const handleNext = () => {
     setIsLoading(true);
@@ -53,18 +62,19 @@ const SignUpForm = () => {
   };
 
   const updateFormData = (stepData: Record<string, unknown>) => {
-    setFormData(prev => ({ ...prev, ...stepData }));
+    setFormData((prev) => ({ ...prev, ...stepData }));
   };
 
   const clearStorage = () => {
     localStorage.removeItem('formData');
+    setFormData({});
+    setCompletedSteps([false, false, false, false]);
   };
 
   const handleFinalSubmit = async () => {
     try {
       setIsLoading(true);
 
-      
       const response = await new Promise((resolve) => {
         setTimeout(() => {
           resolve({ data: 'Form submitted successfully!' });
@@ -73,7 +83,6 @@ const SignUpForm = () => {
 
       console.log('API Response:', response);
 
-
       setToast({ message: 'Form submitted successfully!', type: 'success' });
 
       clearStorage();
@@ -81,7 +90,6 @@ const SignUpForm = () => {
     } catch (error) {
       console.error('API Error:', error);
 
-     
       setToast({ message: 'Failed to submit form. Please try again.', type: 'error' });
     } finally {
       setIsLoading(false);
@@ -126,17 +134,15 @@ const SignUpForm = () => {
             onStepChange={handleStepChange}
           />
         );
-        case 4:
-          return (
-            <FormStep4
-              currentStep={currentStep}
-              onNext={handleFinalSubmit}
-              formData={formData}
-              completedSteps={completedSteps}
-              setCompletedSteps={setCompletedSteps}
-              onStepChange={handleStepChange}
-            />
-          );
+      case 4:
+        return (
+          <FormStep4
+            currentStep={currentStep}
+            onNext={handleFinalSubmit}
+            completedSteps={completedSteps}
+            setCompletedSteps={setCompletedSteps}
+          />
+        );
       case 5:
         return <SuccessPage />;
       default:
@@ -147,10 +153,9 @@ const SignUpForm = () => {
   return (
     <>
       <MaxWidthWrapper>
-      {isLoading && currentStep < 3 ? <Loading /> : renderFormStep()}
+        {isLoading && currentStep < 3 ? <Loading /> : renderFormStep()}
       </MaxWidthWrapper>
 
-      
       {toast && (
         <Toast
           message={toast.message}

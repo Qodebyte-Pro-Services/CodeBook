@@ -24,10 +24,10 @@ const FormStep1: React.FC<FormStep1Props> = ({ currentStep, onNext, formData, up
 
   const fields = useMemo(
     () => [
-      { name: 'email', label: 'Email', type: 'email', required: true },
-      { name: 'ownerName', label: 'Owner Name', type: 'text', required: true },
-      { name: 'password', label: 'Password', type: 'password', required: true },
-      { name: 'confirmPassword', label: 'Confirm Password', type: 'password', required: true },
+      { name: 'email', label: 'Email', type: 'email', required: true, placeholder: 'Enter Your Email' },
+      { name: 'ownerName', label: 'Owner Name', type: 'text', required: true , placeholder: 'Enter Owner Name'},
+      { name: 'password', label: 'Password', type: 'password', required: true , placeholder: 'Enter Your Password'},
+      { name: 'confirmPassword', label: 'Confirm Password', type: 'password', required: true , placeholder: 'Confirm Your Password'},
     ],
     []
   );

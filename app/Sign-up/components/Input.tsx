@@ -67,15 +67,15 @@ const Input: React.FC<InputProps> = ({
           onChange={onChange}
           {...rest}
         >
-          {/* Add a default empty option */}
+          
           <option value="">Select an option</option>
-          {/* Render options from props */}
+         
           {options?.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}
-          {/* Allow children to be passed as well */}
+         
           {children}
         </select>
         {error && <p className="text-red-500 text-sm mt-1">{error}</p>}

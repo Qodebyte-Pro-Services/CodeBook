@@ -7,7 +7,7 @@ interface FormStepsNavigationProps {
   onStepClick: (step: number) => void;
   stepLabels: string[];
   validateStep: (step: number) => boolean;
-  completedSteps: boolean[]; // Add completedSteps prop
+  completedSteps: boolean[]; 
 }
 
 const FormStepsNavigation: React.FC<FormStepsNavigationProps> = ({

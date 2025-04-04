@@ -21,7 +21,7 @@ const FormStep3: React.FC<FormStep3Props> = ({ currentStep, onNext, formData, up
   const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('warning');
 
   const fields = useMemo(() => [
-    { name: 'schoolName', label: 'School Name', type: 'text', required: true },
+    { name: 'schoolName', label: 'School Name', type: 'text', required: true , placeholder: 'Enter School Name'},
     { 
       name: 'schoolType', 
       label: 'School Type', 
@@ -40,7 +40,7 @@ const FormStep3: React.FC<FormStep3Props> = ({ currentStep, onNext, formData, up
       required: true,
       placeholder: 'eg”(Little stars academy is a nursery and primary school that focuses on nurturing young learners through creativity and play-based education.)”'
     },
-    { name: 'schoolAddress', label: 'School  Address', type: 'text', required: true },
+    { name: 'schoolAddress', label: 'School  Address', type: 'text', required: true, placeholder: 'Enter Your School Address' },
   ], []);
 
   const defaultValues = useMemo(() => formData, [formData]);
