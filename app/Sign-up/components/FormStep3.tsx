@@ -22,25 +22,25 @@ const FormStep3: React.FC<FormStep3Props> = ({ currentStep, onNext, formData, up
 
   const fields = useMemo(() => [
     { name: 'schoolName', label: 'School Name', type: 'text', required: true },
-    { name: 'schoolDescription', label: 'School Description', type: 'text', required: true },
     { 
       name: 'schoolType', 
       label: 'School Type', 
-      type: 'checkbox', 
+      type: 'select', 
       required: true,
-      options: [
+      options: [ 
         { value: 'nursery', label: 'Nursery School' },
         { value: 'primary', label: 'Primary School' },
-        { value: 'secondary', label: 'Secondary School' }
+        { value: 'combined', label: 'Combined (Primary & Nursery)' }
       ]
     },
-    { name: 'schoolEmail', label: 'School Email Address', type: 'email', required: true },
-    { name: 'schoolPhone', label: 'School  Phone Number', type: 'text', required: true },
+    { 
+      name: 'schoolDescription', 
+      label: 'School Description', 
+      type: 'textarea', 
+      required: true,
+      placeholder: 'Enter a detailed description of your school...'
+    },
     { name: 'schoolAddress', label: 'School  Address', type: 'text', required: true },
-    { name: 'schoolCity', label: 'School  City', type: 'text', required: true },
-    { name: 'schoolState', label: 'School  State', type: 'text', required: true },
-    { name: 'establishmentDate', label: 'Establishment Date', type: 'date', required: true },
-    { name: 'schoolLogo', label: 'School Logo', type: 'file', required: true  }, 
   ], []);
 
   const defaultValues = useMemo(() => formData, [formData]);

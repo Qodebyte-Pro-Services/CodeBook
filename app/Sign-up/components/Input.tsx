@@ -15,6 +15,7 @@ interface InputProps extends HTMLAttributes<HTMLInputElement | HTMLSelectElement
   disabled?: boolean;
   className?: string;
   options?: { value: string; label: string }[]; 
+  rows?: number;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -28,6 +29,7 @@ const Input: React.FC<InputProps> = ({
   className = '',
   onChange,
   options = [],
+  rows= 4,
   ...rest
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -57,7 +59,7 @@ const Input: React.FC<InputProps> = ({
   if (type === 'select') {
     return (
       <div className="mb-4 w-full">
-        {label && <label className="block text-sm font-medium text-gray-700">{label}</label>}
+        {label && <label className="block text-sm font-medium text-left text-gray-700">{label}</label>}
         <select
           className={inputClassName}
           value={value as string | number | undefined}
@@ -65,6 +67,15 @@ const Input: React.FC<InputProps> = ({
           onChange={onChange}
           {...rest}
         >
+          {/* Add a default empty option */}
+          <option value="">Select an option</option>
+          {/* Render options from props */}
+          {options?.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+          {/* Allow children to be passed as well */}
           {children}
         </select>
         {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
@@ -142,6 +153,25 @@ const Input: React.FC<InputProps> = ({
       </div>
     );
   }
+
+ 
+if (type === 'textarea') {
+  return (
+    <div className="mb-4 w-full">
+      {label && <label className="block text-sm text-left font-medium text-gray-700">{label}</label>}
+      <textarea
+        className={`${inputClassName} h-32 resize-y pt-[0.7rem] pb-[0.7rem] min-h-[100px]`}
+        rows={rows} 
+        value={value as string | undefined}
+        placeholder={placeholder}
+        disabled={disabled}
+        onChange={onChange}
+        {...rest}
+      />
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+    </div>
+  );
+}
 
   return (
     <div className="mb-4 w-full">

@@ -127,7 +127,19 @@ const Form: React.FC<FormProps> = ({
 
   const getValue = (fieldName: string | undefined): string | number | File | string[] | undefined => {
     if (!fieldName) return undefined;
-    return formData[fieldName] as string | number | File | string[] | undefined;
+    const value = formData[fieldName];
+    
+    
+    if (value instanceof File) {
+      return value;
+    }
+    
+   
+    if (Array.isArray(value)) {
+      return value;
+    }
+
+    return value !== undefined && value !== null ? String(value) : undefined;
   };
 
   return (
