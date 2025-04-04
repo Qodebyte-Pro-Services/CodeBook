@@ -5,7 +5,7 @@ import FormStepsNavigation from './FormStepsNavigation';
 interface FormStep4Props {
   currentStep: number;
   onNext: () => void;
-  formData: Record<string, unknown>;
+  formData: Record<string, unknown>; 
   completedSteps: boolean[];
   setCompletedSteps: (steps: boolean[]) => void;
   onStepChange: (step: number) => void;
@@ -29,13 +29,13 @@ const FormStep4: React.FC<FormStep4Props> = ({
             const newCompletedSteps = [...completedSteps];
             newCompletedSteps[3] = true;
             setCompletedSteps(newCompletedSteps);
-            onNext(); // Proceed to the success page
-          }, 500); // Small delay before proceeding
+            onNext(); 
+          }, 500); 
           return prev;
         }
-        return prev + 5; // Increment progress by 5%
+        return prev + 5;
       });
-    }, 200); // Update progress every 200ms
+    }, 200); 
 
     return () => clearInterval(interval);
   }, [completedSteps, onNext, setCompletedSteps]);

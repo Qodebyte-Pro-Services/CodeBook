@@ -126,18 +126,17 @@ const SignUpForm = () => {
             onStepChange={handleStepChange}
           />
         );
-      case 4:
-        return (
-          <FormStep4
-            currentStep={currentStep}
-            onNext={handleFinalSubmit}
-            formData={formData}
-            updateFormData={updateFormData}
-            completedSteps={completedSteps}
-            setCompletedSteps={setCompletedSteps}
-            onStepChange={handleStepChange}
-          />
-        );
+        case 4:
+          return (
+            <FormStep4
+              currentStep={currentStep}
+              onNext={handleFinalSubmit}
+              formData={formData}
+              completedSteps={completedSteps}
+              setCompletedSteps={setCompletedSteps}
+              onStepChange={handleStepChange}
+            />
+          );
       case 5:
         return <SuccessPage />;
       default:
