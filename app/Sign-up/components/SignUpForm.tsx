@@ -32,7 +32,7 @@ const SignUpForm = () => {
     localStorage.setItem('formData', JSON.stringify(formData));
   }, [formData]);
 
-  // Timeout logic for inactivity
+  
   useEffect(() => {
     const timeout = setTimeout(() => {
       clearStorage();
@@ -40,11 +40,11 @@ const SignUpForm = () => {
         message: 'Session expired due to inactivity. Please start again.',
         type: 'warning',
       });
-      setCurrentStep(1); // Reset to the first step
-    }, 2 * 60 * 1000); // 2 minutes
+      setCurrentStep(1); 
+    }, 2 * 60 * 1000); 
 
-    return () => clearTimeout(timeout); // Clear timeout on component unmount or when dependencies change
-  }, [currentStep, formData]); // Reset timeout on step or form data change
+    return () => clearTimeout(timeout); 
+  }, [currentStep, formData]); 
 
   const handleNext = () => {
     setIsLoading(true);
@@ -151,7 +151,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <>
+    <div className='bg-gradient-to-b from-[#DAF2FF] to-[#CEC9C3]'>
       <MaxWidthWrapper>
         {isLoading && currentStep < 3 ? <Loading /> : renderFormStep()}
       </MaxWidthWrapper>
@@ -163,7 +163,7 @@ const SignUpForm = () => {
           onClose={() => setToast(null)}
         />
       )}
-    </>
+    </div>
   );
 };
 

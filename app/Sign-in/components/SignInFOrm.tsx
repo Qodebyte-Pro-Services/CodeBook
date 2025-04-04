@@ -62,7 +62,7 @@ const SignInForm = () => {
 
   return (
     <>
-      <div className="flex w-full justify-center py-[1.5rem]">
+      <div className="flex w-full justify-center py-[1.5rem] bg-gradient-to-b from-[#DAF2FF] to-[#CEC9C3]">
         <div className="lg:w-[70%] lg:h-[854px] w-full h-auto flex lg:flex-row rounded-[20px] bg-white">
           <div className="lg:flex hidden lg:w-1/2 bg-[#DAF2FF] w-0 h-full rounded-bl-[20px] shadow-bl-2xl items-center justify-center overflow-hidden ">
             <div className="w-[500px] h-[450px] relative py-auto">

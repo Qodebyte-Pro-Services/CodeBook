@@ -292,7 +292,7 @@ const DashboardSection = () => {
                     <Link className='text-blue-500 underline' href="/board">view all</Link>
                 </div>
 
-                <div className="flex flex-col gap-2 p-2 w-full overflow-y-scroll max-h-[300px]">
+                <div className="flex flex-col gap-2 p-2 w-full overflow-y-scroll max-h-[200px]">
       <div className="w-full h-[90px] border-2 border-[#F5F4F9] rounded-md flex gap-2 items-center p-2">
         <div className="w-[30px] h-[41px] bg-[#FFED9F] flex justify-center items-center rounded-md p-2">
           <Bell className="" />
@@ -370,15 +370,16 @@ const DashboardSection = () => {
                     <div className='w-full xl:w-1/3  flex lg:flex-row flex-col gap-2'>
                     
 
-                      <div className='bg-[#FFFFFF]  w-full  rounded-lg p-4 flex flex-col gap-4'> 
-  <div className="flex items-center justify-between">
-    <h2 className="text-lg font-semibold">Messages</h2>
-    <button className="text-gray-500">
-      <Ellipsis/>
-    </button>
-  </div>
+                      <div className='bg-[#FFFFFF]  w-full  rounded-lg p-3 flex flex-col gap-4'> 
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-semibold">Messages</h2>
+                  <button className="text-gray-500">
+                    <Ellipsis/>
+                  </button>
+                </div>
 
-  <div className="flex items-start gap-2">
+    <div className='flex-col flex gap-2 w-full max-h-[250px] overflow-y-scroll'>
+    <div className="flex items-start gap-2 ">
     <div className="flex-shrink-0">
       <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
        
@@ -454,9 +455,21 @@ const DashboardSection = () => {
     </div>
   </div>
 
-  <div className="text-center text-gray-500 text-sm">
-  <Ellipsis/>
+  <div className="flex items-start gap-2">
+    <div className="flex-shrink-0">
+      <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+        <span className="text-sm font-semibold">Q</span>
+      </div>
+    </div>
+    <div className="flex-1">
+      <div className="flex justify-between items-center">
+        <span className="font-semibold">Qodebyte</span>
+        <span className="text-xs text-gray-500">12:34 pm</span>
+      </div>
+      <p className="text-sm">Can we go for a movie...</p>
+    </div>
   </div>
+    </div>
 </div>
                     </div>
             </div>

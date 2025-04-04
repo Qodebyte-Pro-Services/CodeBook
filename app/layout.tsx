@@ -31,6 +31,7 @@ export default function RootLayout({
       >
        
       <div className="bg-gradient-to-b from-[#DAF2FF] to-[#CEC9C3]">
+        {/* <div className="bg-[#FAFAFAFA]"> */}
       <Loading />
         {children}
         </div>
