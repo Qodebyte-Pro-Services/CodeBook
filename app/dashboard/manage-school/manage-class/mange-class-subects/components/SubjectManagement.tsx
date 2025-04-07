@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ChevronsLeft, Edit, Plus, Trash } from "lucide-react";
+import { ChevronsLeft, Edit, Plus, Trash, View } from "lucide-react";
 import Pagination from "@/app/dashboard/teachers/components/Pagination";
 import Select from "@/app/dashboard/teachers/add-teacher/compoenent/Select";
 
@@ -173,6 +173,9 @@ const SubjectTable = () => {
                     className="text-gray-50 flex bg-blue-500 px-3 py-2 rounded-lg mr-4"
                   >
                     <Edit />
+                  </Link>
+                  <Link href='/dashboard/manage-school/school-detail/subject-detail' className="text-gray-50 flex bg-blue-500 px-3 py-2 rounded-lg mr-4">
+                  <View/>
                   </Link>
                   <button className="text-gray-50 flex bg-blue-500 px-3 py-2 rounded-lg mr-4">
                     <Trash />
