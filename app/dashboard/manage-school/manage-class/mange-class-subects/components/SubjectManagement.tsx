@@ -13,7 +13,7 @@ const SubjectTable = () => {
     const tabs = [
       { name: 'General', href: '/dashboard/manage-school'},
       { name: 'Classes', href: '/dashboard/manage-school/manage-class'},
-      { name: 'Subjects', href: '/dashboard/manage-school/mange-clss-subects' },
+      { name: 'Subjects', href: '/dashboard/manage-school/manage-class/mange-class-subects' },
       { name: 'Timetable', href: '/dashboard/manage-school/timetable' },
       { name: 'Fee Mangement', href: '/dashboard/manage-school/fee-management' },
       { name: 'Grading', href: '/dashboard/manage-school/grading' },
@@ -24,8 +24,6 @@ const SubjectTable = () => {
     {
       subjectName: "Mathematics",
       subjectId: "1",
-      class: "Primary 1",
-      assignedTeacher: "Mr Kevin",
     },
   ];
 
@@ -46,9 +44,7 @@ const SubjectTable = () => {
     const filteredSubjects = initialSubjects.filter(
       (subject) =>
         subject.subjectName.toLowerCase().includes(term) ||
-        subject.subjectId.toLowerCase().includes(term) ||
-        subject.class.toLowerCase().includes(term) ||
-        subject.assignedTeacher.toLowerCase().includes(term)
+        subject.subjectId.toLowerCase().includes(term) 
     );
     setSubjects(filteredSubjects);
   };
@@ -80,8 +76,8 @@ const SubjectTable = () => {
       </div>
 
       <div className='flex flex-col gap-1 px-2 py-2'>
-        <p className='font-medium text-sm'>General</p>
-        <span className='text-gray-700 text-xs'>Manage & edit the details of your school</span>
+        <p className='font-medium text-sm'>Subjects</p>
+        <span className='text-gray-700 text-xs'>Manage & edit your school subjects</span>
       </div>
     </div>
 
@@ -123,7 +119,7 @@ const SubjectTable = () => {
           </form>
 
           <Link
-            href="/dashboard/manage-school/manage-class/mange-class-subects/add-subject"
+            href="/dashboard/manage-school/school-detail/add-subjects"
             className="flex items-center gap-2 rounded-lg md:px-4 md:py-2 py-0 px-0 text-[12px] md:text-md"
           >
             <Plus className="text-blue-500" />
@@ -155,12 +151,6 @@ const SubjectTable = () => {
                 Subject Name
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Class
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Assigned Teacher
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Action
               </th>
             </tr>
@@ -177,16 +167,9 @@ const SubjectTable = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{subject.subjectName}</div>
                 </td>
-                
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{subject.class}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{subject.assignedTeacher}</div>
-                </td>
                 <td className="px-6 flex gap-1 py-4 whitespace-nowrap">
                   <Link
-                    href="/dashboard/manage-school/manage-class/mange-class-subects/subject-detail"
+                    href="/dashboard/manage-school/manage-class/mange-class-subects/add-subject"
                     className="text-gray-50 flex bg-blue-500 px-3 py-2 rounded-lg mr-4"
                   >
                     <Edit />

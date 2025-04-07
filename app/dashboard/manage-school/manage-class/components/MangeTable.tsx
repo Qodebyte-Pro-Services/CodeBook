@@ -21,9 +21,9 @@ const MangeTable = () => {
 
   const initialClasses = [
     {
-      className: 'Primary 1B',
-      headTeacher: 'Mrs Tochukwu',
-      numberofClassRoom: '45',
+      className: 'Primary 1',
+      formTeacher: 'Mrs Tochukwu',
+      numberofClassRoom: '5',
       schoolType: 'Primary School',
       multipleClassRoom: 'Yes',
     },
@@ -47,7 +47,7 @@ const MangeTable = () => {
     const filteredClasses = initialClasses.filter(
       (klass) =>
         klass.className.toLowerCase().includes(term) ||
-        klass.headTeacher.toLowerCase().includes(term) ||
+        klass.formTeacher.toLowerCase().includes(term) ||
         klass.numberofClassRoom.toLowerCase().includes(term) ||
         klass.multipleClassRoom.toLowerCase().includes(term) ||
         klass.schoolType.toLowerCase().includes(term)
@@ -62,12 +62,12 @@ const MangeTable = () => {
   const handleAddClass = (newClass: { 
     schooltype: string; 
     className: string; 
-    headTeacher?: string; 
+    formTeacher?: string; 
     multipleClassRoom: string;
   }) => {
     setClasses([...klasses, { 
       className: newClass.className,
-      headTeacher: newClass.multipleClassRoom === 'yes' ? 'N/A' : newClass.headTeacher || 'N/A',
+      formTeacher: newClass.multipleClassRoom === 'yes' ? 'N/A' : newClass.formTeacher || 'N/A',
       numberofClassRoom: 'N/A',
       multipleClassRoom: newClass.multipleClassRoom === 'yes' ? 'Yes' : 'No',
       schoolType: newClass.schooltype 
@@ -170,7 +170,7 @@ const MangeTable = () => {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Head Teacher</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned Form Teacher</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mutiple ClassRoom</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class Room No</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">School Type</th>
@@ -188,7 +188,7 @@ const MangeTable = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-500">
-                    {klass.multipleClassRoom === 'Yes' ? 'N/A' : klass.headTeacher}
+                    {klass.multipleClassRoom === 'Yes' ? 'Has Multiple ClassRooms' : klass.formTeacher}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">

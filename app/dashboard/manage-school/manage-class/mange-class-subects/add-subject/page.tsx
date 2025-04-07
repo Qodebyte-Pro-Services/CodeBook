@@ -12,7 +12,7 @@ const page = () => {
           <DashboardNavBar />
           <div className="flex-1 md:p-8 overflow-hidden ">
           <DashboardHeader /> 
-          <h3 className='mb-3 font-bold text-lg'>Add Subject Form</h3>
+          <h3 className='mb-3 font-bold text-lg'>Update Subject Detail</h3>
           <PersonalizeSubjectForm/>
           </div>
           </div>

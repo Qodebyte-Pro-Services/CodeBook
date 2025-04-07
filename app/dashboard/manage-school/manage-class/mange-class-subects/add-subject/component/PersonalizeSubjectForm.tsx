@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { ChevronsLeft, Save } from "lucide-react";
 import Link from "next/link";
-import Select from "@/app/dashboard/teachers/add-teacher/compoenent/Select";
 import Toast from "@/app/components/Toast";
 import TextAreaInput from "@/app/dashboard/teachers/add-teacher/compoenent/TextAreaInput";
 
@@ -14,12 +13,20 @@ interface ToastState {
 
 const PersonalizeSubjectForm = () => {
   const [formData, setFormData] = useState({
-    subject: "",
-    class: "",
-    assignedTeacher: "",
     textbooks: "",
     equipmentNeeded: "",
   });
+
+    const [activeTab, setActiveTab] = useState('Subjects');
+    
+      const tabs = [
+        { name: 'General', href: '/dashboard/manage-school'},
+        { name: 'Classes', href: '/dashboard/manage-school/manage-class'},
+        { name: 'Subjects', href: '/dashboard/manage-school/manage-class/mange-class-subects' },
+        { name: 'Timetable', href: '/dashboard/manage-school/timetable' },
+        { name: 'Fee Mangement', href: '/dashboard/manage-school/fee-management' },
+        { name: 'Grading', href: '/dashboard/manage-school/grading' },
+      ];
 
   const [toast, setToast] = useState<ToastState | null>(null);
 
@@ -42,11 +49,38 @@ const PersonalizeSubjectForm = () => {
 
   return (
     <>
-      <div className="w-full bg-[#FFFFFF] mb-3 h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll">
+
+<div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="border-b border-gray-200">
+        <nav className="flex -mb-px xl:overflow-hidden overflow-x-scroll  justify-between">
+          {tabs.map((tab) => (
+            <Link
+              key={tab.name}
+              href={tab.href}
+              onClick={() => setActiveTab(tab.name)}
+              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
+                activeTab === tab.name
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {tab.name}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      <div className='flex flex-col gap-1 px-2 py-2'>
+        <p className='font-medium text-sm'>Subjects</p>
+        <span className='text-gray-700 text-xs'>Manage & edit your school subjects</span>
+      </div>
+    </div>
+
+      <div className="w-full mt-2 bg-[#FFFFFF] mb-3 h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll">
         <div className="flex gap-2 md:w-1/2 w-full items-center justify-start md:text-md text-[12px]">
           <ChevronsLeft />
           <Link href="/dashboard/manage-school/manage-class/mange-class-subects" className="cursor-pointer">
-            Class
+            Subjects Table
           </Link>
           <ChevronsLeft className="text-gray-400 w-[20px]" />
           <p>Personalize Subject</p>
@@ -61,51 +95,9 @@ const PersonalizeSubjectForm = () => {
         </button>
       </div>
 
-      <div className="lg:flex-row flex flex-col lg:gap-0 gap-3 bg-[#FFFFFF] rounded-md">
-        <div className="lg:w-1/2 w-full lg:mb-0 mb-4 p-4 rounded-lg mr-4">
-          <h2 className="text-lg font-semibold mb-4">Personalize Subject</h2>
-
-         
-          <Select
-            label="Subject"
-            options={[
-              { label: "Select Subject", value: "" },
-              { label: "Mathematics", value: "math" },
-              { label: "English", value: "english" },
-              { label: "Science", value: "science" },
-              { label: "Biology", value: "biology" },
-            ]}
-            name="subject"
-            value={formData.subject}
-            onChange={handleInputChange}
-          />
-
-          <Select
-            label="Class"
-            options={[
-              { label: "Select Class", value: "" },
-              { label: "Primary 1", value: "primary1" },
-              { label: "JS1", value: "js1" },
-            ]}
-            name="class"
-            value={formData.class}
-            onChange={handleInputChange}
-          />
-
-
-        
-           <Select
-            label="Assigned Teacher"
-            options={[
-              { label: "Select assigned teacher", value: "" },
-              { label: "Victor", value: "teacherId-teachername" },
-              
-            ]}
-            name="assignedTeacher"
-            value={formData.assignedTeacher}
-            onChange={handleInputChange}
-          />
-
+    <div className="lg:flex-row flex flex-col lg:gap-0 gap-3 bg-[#FFFFFF] rounded-md">
+    <div className="lg:w-1/2 w-full lg:mb-0 mb-4 p-4 rounded-lg mr-4">
+    <h2 className="text-lg font-semibold mb-4">Personalize Subject</h2>
     <TextAreaInput
       label="Textbooks"
       placeholder="Enter required textbooks eg: New General Mathematics for Primary 1 or Basic Biology for JS1."
@@ -114,8 +106,6 @@ const PersonalizeSubjectForm = () => {
       onChange={handleInputChange}
       rows={5} 
     />
-
-    
 
     <TextAreaInput
       label="Equipment Needed"

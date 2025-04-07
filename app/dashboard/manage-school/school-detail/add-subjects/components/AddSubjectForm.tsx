@@ -22,6 +22,17 @@ const AddSubjectForm = () => {
     assessmentCriteria: "",
   });
 
+    const [activeTab, setActiveTab] = useState('Subjects');
+    
+      const tabs = [
+        { name: 'General', href: '/dashboard/manage-school'},
+        { name: 'Classes', href: '/dashboard/manage-school/manage-class'},
+        { name: 'Subjects', href: '/dashboard/manage-school/manage-class/mange-class-subects' },
+        { name: 'Timetable', href: '/dashboard/manage-school/timetable' },
+        { name: 'Fee Mangement', href: '/dashboard/manage-school/fee-management' },
+        { name: 'Grading', href: '/dashboard/manage-school/grading' },
+      ];
+
   const [toast, setToast] = useState<ToastState | null>(null);
 
   const handleInputChange = (e: { target: { name: string; value: unknown } }) => {
@@ -43,10 +54,36 @@ const AddSubjectForm = () => {
 
   return (
     <>
+     <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="border-b border-gray-200">
+        <nav className="flex -mb-px xl:overflow-hidden overflow-x-scroll  justify-between">
+          {tabs.map((tab) => (
+            <Link
+              key={tab.name}
+              href={tab.href}
+              onClick={() => setActiveTab(tab.name)}
+              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
+                activeTab === tab.name
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {tab.name}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      <div className='flex flex-col gap-1 px-2 py-2'>
+        <p className='font-medium text-sm'>Subjects</p>
+        <span className='text-gray-700 text-xs'>Manage & edit your school subjects</span>
+      </div>
+    </div>
+
       <div className="w-full bg-[#FFFFFF] mb-3 h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll">
         <div className="flex gap-2 md:w-1/2 w-full items-center justify-start md:text-md text-[12px]">
           <ChevronsLeft />
-          <Link href="/dashboard/manage-school/school-detail" className="cursor-pointer">
+          <Link href="/dashboard/manage-school/" className="cursor-pointer">
             School detail
           </Link>
           <ChevronsLeft className="text-gray-400 w-[20px]" />
@@ -61,7 +98,7 @@ const AddSubjectForm = () => {
           <p className="text-[10px] md:text-md">Save</p>
         </button>
       </div>
-ddd
+
       <div className="lg:flex-row flex flex-col lg:gap-0 gap-3 bg-[#FFFFFF] rounded-md">
         <div className="lg:w-1/2 w-full lg:mb-0 mb-4 p-4 rounded-lg mr-4">
           <h2 className="text-lg font-semibold mb-4">Subject Information</h2>

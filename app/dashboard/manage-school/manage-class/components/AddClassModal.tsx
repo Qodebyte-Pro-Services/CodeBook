@@ -11,7 +11,7 @@ interface AddClassModalProps {
   onSave: (data: { 
     schooltype: string; 
     className: string; 
-    headTeacher?: string; 
+    formTeacher?: string; 
     multipleClassRoom: string;
   }) => void;
 }
@@ -19,7 +19,7 @@ interface AddClassModalProps {
 const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }) => {
   const [schooltype, setSchoolType] = useState('');
   const [className, setClassName] = useState('');
-  const [headTeacher, setHeadTeacher] = useState('');
+  const [formTeacher, setFormTeacher] = useState('');
   const [multipleClassRoom, setMultipleClassRoom] = useState('no');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
@@ -28,9 +28,9 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
     console.log('schooltype:', schooltype);
   console.log('className:', className);
   console.log('multipleClassRoom:', multipleClassRoom);
-  console.log('headTeacher:', headTeacher);
+  console.log('formTeacher:', formTeacher);
     
-  if (!schooltype || !className || (multipleClassRoom === 'no' && !headTeacher)) {
+  if (!schooltype || !className || (multipleClassRoom === 'no' && !formTeacher)) {
     setToastMessage('Please fill in all required fields.');
     setToastType('error');
     return;
@@ -40,7 +40,7 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
     schooltype,
     className,
     multipleClassRoom,
-    ...(multipleClassRoom === 'no' && { headTeacher }),
+    ...(multipleClassRoom === 'no' && { formTeacher }),
   };
 
   onSave(data);
@@ -65,7 +65,7 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Do you wish to add Multiple Class Rooms?
+            Do you wish to add Multiple Class Rooms:  <span className='text-gray-500 text-sm'>eg: primary 1A, 1B  </span> E.T.C?
           </label>
           <div className="flex gap-4">
             <label className="inline-flex items-center">
@@ -115,14 +115,14 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
 
         {multipleClassRoom === 'no' && (
           <Select
-            label="Head Teacher"
+            label="Form Teacher"
             options={[
               { value: '#', label: 'Select Form Teacher' },
               { value: 'mr-qodebyte', label: 'Mr. Qodebyte' },
               { value: 'mrs-tochukwu', label: 'Mrs. Tochukwu' },
             ]}
-            value={headTeacher}
-            onChange={(e: { target: { value: React.SetStateAction<string> } }) => setHeadTeacher(e.target.value)}
+            value={formTeacher}
+            onChange={(e: { target: { value: React.SetStateAction<string> } }) => setFormTeacher(e.target.value)}
           />
         )}
 
