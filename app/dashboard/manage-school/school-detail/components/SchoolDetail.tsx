@@ -10,7 +10,7 @@ const SchoolDetail = () => {
   const tabs = [
     { name: 'General', href: '/dashboard/manage-school'},
     { name: 'Classes', href: '/dashboard/manage-school/manage-class'},
-       { name: 'Subjects', href: '/dashboard/manage-school/manage-class-subjects' },
+       { name: 'School-Subjects', href: '/dashboard/manage-school/manage-class-subjects' },
    { name: 'Timetable', href: '/dashboard/manage-school/timetable' },
     { name: 'Fee Mangement', href: '/dashboard/manage-school/fee-management' },
     { name: 'Grading', href: '/dashboard/manage-school/grading' },
