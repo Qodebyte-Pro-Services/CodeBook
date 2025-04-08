@@ -3,7 +3,7 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 const FeesPaymentChart = () => {
-  const percentage = 60; 
+  const percentage = 100; 
 
   return (
     <div className="bg-white rounded-lg p-2 shadow-md w-full">
@@ -32,7 +32,7 @@ const FeesPaymentChart = () => {
       </div>
       <div className="flex justify-between mb-1">
         <span className="text-sm text-gray-600">Outstanding payment</span>
-        <span className="text-sm text-gray-800">₦20.000.000</span>
+        <span className="text-sm text-gray-800">₦0</span>
       </div>
       <div className="flex flex-col justify-between">
         <div className="flex justify-between">
@@ -40,14 +40,14 @@ const FeesPaymentChart = () => {
             <p className="text-5xl text-blue-500">•</p>
             <span className="text-sm text-gray-600">Tuition Paid</span>
           </div>
-          <span className="text-sm text-gray-800 flex items-center">50.89%</span>
+          <span className="text-sm text-gray-800 flex items-center">100%</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex pb-7 justify-between">
           <div className="flex gap-2 items-center">
             <p className="text-5xl text-red-500">•</p>
             <span className="text-sm text-gray-600">Outstanding Payment</span>
           </div>
-          <span className="text-sm text-gray-800 flex items-center">22.79%</span>
+          <span className="text-sm text-gray-800 flex items-center">0%</span>
         </div>
       </div>
     </div>

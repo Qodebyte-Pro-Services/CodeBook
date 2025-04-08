@@ -26,17 +26,17 @@ const ViewSessionClass = () => {
                   onChange={(value) => console.log(value)}
                 />
       </div>
-            <Link href='/dashboard/students/view-students/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
+            <Link href='/dashboard/students/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
                 <p>Nursery 1</p>
                 <ChevronsRight />
             </Link>
 
-            <Link href='/dashboard/students/view-students/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
+            <Link href='/dashboard/students/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
             <p>Nursery 1</p>
                 <ChevronsRight />
             </Link>
 
-            <Link href='/dashboard/students/view-students/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
+            <Link href='/dashboard/students/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
             <p>Nursery 1</p>
                 <ChevronsRight />
             </Link>

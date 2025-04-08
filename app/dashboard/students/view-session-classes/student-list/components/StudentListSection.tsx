@@ -140,7 +140,7 @@ const StudentListSection = () => {
                   <div className="text-sm text-gray-900">{student.yearOfExit}</div>
                 </td>
                 <td className="px-6 flex gap-1 py-4 whitespace-nowrap">
-                  <Link href='/dashboard/manage-school/manage-class-room/class-room-detail/student-detail' className="text-gray-50  flex bg-blue-500 px-3 py-2 rounded-lg mr-4">
+                  <Link href='/dashboard/students/view-session-classes/student-list/student-detail' className="text-gray-50  flex bg-blue-500 px-3 py-2 rounded-lg mr-4">
                     <Edit/>
                   </Link>
                   <button className="text-gray-50  flex bg-red-500 px-3 py-2 rounded-lg mr-4">
