@@ -10,7 +10,7 @@ const SubjectDetail = () => {
       <div className='w-full bg-[#FFFFFF] h-[55px] mb-3 py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'>
           <div className='flex gap-2  sm:w-1/2 w-full items-center justify-start md:text-md text-[12px] '>
             <ChevronsLeft />
-            <Link href='/dashboard/manage-school/school-detail/' className='text-[9px] cursor-pointer md:text-md'>School Detail</Link>
+            <Link href='/dashboard/manage-school/' className='text-[9px] cursor-pointer md:text-md'>School Detail</Link>
             <ChevronsLeft className='text-gray-400 w-[20px]' />
             <p>Subject Detail</p>
            </div>

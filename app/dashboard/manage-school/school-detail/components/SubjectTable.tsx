@@ -50,7 +50,7 @@ const SubjectTable   = () => {
     <>
        <div className="w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll">
       <Link
-            href="/dashboard/manage-school/school-detail/add-subjects"
+            href="/dashboard/manage-school/manage-class-subjects/add-subjects"
             className="flex items-center gap-2 rounded-lg md:px-4 md:py-2 py-0 px-0 text-[12px] md:text-md"
           >
             <Plus className="text-blue-500" />
@@ -136,7 +136,7 @@ const SubjectTable   = () => {
                 </td>
                 <td className="px-6 flex gap-1 py-4 whitespace-nowrap">
                   <Link
-                    href="/dashboard/manage-school/school-detail/subject-detail"
+                    href="/dashboard/manage-school/manage-class-subjects/subject-detail"
                     className="text-gray-50 flex bg-blue-500 px-3 py-2 rounded-lg mr-4"
                   >
                     <Edit />

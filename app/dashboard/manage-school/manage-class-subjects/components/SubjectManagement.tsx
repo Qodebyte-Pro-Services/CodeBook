@@ -13,7 +13,7 @@ const SubjectTable = () => {
     const tabs = [
       { name: 'General', href: '/dashboard/manage-school'},
       { name: 'Classes', href: '/dashboard/manage-school/manage-class'},
-      { name: 'Subjects', href: '/dashboard/manage-school/manage-class/mange-class-subects' },
+         { name: 'Subjects', href: '/dashboard/manage-school/manage-class-subjects' },
       { name: 'Timetable', href: '/dashboard/manage-school/timetable' },
       { name: 'Fee Mangement', href: '/dashboard/manage-school/fee-management' },
       { name: 'Grading', href: '/dashboard/manage-school/grading' },
@@ -119,7 +119,7 @@ const SubjectTable = () => {
           </form>
 
           <Link
-            href="/dashboard/manage-school/school-detail/add-subjects"
+            href="/dashboard/manage-school/manage-class-subjects/add-subjects"
             className="flex items-center gap-2 rounded-lg md:px-4 md:py-2 py-0 px-0 text-[12px] md:text-md"
           >
             <Plus className="text-blue-500" />
@@ -169,12 +169,12 @@ const SubjectTable = () => {
                 </td>
                 <td className="px-6 flex gap-1 py-4 whitespace-nowrap">
                   <Link
-                    href="/dashboard/manage-school/manage-class/mange-class-subects/add-subject"
+                    href="/dashboard/manage-school/manage-class-subjects/subject-update"
                     className="text-gray-50 flex bg-blue-500 px-3 py-2 rounded-lg mr-4"
                   >
                     <Edit />
                   </Link>
-                  <Link href='/dashboard/manage-school/school-detail/subject-detail' className="text-gray-50 flex bg-blue-500 px-3 py-2 rounded-lg mr-4">
+                  <Link href='/dashboard/manage-school/manage-class-subjects/subject-detail' className="text-gray-50 flex bg-blue-500 px-3 py-2 rounded-lg mr-4">
                   <View/>
                   </Link>
                   <button className="text-gray-50 flex bg-blue-500 px-3 py-2 rounded-lg mr-4">

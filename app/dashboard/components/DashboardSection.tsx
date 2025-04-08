@@ -229,7 +229,7 @@ const DashboardSection = () => {
                 <div className='bg-[#F8E38D] flex flex-col h-[107px] w-full justify-between rounded-xl'>
                     <div className='flex items-start justify-between p-3 w-full'>
                         <h2>Students</h2>
-                        <Link href='/dashboard/manage-school/school-detail/view-students'>
+                        <Link href='/dashboard/students'>
                         <Ellipsis />
                         </Link>
                     </div>
