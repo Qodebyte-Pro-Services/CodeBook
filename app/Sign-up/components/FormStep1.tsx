@@ -43,30 +43,54 @@ const FormStep1: React.FC<FormStep1Props> = ({ currentStep, onNext, formData, up
   }, [formData]);
 
   const handleSubmit = async (data: Record<string, unknown>) => {
-    if (data.password !== data.confirmPassword) {
-      setToastMessage('Passwords do not match.');
-      setToastType('error');
+    const password = data.password as string;
+    const confirmPassword = data.confirmPassword as string;
+    const email = data.email as string;
+  
+    if (!password || typeof password !== "string") {
+      setToastMessage("Password is required and must be a string.");
+      setToastType("error");
+      setShowToast(true);
+      return;
+    }
+  
+    if (password.length < 8) {
+      setToastMessage("Password must be at least 8 characters long.");
+      setToastType("error");
+      setShowToast(true);
+      return;
+    }
+
+    if (password === email) {
+      setToastMessage("Password cannot be the same as your email.");
+      setToastType("error");
+      setShowToast(true);
+      return;
+    }
+  
+    if (password !== confirmPassword) {
+      setToastMessage("Passwords do not match.");
+      setToastType("error");
       setShowToast(true);
       return;
     }
   
     try {
-      const response = await axios.post('https://sch-mgt-03yw.onrender.com/auth/register', {
+      const response = await axios.post("https://sch-mgt-03yw.onrender.com/auth/register", {
         email: data.email,
-        password1: data.password,
-        password2: data.confirmPassword,
+        password1: password,
+        password2: confirmPassword,
         full_name: data.ownerName,
       });
   
-      console.log('Registration Response:', response.data);
+      console.log("Registration Response:", response.data);
   
-      
       if (response.data.key) {
-        sessionStorage.setItem('authToken', response.data.key);
+        sessionStorage.setItem("authToken", response.data.key);
       }
   
-      setToastMessage('Registration successful! Proceed to the next step.');
-      setToastType('success');
+      setToastMessage("Registration successful! Proceed to the next step.");
+      setToastType("success");
       setShowToast(true);
   
       updateFormData(data);
@@ -75,9 +99,9 @@ const FormStep1: React.FC<FormStep1Props> = ({ currentStep, onNext, formData, up
       setCompletedSteps(newCompletedSteps);
       onNext();
     } catch (error) {
-      console.error('Registration Error:', error);
-      setToastMessage('Registration failed. Please try again.');
-      setToastType('error');
+      console.error("Registration Error:", error);
+      setToastMessage("Registration failed. Please try again.");
+      setToastType("error");
       setShowToast(true);
     }
   };
