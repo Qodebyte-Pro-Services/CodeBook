@@ -41,7 +41,7 @@ const Form: React.FC<FormProps> = ({
       }
     });
     setFormData(initialFormData);
-  }, [defaultValues, fields]); 
+  }, [defaultValues, fields]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;

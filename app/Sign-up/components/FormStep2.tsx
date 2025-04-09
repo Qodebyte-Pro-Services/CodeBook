@@ -3,6 +3,7 @@ import Form from './Form';
 import Image from 'next/image';
 import FormStepsNavigation from './FormStepsNavigation';
 import Toast from '@/app/components/Toast';
+import axios from 'axios';
 interface FormStep2Props {
   currentStep: number;
   onNext: () => void;
@@ -24,16 +25,36 @@ const FormStep2: React.FC<FormStep2Props> = ({ currentStep, onNext, formData, up
     
   ], []); 
  
-   const defaultValues = useMemo(() => formData, [formData]);
+   const defaultValues = useMemo(() => {
+    return {
+      confirmationCode: formData.confirmationCode || '',
+    };
+   }, [formData]);
 
    
-   const handleSubmit = (data: Record<string, unknown>) => {
-    console.log('Form 2 Data:', data);
-    updateFormData(data);
-    const newCompletedSteps = [...completedSteps];
-    newCompletedSteps[1] = true;
-    setCompletedSteps(newCompletedSteps);
-    onNext();
+   const handleSubmit = async (data: Record<string, unknown>) => {
+    try {
+      const response = await axios.post('https://sch-mgt-03yw.onrender.com/auth/verify-email/', {
+        code: data.confirmationCode,
+      });
+  
+      console.log('Verification Response:', response.data);
+  
+      setToastMessage('Verification successful! Proceed to the next step.');
+      setToastType('success');
+      setShowToast(true);
+  
+      updateFormData(data);
+      const newCompletedSteps = [...completedSteps];
+      newCompletedSteps[1] = true;
+      setCompletedSteps(newCompletedSteps);
+      onNext();
+    } catch (error) {
+      console.error('Verification Error:', error);
+      setToastMessage('Verification failed. Please try again.');
+      setToastType('error');
+      setShowToast(true);
+    }
   };
   const handleStepClick = (step: number) => {
     if (validateStep(step)) {

@@ -6,6 +6,7 @@ import Form from './Form';
 import Image from 'next/image';
 import FormStepsNavigation from './FormStepsNavigation';
 import Toast from '@/app/components/Toast';
+import axios from 'axios';
 
 interface FormStep1Props {
   currentStep: number;
@@ -26,26 +27,59 @@ const FormStep1: React.FC<FormStep1Props> = ({ currentStep, onNext, formData, up
     () => [
       { name: 'email', label: 'Email', type: 'email', required: true, placeholder: 'Enter Your Email' },
       { name: 'ownerName', label: 'Owner Name', type: 'text', required: true , placeholder: 'Enter Owner Name'},
-      { name: 'password', label: 'Password', type: 'password', required: true , placeholder: 'Enter Your Password'},
+      { name: 'password', label: 'Password', type: 'password', required: true , placeholder: 'Enter Your Password 8 charcter password'},
       { name: 'confirmPassword', label: 'Confirm Password', type: 'password', required: true , placeholder: 'Confirm Your Password'},
     ],
     []
   );
 
-  const defaultValues = useMemo(() => formData, [formData]);
+  const defaultValues = useMemo(() => {
+    return {
+      email: formData.email || '',
+      ownerName: formData.ownerName || '',
+      password: formData.password || '',
+      confirmPassword: formData.confirmPassword || '',
+    };
+  }, [formData]);
 
-  const handleSubmit = (data: Record<string, unknown>) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     if (data.password !== data.confirmPassword) {
       setToastMessage('Passwords do not match.');
       setToastType('error');
       setShowToast(true);
       return;
     }
-    updateFormData(data);
-    const newCompletedSteps = [...completedSteps];
-    newCompletedSteps[0] = true;
-    setCompletedSteps(newCompletedSteps);
-    onNext();
+  
+    try {
+      const response = await axios.post('https://sch-mgt-03yw.onrender.com/auth/register', {
+        email: data.email,
+        password1: data.password,
+        password2: data.confirmPassword,
+        full_name: data.ownerName,
+      });
+  
+      console.log('Registration Response:', response.data);
+  
+      
+      if (response.data.token) {
+        sessionStorage.setItem('authToken', response.data.token);
+      }
+  
+      setToastMessage('Registration successful! Proceed to the next step.');
+      setToastType('success');
+      setShowToast(true);
+  
+      updateFormData(data);
+      const newCompletedSteps = [...completedSteps];
+      newCompletedSteps[0] = true;
+      setCompletedSteps(newCompletedSteps);
+      onNext();
+    } catch (error) {
+      console.error('Registration Error:', error);
+      setToastMessage('Registration failed. Please try again.');
+      setToastType('error');
+      setShowToast(true);
+    }
   };
 
   const handleStepClick = (step: number) => {

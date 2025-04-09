@@ -56,13 +56,15 @@ const Input: React.FC<InputProps> = ({
     error ? 'border-red-500' : ''
   } ${className}`;
 
+  const safeValue = value !== undefined && value !== null ? value : '';
+
   if (type === 'select') {
     return (
       <div className="mb-4 w-full">
         {label && <label className="block text-sm font-medium text-left text-gray-700">{label}</label>}
         <select
           className={inputClassName}
-          value={value as string | number | undefined}
+          value={safeValue as string | number | undefined}
           disabled={disabled}
           onChange={onChange}
           {...rest}
@@ -162,7 +164,7 @@ if (type === 'textarea') {
       <textarea
         className={`${inputClassName} h-32 resize-y pt-[0.7rem] pb-[0.7rem] min-h-[100px]`}
         rows={rows} 
-        value={value as string | undefined}
+        value={safeValue as string | undefined}
         placeholder={placeholder}
         disabled={disabled}
         onChange={onChange}
@@ -179,7 +181,7 @@ if (type === 'textarea') {
       <input
         type={type}
         className={inputClassName}
-        value={value as string | number | undefined}
+        value={safeValue as string | number | undefined}
         placeholder={placeholder}
         disabled={disabled}
         onChange={onChange}

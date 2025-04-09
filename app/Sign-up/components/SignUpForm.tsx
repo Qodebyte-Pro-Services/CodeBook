@@ -41,7 +41,7 @@ const SignUpForm = () => {
         type: 'warning',
       });
       setCurrentStep(1); 
-    }, 2 * 60 * 1000); 
+    }, 2 * 60 * 10000); 
 
     return () => clearTimeout(timeout); 
   }, [currentStep, formData]); 

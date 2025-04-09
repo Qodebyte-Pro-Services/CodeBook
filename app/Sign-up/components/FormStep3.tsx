@@ -3,6 +3,7 @@ import Form from './Form';
 import Image from 'next/image';
 import FormStepsNavigation from './FormStepsNavigation';
 import Toast from '@/app/components/Toast';
+import axios from 'axios';
 
 
 interface FormStep3Props {
@@ -43,15 +44,55 @@ const FormStep3: React.FC<FormStep3Props> = ({ currentStep, onNext, formData, up
     { name: 'schoolAddress', label: 'School  Address', type: 'text', required: true, placeholder: 'Enter Your School Address' },
   ], []);
 
-  const defaultValues = useMemo(() => formData, [formData]);
+  const defaultValues = useMemo(() => {
+    return {
+      schoolName: formData.schoolName || '',
+      schoolType: formData.schoolType || '',
+      schoolDescription: formData.schoolDescription || '',
+      schoolAddress: formData.schoolAddress || '',
+    };
+  }, [formData]);
 
-  const handleSubmit = (data: Record<string, unknown>) => {
-    console.log('Form 3 Data:', data);
-    updateFormData(data);
-    const newCompletedSteps = [...completedSteps];
-    newCompletedSteps[2] = true;
-    setCompletedSteps(newCompletedSteps);
-    onNext();
+  const handleSubmit = async (data: Record<string, unknown>) => {
+    try {
+    
+      const authToken = sessionStorage.getItem('authToken');
+  
+      const response = await axios.post(
+        'https://sch-mgt-03yw.onrender.com/school/main-school/',
+        {
+          name_of_school: data.schoolName,
+          school_email: formData.email, 
+          school_description: data.schoolDescription,
+          school_address: data.schoolAddress,
+          school_types: data.schoolType,
+          user: '',
+        },
+        {
+          headers: {
+            Authorization: `Token ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      console.log('School Setup Response:', response.data);
+  
+      setToastMessage('School setup successful! Proceed to the next step.');
+      setToastType('success');
+      setShowToast(true);
+  
+      updateFormData(data);
+      const newCompletedSteps = [...completedSteps];
+      newCompletedSteps[2] = true;
+      setCompletedSteps(newCompletedSteps);
+      onNext();
+    } catch (error) {
+      console.error('School Setup Error:', error);
+      setToastMessage('School setup failed. Please try again.');
+      setToastType('error');
+      setShowToast(true);
+    }
   };
 
   const handleStepClick = (step: number) => {
