@@ -35,7 +35,7 @@ const FormStep2: React.FC<FormStep2Props> = ({ currentStep, onNext, formData, up
    const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       const response = await axios.post('https://sch-mgt-03yw.onrender.com/auth/verify-email/', {
-        code: data.confirmationCode,
+        key: data.confirmationCode,
       });
   
       console.log('Verification Response:', response.data);

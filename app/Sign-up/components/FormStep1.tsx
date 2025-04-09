@@ -61,8 +61,8 @@ const FormStep1: React.FC<FormStep1Props> = ({ currentStep, onNext, formData, up
       console.log('Registration Response:', response.data);
   
       
-      if (response.data.token) {
-        sessionStorage.setItem('authToken', response.data.token);
+      if (response.data.key) {
+        sessionStorage.setItem('authToken', response.data.key);
       }
   
       setToastMessage('Registration successful! Proceed to the next step.');

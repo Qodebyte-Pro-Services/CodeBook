@@ -52,7 +52,7 @@ const Input: React.FC<InputProps> = ({
     }
   };
 
-  const inputClassName = `mt-1 outline-none block xl:w-3/3 lg:w-full md:w-1/2 w-full h-[50px] text-gray-950 rounded-md border-[#ADADAD] px-3 border-2 shadow-sm focus:border-blue-400 focus:ring-blue-400 ${
+  const inputClassName = `mt-1 outline-none block w-full h-[50px] text-gray-950 rounded-md border-[#ADADAD] px-3 border-2 shadow-sm focus:border-blue-400 focus:ring-blue-400 ${
     error ? 'border-red-500' : ''
   } ${className}`;
 

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, ChangeEvent, HTMLAttributes, useEffect } from 'react';
-import Input from './Input';
+import React, { useState, ChangeEvent, HTMLAttributes, useEffect } from "react";
+import Input from "./Input";
 
 interface InputProps extends HTMLAttributes<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> {
   label?: string;
@@ -19,7 +19,7 @@ interface InputProps extends HTMLAttributes<HTMLInputElement | HTMLSelectElement
 
 interface FormProps {
   fields: InputProps[];
-  onSubmit: (data: Record<string, unknown>) => void;
+  onSubmit: (data: Record<string, unknown>) => Promise<void>;
   submitButtonText?: string;
   defaultValues?: Record<string, unknown>;
 }
@@ -27,17 +27,18 @@ interface FormProps {
 const Form: React.FC<FormProps> = ({
   fields,
   onSubmit,
-  submitButtonText = 'Submit',
+  submitButtonText = "Submit",
   defaultValues = {},
 }) => {
   const [formData, setFormData] = useState<Record<string, unknown>>(defaultValues);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const initialFormData: Record<string, unknown> = { ...defaultValues };
     fields.forEach((field) => {
       if (field.name && !(field.name in initialFormData)) {
-        initialFormData[field.name] = '';
+        initialFormData[field.name] = "";
       }
     });
     setFormData(initialFormData);
@@ -45,21 +46,20 @@ const Form: React.FC<FormProps> = ({
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-    
+
     if (name) {
       setFormData((prevFormData) => {
         const updatedFormData = { ...prevFormData };
-        
-        if (type === 'checkbox') {
+
+        if (type === "checkbox") {
           const checkboxEvent = e as ChangeEvent<HTMLInputElement>;
           const checkboxValue = checkboxEvent.target.value;
           const isChecked = checkboxEvent.target.checked;
-          
-          // Initialize as array if not already
-          const currentValues = Array.isArray(updatedFormData[name]) 
-            ? [...updatedFormData[name] as string[]] 
+
+          const currentValues = Array.isArray(updatedFormData[name])
+            ? [...(updatedFormData[name] as string[])]
             : [];
-          
+
           if (isChecked) {
             if (!currentValues.includes(checkboxValue)) {
               currentValues.push(checkboxValue);
@@ -70,24 +70,22 @@ const Form: React.FC<FormProps> = ({
               currentValues.splice(index, 1);
             }
           }
-          
+
           updatedFormData[name] = currentValues;
-        } 
-        else if (type === 'file' && e.target instanceof HTMLInputElement) {
+        } else if (type === "file" && e.target instanceof HTMLInputElement) {
           updatedFormData[name] = e.target.files?.[0];
-        } 
-        else {
+        } else {
           updatedFormData[name] = value;
         }
-        
+
         return updatedFormData;
       });
-      
-      setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     let hasErrors = false;
     const newErrors: Record<string, string> = {};
@@ -96,7 +94,7 @@ const Form: React.FC<FormProps> = ({
       if (field.name) {
         const value = formData[field.name];
         if (field.required) {
-          if (field.type === 'checkbox') {
+          if (field.type === "checkbox") {
             if (!value || (Array.isArray(value) && value.length === 0)) {
               newErrors[field.name] = `${field.label || field.name} is required.`;
               hasErrors = true;
@@ -121,20 +119,22 @@ const Form: React.FC<FormProps> = ({
       return;
     }
 
-    onSubmit(formData);
-    setErrors({});
+    setLoading(true);
+    try {
+      await onSubmit(formData);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getValue = (fieldName: string | undefined): string | number | File | string[] | undefined => {
     if (!fieldName) return undefined;
     const value = formData[fieldName];
-    
-    
+
     if (value instanceof File) {
       return value;
     }
-    
-   
+
     if (Array.isArray(value)) {
       return value;
     }
@@ -143,7 +143,10 @@ const Form: React.FC<FormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className='flex flex-col gap-2 lg:justify-normal justify-center mx-auto  w-full align-center'>
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-2 lg:justify-normal justify-center mx-auto w-full align-center"
+    >
       {fields.map((field) => (
         <Input
           key={field.name}
@@ -155,9 +158,12 @@ const Form: React.FC<FormProps> = ({
       ))}
       <button
         type="submit"
-        className="bg-[#0A92DD] hover:bg-[#0a93dd79] text-white w-[70%] m-auto font-bold py-2 px-4 rounded "
+        className={`bg-[#0A92DD] hover:bg-[#0a93dd79] text-white w-[70%] m-auto font-bold py-2 px-4 rounded ${
+          loading ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        disabled={loading}
       >
-        {submitButtonText}
+        {loading ? "Submitting..." : submitButtonText}
       </button>
     </form>
   );
