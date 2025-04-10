@@ -153,16 +153,6 @@ const MangeTable = () => {
             value="Nursery"
             onChange={(value) => console.log(value)}
           />
-
-          <Select
-            label=""
-            options={[
-              { value: 'nursery1', label: 'Nursery 1' },
-              { value: 'primary2', label: 'Primary 2' },
-            ]}
-            value="Nursery"
-            onChange={(value) => console.log(value)}
-          />  
         </div>
         
         <table className="min-w-full divide-y divide-gray-200">

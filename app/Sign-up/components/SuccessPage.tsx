@@ -4,16 +4,42 @@ import React, { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import axios from "axios";
 
 const SuccessPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push('/dashboard'); 
-    }, 3000);
+    const fetchAdminData = async () => {
+      const authToken = sessionStorage.getItem("authToken");
 
-    return () => clearTimeout(timer); 
+      if (!authToken) {
+        console.error("Auth token not found in session storage.");
+        return;
+      }
+
+      try {
+        const response = await axios.get("https://sch-mgt-03yw.onrender.com/auth/user/", {
+          headers: {
+            Authorization: `Token ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const { role,pk, ...adminData } = response.data;
+
+       
+        sessionStorage.setItem("AdminData", JSON.stringify(adminData));
+        sessionStorage.setItem("adminId", pk);
+        sessionStorage.setItem("adminRole", role);
+      
+        router.push("/dashboard");
+      } catch (error) {
+        console.error("Error fetching admin data:", error);
+      }
+    };
+
+    fetchAdminData();
   }, [router]);
 
   return (

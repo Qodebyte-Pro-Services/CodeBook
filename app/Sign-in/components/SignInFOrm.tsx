@@ -24,42 +24,82 @@ const SignInForm = () => {
   const defaultValues = useMemo(() => ({}), []);
 
   const handleSubmit = async (data: Record<string, unknown>) => {
-  
     if (!data.email || !data.password) {
-      setToastMessage('Please fill in all fields.');
-      setToastType('error');
+      setToastMessage("Please fill in all fields.");
+      setToastType("error");
       setShowToast(true);
       return;
     }
-
+  
     try {
       
-      const response = await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({ data: 'Sign in successful!' });
-        }, 1000);
+      const loginResponse = await fetch("https://sch-mgt-03yw.onrender.com/auth/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+        }),
       });
-
-      console.log('API Response:', response);
-
-   
-      setToastMessage('Sign in successful! Redirecting to dashboard...');
-      setToastType('success');
+  
+      if (!loginResponse.ok) {
+        throw new Error("Invalid login credentials.");
+      }
+  
+      const loginData = await loginResponse.json();
+      const authToken = loginData.key;
+  
+      
+      sessionStorage.setItem("authToken", authToken);
+  
+     
+      const userResponse = await fetch("https://sch-mgt-03yw.onrender.com/auth/user/", {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${authToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!userResponse.ok) {
+        throw new Error("Failed to fetch user data.");
+      }
+  
+      const userData = await userResponse.json();
+  
+     
+      const { pk, role, ...rest } = userData;
+      sessionStorage.setItem(`${role}Id`, pk);
+      sessionStorage.setItem(`${role}Role`, role);
+      sessionStorage.setItem(`${role}MainData`, JSON.stringify(userData));
+      sessionStorage.setItem(`${role}Data`, JSON.stringify(rest ));
+      
+      setToastMessage("Sign in successful! Redirecting...");
+      setToastType("success");
       setShowToast(true);
-
+  
      
       setTimeout(() => {
-        router.push('/dashboard');
+        if (role === "admin") {
+          router.push("/dashboard");
+        } else if (role === "student") {
+          router.push("/student-dashboard");
+        } else if (role === "teacher") {
+          router.push("/teacher-dashboard");
+        } else {
+          throw new Error("Unknown role.");
+        }
       }, 2000);
     } catch (error) {
-      console.error('API Error:', error);
-
-      setToastMessage('Failed to sign in. Please try again.');
-      setToastType('error');
+      console.error("Error during sign-in:", error);
+  
+      setToastMessage("Failed to sign in. Please try again.");
+      setToastType("error");
       setShowToast(true);
     }
   };
-
   return (
     <>
       <div className="flex w-full justify-center py-[1.5rem] bg-gradient-to-b from-[#DAF2FF] to-[#CEC9C3]">

@@ -1,9 +1,27 @@
 "use client";
 import Link from "next/link";
-import React from "react";
-import {  Landmark } from "lucide-react";
+import React, { useState } from "react";
+import {  Landmark, X } from "lucide-react";
+import Input from "../../../add-teacher/compoenent/Input";
+import Select from "../../../add-teacher/compoenent/Select";
 
 const EmploymentDetails = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [updatePayment, setUpdatePayment] = useState<{
+    paymentMethod: string;
+    amount: string;
+    paymentType: string;
+  } | null>(null);
+
+  const openModal = (updatePaymentStatus: {paymentMethod:string; amount:string; paymentType:string}) => {
+    setUpdatePayment(updatePaymentStatus);
+    setIsModalOpen(true);
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setUpdatePayment(null);
+  };
   return (
     <div className="flex flex-col gap-4 w-full p-4">
  
@@ -11,7 +29,7 @@ const EmploymentDetails = () => {
         <div className="border-b border-gray-200">
           <nav className="flex -mb-px xl:overflow-hidden overflow-x-scroll justify-between">
             {[
-              { name: "General", href: "/dashboard/teachers/teacher-detail/general" },
+              { name: "General", href: "/dashboard/teachers/teacher-detail" },
               { name: "Employment Details", href: "/dashboard/teachers/teacher-detail/employment-details" },
               { name: "Attendance/Leave record", href: "/dashboard/teachers/teacher-detail/attendance-leave" },
               { name: "Reviews", href: "/dashboard/teachers/teacher-detail/reviews" },
@@ -102,12 +120,12 @@ const EmploymentDetails = () => {
           <div className="bg-white rounded-lg shadow p-4">
             <div className="flex justify-between items-center mb-4">
               <h5 className="font-semibold text-lg">Payment Summary</h5>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm">
+              <button onClick={() => openModal({ paymentMethod: "", amount: "", paymentType: "" })} className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm">
                 Confirm Monthly Payment
               </button>
             </div>
             <div className="flex flex-col gap-4">
-              {[...Array(4)].map((_, index) => (
+              {[...Array(4)].map((updatePaymentStatus, index) => (
                 <div key={index} className="flex items-start gap-4">
                   <Landmark className="text-green-500" size={20} />
                   <div>
@@ -213,6 +231,55 @@ const EmploymentDetails = () => {
           </div>
         </div>
       </div>
+
+      {isModalOpen && updatePayment && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500/75 transition-opacity bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg w-[90%] max-w-md p-6 relative">
+           
+            <button
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+              onClick={closeModal}
+            >
+              <X size={20} />
+            </button>
+            <div className="flex flex-col  gap-2 w-full">
+            <h2>Confirm monthly payment</h2>
+              <Select
+              label="Payment Method"
+                options={[
+                  { value: "bank_transfer", label: "Bank Transfer" },
+                  { value: "cheque", label: "Cheque" },
+                  { value: "cash", label: "Cash" },
+                ]}
+                value={updatePayment.paymentMethod}
+                onChange={(e) => setUpdatePayment({ ...updatePayment, paymentMethod: e.target.value })}
+              />
+
+              <Input
+              label="Amount"
+                type="text"
+                placeholder="Type in Amount"
+                value=""
+                onChange={(e) => setUpdatePayment({ ...updatePayment, amount: e.target.value })}
+              />
+
+              <Select
+              label="Payment Type"
+                options={[
+                  { value: "monthly", label: "Monthly Salary" },
+                  { value: "bonus", label: "Bonus" },
+                ]}
+                value={updatePayment.paymentType}
+                onChange={(e) => setUpdatePayment({ ...updatePayment, paymentType: e.target.value })}
+              />
+
+              <button className="bg-blue-500 text-white rounded-lg px-4 py-2 text-sm">
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

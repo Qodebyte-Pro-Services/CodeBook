@@ -85,7 +85,7 @@ const TeacherDetailPage = () => {
         <div className="border-b border-gray-200">
             <nav className="flex -mb-px xl:overflow-hidden overflow-x-scroll justify-between">
             {[
-              { name: "General", href: "/dashboard/teachers/teacher-detail/general" },
+              { name: "General", href: "/dashboard/teachers/teacher-detail" },
               { name: "Employment Details", href: "/dashboard/teachers/teacher-detail/employment-details" },
               { name: "Attendance/Leave record", href: "/dashboard/teachers/teacher-detail/attendance-leave" },
               { name: "Reviews", href: "/dashboard/teachers/teacher-detail/reviews" },
@@ -260,7 +260,7 @@ const TeacherDetailPage = () => {
               <X size={20} />
             </button>
 
-            {/* Modal Content */}
+    
             <div className="flex items-center gap-4 mb-4">
               <div className="relative w-12 h-12 rounded-full overflow-hidden">
                 <Image
