@@ -20,8 +20,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   }, [router]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-    
+    <div>
       {children}
     </div>
   );
