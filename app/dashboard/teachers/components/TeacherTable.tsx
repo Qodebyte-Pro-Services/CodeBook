@@ -11,11 +11,8 @@ const TeacherTable = () => {
       name: 'Okoli Qodebyte',
       email: 'unified347@gmail.com',
       teacherId: 'AGS-1289-QB',
-      subject: 'Basic - Technology',
-      classes: 'primary 1, primary 2',
       classRoom: 'JSS 1',
       address: '3 Presidential Road',
-      schoolType: 'Primary',
     },
 
   ];
@@ -38,10 +35,7 @@ const TeacherTable = () => {
       (teacher) =>
         teacher.name.toLowerCase().includes(term) ||
         teacher.teacherId.toLowerCase().includes(term) ||
-        teacher.subject.toLowerCase().includes(term) ||
-        teacher.classes.toLowerCase().includes(term) ||
         teacher.address.toLowerCase().includes(term) ||
-        teacher.schoolType.toLowerCase().includes(term) ||
         teacher.classRoom.toLowerCase().includes(term)
     );
     setTeachers(filteredTeachers);
@@ -93,10 +87,7 @@ const TeacherTable = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class(es)</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">School Type</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ClassRoom</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
             </tr>
@@ -115,16 +106,7 @@ const TeacherTable = () => {
                   <div className="text-sm text-gray-900">{teacher.teacherId}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{teacher.subject}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{teacher.classes}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{teacher.address}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{teacher.schoolType}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{teacher.classRoom}</div>

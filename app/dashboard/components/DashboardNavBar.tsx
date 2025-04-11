@@ -13,7 +13,7 @@ const DashboardNavBar = () => {
 
   return (
     <nav className=" bg-white  w-64 p-4 rounded-lg relative lg:flex shadow-lg hidden ">
-     <div className='  h-screen flex flex-col  top-5  left-10 '>
+     <div className='  h-screen flex flex-col  top-5 p-4 left-10 '>
      <ul className="space-y-2">
         {navItems.map((item) => (
           <li key={item.href}>
@@ -27,7 +27,7 @@ const DashboardNavBar = () => {
                   : ''
               }`}
             >
-               <div className='gap-2 flex '>
+               <div className='gap-3 flex '>
                 {React.createElement(item.icon)}
                <span className="mr-2 text-sm">{item.label}</span>
                </div>

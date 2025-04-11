@@ -28,6 +28,10 @@ const AddTeacherForm = () => {
     highestCert: '',
     schoolAttended: '',
     yearOfGraduation: '',
+    previousWorkOrganization: '',
+    jobTitle: '',
+    jobDuration: '',
+    jobRefContact: '',
   });
   const [toast, setToast] = useState<ToastState | null>(null);
 
@@ -99,46 +103,8 @@ const AddTeacherForm = () => {
             value={formData.dob}
             onChange={handleInputChange}
           />
-          <Input
-            label="Phone"
-            placeholder="Enter contact number"
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleInputChange}
-          />
-          <Input
-            label="Address"
-            placeholder="Area and street"
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleInputChange}
-          />
-
-          <Select
-                label="Select School Type"
-                options={[
-                  { label: 'Select School Type', value: '' },
-                  { label: 'Primary', value: 'primary' },
-                  { label: 'Secondary', value: 'secondary' },
-                ]}
-                name="city"
-                value={formData.city}
-                onChange={handleInputChange}
-              />
-
-           <Select
-                label="Select Subject"
-                options={[
-                  { label: 'Select Subject', value: '' },
-                  { label: 'Home Economics', value: 'home-economics' },
-                  { label: 'Chemistry', value: 'chemistry' },
-                ]}
-                name="city"
-                value={formData.city}
-                onChange={handleInputChange}
-              />
+    
+          
 
 
           <div className="mb-4">
@@ -199,6 +165,23 @@ const AddTeacherForm = () => {
               />
             </div>
           </div>
+
+          <Input
+            label="Phone"
+            placeholder="Enter contact number"
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleInputChange}
+          />
+          <Input
+            label="Address"
+            placeholder="Area and street"
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleInputChange}
+          />
         </div>
         <div className="lg:w-1/2 w-full p-4 rounded-lg">
           <UploadImage onChange={handleFileChange} />
@@ -237,6 +220,43 @@ const AddTeacherForm = () => {
                 type="date"
                 name="yearOfGraduation"
                 value={formData.yearOfGraduation}
+                onChange={handleInputChange}
+              />
+
+<h2 className="text-lg font-semibold mb-4 mt-8">Work Experience Information</h2>
+              <Input
+                label="Name of School Of Organization"
+                placeholder="Enter th name of the Previous Qorganization"
+                type="text"
+                name="previousWorkOrganization"
+                value={formData.previousWorkOrganization}
+                onChange={handleInputChange}
+              />
+
+            <Input
+                label="Job Title"
+                placeholder="Enter Previous Job Title"
+                type="text"
+                name="jobTitle"
+                value={formData.jobTitle}
+                onChange={handleInputChange}
+              />
+
+            <Input
+                label="Job Duration"
+                placeholder="Enter Previous Job Duration"
+                type="text"
+                name="jobDuration"
+                value={formData.jobDuration}
+                onChange={handleInputChange}
+              />
+
+          <Input
+                label="Job Reference Contact"
+                placeholder="Enter Previous Job  Reference Contact"
+                type="text"
+                name="jobRefContact"
+                value={formData.jobRefContact}
                 onChange={handleInputChange}
               />
         </div>

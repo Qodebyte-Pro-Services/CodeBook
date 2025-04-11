@@ -6,7 +6,7 @@ import {  MonitorSmartphone, ShieldCheck, SquareMousePointer, Trash } from 'luci
 const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState('Security');
 
-  const tabs = ['General', 'Security', 'Team', 'Notifications'];
+  const tabs = ['General', 'Security', 'Admin Team', 'Notifications'];
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -193,15 +193,15 @@ const SettingsPage = () => {
           </div>
         );
       
-      case 'Team':
+      case 'Admin Team':
         return (
           <div className="p-6">
-            <h2 className="md:text-xl text-[13px] font-semibold mb-6">Team Settings</h2>
+            <h2 className="md:text-xl text-[13px] font-semibold mb-6">Admin Settings</h2>
             
             <div className="mb-8">
               <div className="flex md:flex-row flex-col justify-between md:items-center mb-4">
-                <h3 className="md:text-lg text-[sm] font-medium">Team Members</h3>
-                <button className="bg-blue-500 text-white md:px-4 md:py-2 px-1 py-2 rounded-lg ">Invite Member</button>
+                <h3 className="md:text-lg text-[sm] font-medium">Admin Members</h3>
+                <button className="bg-blue-500 text-white md:px-4 md:py-2 px-1 py-2 rounded-lg ">Add New Admin</button>
               </div>
               
               <div className="border border-gray-200 rounded-lg xl:overflow-hidden overflow-x-scroll">
@@ -232,7 +232,7 @@ const SettingsPage = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                          Admin
+                         Super Admin
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -261,7 +261,7 @@ const SettingsPage = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                          Member
+                          Admin
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -280,11 +280,11 @@ const SettingsPage = () => {
             </div>
             
             <div>
-              <h3 className="text-lg font-medium mb-4">Team Settings</h3>
+              <h3 className="text-lg font-medium mb-4">Admin Settings</h3>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Team Name</p>
+                    <p className="font-medium">Admin Team Name</p>
                     <p className="text-sm text-gray-600">Acme Inc.</p>
                   </div>
                   <button className="text-blue-500">Edit</button>
