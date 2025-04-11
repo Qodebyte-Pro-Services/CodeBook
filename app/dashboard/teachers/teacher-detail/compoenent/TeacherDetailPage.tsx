@@ -6,8 +6,10 @@ import {
   Landmark,
   Mail,
   Phone,
+  PhoneCall,
   School,
   University,
+  User,
   X,
 } from "lucide-react";
 import Image from "next/image";
@@ -61,6 +63,16 @@ const TeacherDetailPage = () => {
   ];
 
   const messagesData = [
+    {
+      sender: "Parent",
+      text: "Running low on graph paper, lab supplies for my class, please can I get a restock?",
+      time: "November 10, 2025 - 10:45am",
+    },
+    {
+      sender: "Parent",
+      text: "Running low on graph paper, lab supplies for my class, please can I get a restock?",
+      time: "November 10, 2025 - 10:45am",
+    },
     {
       sender: "Parent",
       text: "Running low on graph paper, lab supplies for my class, please can I get a restock?",
@@ -164,7 +176,7 @@ const TeacherDetailPage = () => {
               <h5 className="font-semibold text-lg">Messages</h5>
               <button className="text-blue-500 text-sm">Mark all as read</button>
             </div>
-            <div className="flex flex-col max-h-[160px] overflow-y-auto gap-4">
+            <div className="flex flex-col max-h-[300px] overflow-y-auto gap-4">
               {messagesData.map((message, index) => (
                 <div key={index} className="flex flex-col gap-1">
                   <p className="text-sm">{message.text}</p>
@@ -185,9 +197,29 @@ const TeacherDetailPage = () => {
      
           <div className="bg-white rounded-lg shadow p-4">
             <h5 className="font-semibold text-lg">Emergency Contact Information</h5>
-            <p className="text-sm text-gray-600">Mr. Qodebyte Eguemokpon</p>
-            <p className="text-sm text-gray-600">Relationship: Father</p>
-            <p className="text-sm text-gray-600">Contact: +2349059484839</p>
+            <div className="flex flex-col gap-2">
+          <div className="flex flex-col">
+            <h4 className="text-gray-400">Name</h4>
+            <div className="flex gap-2">
+              <User className="text-gray-300"/>
+              <p className="text-sm text-gray-600">Mr. Qodebyte Eguemokpon</p>
+            </div>
+          </div>
+          <div className="flex flex-col">
+          <h4 className="text-gray-400">Relationship: </h4>
+            <div className="flex gap-2">
+            <User className="text-gray-300"/>
+            <p className="text-sm text-gray-600">Father</p>
+            </div>
+          </div>
+         <div className="flex flex-col">
+          <h4  className="text-gray-400">Contact</h4>
+          <div  className="flex gap-2">
+            <PhoneCall  className="text-gray-300"/>
+          <p className="text-sm text-gray-600">+2349059484839</p>
+          </div>
+         </div>
+            </div>
           </div>
 
           <CalendarComp />
@@ -237,7 +269,7 @@ const TeacherDetailPage = () => {
               value={formData.Subject}
               onChange={handleInputChange}
             />
-            <div className="flex flex-col max-h-[100px] overflow-y-scroll gap-2 mt-4">
+            <div className="flex flex-col max-h-[300px] overflow-y-scroll gap-2 mt-4">
               {assignmentsData.map((assignment) => (
                 <div key={assignment.id} className="flex flex-col gap-1">
                   <p className="font-medium">{assignment.title}</p>
@@ -252,7 +284,7 @@ const TeacherDetailPage = () => {
       {isModalOpen && selectedMessage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500/75 transition-opacity bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg w-[90%] max-w-md p-6 relative">
-            {/* Close Button */}
+          
             <button
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
               onClick={closeModal}

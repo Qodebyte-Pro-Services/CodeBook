@@ -98,7 +98,7 @@ const CommunicationSection = () => {
         </div>
        </div>
 
-        <div className="bg-white shadow w-4/4 flex flex-col justify-between max-h-[500px]  rounded-lg p-4">
+        <div className="bg-white shadow w-4/4 flex flex-col justify-between  rounded-lg p-4">
           <div className="flex items-center justify-between mb-4">
           <div className="flex gap-2 items-center">
             <Image src="/ImageWork.png" alt="" width={40} height={40} className="rounded-full" />

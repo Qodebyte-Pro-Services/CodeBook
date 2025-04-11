@@ -63,7 +63,7 @@ const AttendanceSection = () => {
       </div>
 
       <div className="flex flex-col gap-4">
-              <div className='w-full lg:w-2/3  grid grid-cols-1 md:grid-cols-2  gap-3'>
+              <div className='w-full   grid grid-cols-1 md:grid-cols-2  gap-3'>
                 <div className='bg-white shadow-md rounded-lg p-4 h-[158px]'>
                     <div className='flex justify-between'>
                         <h3>Present Summary</h3>
