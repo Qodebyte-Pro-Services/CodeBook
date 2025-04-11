@@ -1,4 +1,5 @@
-import CalendarComp from '@/app/dashboard/teachers/teacher-detail/compoenent/CalendarComp'
+
+import CalendarComp from '@/app/dashboard/teachers/teacher-detail/[id]/compoenent/CalendarComp'
 import { ChevronDown, ChevronsLeft, Edit, Ellipsis } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'

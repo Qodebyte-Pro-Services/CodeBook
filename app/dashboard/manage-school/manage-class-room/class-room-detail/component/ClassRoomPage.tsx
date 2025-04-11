@@ -1,7 +1,8 @@
 "use client"
 
 import Pagination from '@/app/dashboard/teachers/components/Pagination'
-import CalendarComp from '@/app/dashboard/teachers/teacher-detail/compoenent/CalendarComp'
+import CalendarComp from '@/app/dashboard/teachers/teacher-detail/[id]/compoenent/CalendarComp'
+
 import { Calendar1, ChevronsLeft, Edit, Ellipsis,  Mail, Phone, Plus, PlusCircle, School, Trash, View } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
