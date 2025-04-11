@@ -1,26 +1,55 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ChevronsLeft, Edit, Plus, Trash } from 'lucide-react' 
 import Pagination from './Pagination';
+import axios from 'axios';
+import Toast from '@/app/components/Toast';
+import { useRouter } from 'next/navigation';
+
+
+interface Teacher {
+  id: string;
+  full_name: string;
+  email: string;
+  gender: string;
+}
 
 const TeacherTable = () => {
-  const initialTeachers = [
-    {
-      name: 'Okoli Qodebyte',
-      email: 'unified347@gmail.com',
-      teacherId: 'AGS-1289-QB',
-      classRoom: 'JSS 1',
-      address: '3 Presidential Road',
-    },
-
-  ];
-
-  const [teachers, setTeachers] = useState(initialTeachers);
-  const [searchTerm, setSearchTerm] = useState('');
+  const router = useRouter();
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error" | "confirm";
+    onConfirm?: () => void;
+    onCancel?: () => void;
+  } | null>(null);
+
   const teachersPerPage = 5;
+
+
+
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      const authToken = sessionStorage.getItem("authToken");
+
+      try {
+        const response = await axios.get("https://sch-mgt-03yw.onrender.com/accounts/teacher/", {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
+        });
+        setTeachers(response.data);
+      } catch (error) {
+        console.error("Error fetching teachers:", error);
+      }
+    };
+
+    fetchTeachers();
+  }, []);
 
   const indexOfLastTeacher = currentPage * teachersPerPage;
   const indexOfFirstTeacher = indexOfLastTeacher - teachersPerPage;
@@ -31,18 +60,53 @@ const TeacherTable = () => {
   const handleSearchChange = (e: { target: { value: string; }; }) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const filteredTeachers = initialTeachers.filter(
-      (teacher) =>
-        teacher.name.toLowerCase().includes(term) ||
-        teacher.teacherId.toLowerCase().includes(term) ||
-        teacher.address.toLowerCase().includes(term) ||
-        teacher.classRoom.toLowerCase().includes(term)
+    const filteredTeachers = teachers.filter(
+      (teacher: Teacher) =>
+        teacher.full_name.toLowerCase().includes(term) ||
+        teacher.id.toLowerCase().includes(term) ||
+        teacher.email.toLowerCase().includes(term) ||
+        teacher.gender.toLowerCase().includes(term)
     );
     setTeachers(filteredTeachers);
   };
 
   const handlePageChange = (page: React.SetStateAction<number>) => {
     setCurrentPage(page);
+  };
+
+  const handleDelete = (teacherId: string) => {
+    setToast({
+      message: "Are you sure you want to delete this teacher?",
+      type: "confirm",
+      onConfirm: async () => {
+        const authToken = sessionStorage.getItem("authToken");
+
+        try {
+          await axios.delete(`https://sch-mgt-03yw.onrender.com/accounts/teacher/${teacherId}/`, {
+            headers: {
+              Authorization: `Token ${authToken}`,
+            },
+          });
+
+          setToast({
+            message: "Teacher deleted successfully!",
+            type: "success",
+          });
+
+         
+          setTeachers((prevTeachers) => prevTeachers.filter((teacher) => teacher.id !== teacherId));
+        } catch (error) {
+          console.error("Error deleting teacher:", error);
+          setToast({
+            message: "Failed to delete teacher. Please try again.",
+            type: "error",
+          });
+        }
+      },
+      onCancel: () => {
+        setToast(null);
+      },
+    });
   };
 
   return (
@@ -85,38 +149,55 @@ const TeacherTable = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ClassRoom</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher Email</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher Gender</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-          {currentTeachers.map((teacher, index) => (
-              <tr className='pr-1' key={index}>
+          {currentTeachers.map((teacher: Teacher, index: number) => (
+              <tr
+                key={index}
+                className="pr-1 hover:bg-gray-100 cursor-pointer"
+                onClick={() => router.push(`/dashboard/teachers/teacher-detail/${teacher.id}`)} 
+              >
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <input type="checkbox" className="form-checkbox" />
+                  <input
+                    type="checkbox"
+                    className="form-checkbox"
+                    onClick={(e) => e.stopPropagation()} 
+                  />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{teacher.name}</div>
-                  <div className="text-sm text-gray-500">{teacher.email}</div>
+                  <div className="text-sm text-gray-900">{teacher.id}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{teacher.teacherId}</div>
+                  <div className="text-sm text-gray-900">{teacher.full_name}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{teacher.address}</div>
+                  <div className="text-sm text-gray-900">{teacher.email}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{teacher.classRoom}</div>
+                  <div className="text-sm text-gray-900">{teacher.gender}</div>
                 </td>
                 <td className="px-6 flex gap-1 py-4 whitespace-nowrap">
-                  <Link href='/dashboard/teachers/teacher-detail' className="text-gray-50  flex bg-blue-500 px-3 py-2 rounded-lg mr-4">
-                    <Edit/>
+                  <Link
+                    href={`/dashboard/teachers/teacher-detail/${teacher.id}`}
+                    className="text-gray-50 flex bg-blue-500 px-3 py-2 rounded-lg mr-4"
+                    onClick={(e) => e.stopPropagation()} // Prevent row click when interacting with the edit button
+                  >
+                    <Edit />
                   </Link>
-                  <button className="text-gray-50  flex bg-red-500 px-3 py-2 rounded-lg mr-4">
-                    <Trash/>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent row click when interacting with the delete button
+                      handleDelete(teacher.id);
+                    }}
+                    className="text-gray-50 flex bg-red-500 px-3 py-2 rounded-lg mr-4"
+                  >
+                    <Trash />
                   </button>
                 </td>
               </tr>
@@ -130,6 +211,16 @@ const TeacherTable = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+
+{toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onConfirm={toast.onConfirm}
+          onCancel={toast.onCancel}
+          onClose={() => setToast(null)}
+        />
+      )}
     </>
   );
 };

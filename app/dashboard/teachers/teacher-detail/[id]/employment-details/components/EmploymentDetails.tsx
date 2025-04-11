@@ -2,8 +2,9 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import {  Building, Calendar, Clock, Edit, File, FileText, Landmark, Phone, PlusCircle, University, UserRoundCog, X } from "lucide-react";
-import Input from "../../../add-teacher/compoenent/Input";
-import Select from "../../../add-teacher/compoenent/Select";
+import Select from "@/app/dashboard/teachers/add-teacher/compoenent/Select";
+import Input from "@/app/dashboard/teachers/add-teacher/compoenent/Input";
+
 
 const EmploymentDetails = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

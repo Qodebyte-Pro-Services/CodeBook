@@ -1,10 +1,12 @@
 "use client"
 import Link from 'next/link'
 import React, { useState } from 'react'
-import Select from '../../../add-teacher/compoenent/Select'
+
 import { Edit, PlusCircle, Trash, X } from 'lucide-react'
-import Input from '../../../add-teacher/compoenent/Input'
-import TextAreaInput from '../../../add-teacher/compoenent/TextAreaInput'
+import Select from '@/app/dashboard/teachers/add-teacher/compoenent/Select'
+import TextAreaInput from '@/app/dashboard/teachers/add-teacher/compoenent/TextAreaInput'
+import Input from '@/app/dashboard/teachers/add-teacher/compoenent/Input'
+
 
 
 const AttendanceSection = () => {

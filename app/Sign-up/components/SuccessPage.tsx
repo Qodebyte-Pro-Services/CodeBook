@@ -59,7 +59,7 @@ const SuccessPage = () => {
               Welcome aboard! Start your management journey with
             </h4>
             <div className="relative w-[200px] h-[200px] mx-auto mt-3">
-              <Image src="/Frame-1000003446.png" alt="Success" fill />
+              <Image src="/Success.png" alt="Success" fill />
             </div>
             <Link
               href="/dashboard"

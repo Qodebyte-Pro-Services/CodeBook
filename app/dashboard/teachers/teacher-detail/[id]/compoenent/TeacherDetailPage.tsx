@@ -14,26 +14,71 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SubjectCompletion from "./SubjectCompletion";
 import CalendarComp from "./CalendarComp";
-import Select from "../../add-teacher/compoenent/Select";
 
-const TeacherDetailPage = () => {
+import axios from "axios";
+import Select from "../../../add-teacher/compoenent/Select";
+
+interface TeacherDetailPageProps {
+  teacherId: string;
+}
+
+const TeacherDetailPage: React.FC<TeacherDetailPageProps> = ({ teacherId }) => {
+
+  interface Teacher {
+    id: string;
+    name: string;
+    email: string;
+    contact: string;
+    address: string;
+    gender: string;
+    class: string;
+    employedDate: string;
+  }
+
+  const [teacher, setTeacher] = useState<Teacher | null>(null);
+
+  useEffect(() => {
+    const fetchTeacher = async () => {
+      const authToken = sessionStorage.getItem("authToken");
+
+      try {
+        const response = await axios.get(`https://sch-mgt-03yw.onrender.com/accounts/teacher/${teacherId}/`, {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
+        });
+        setTeacher(response.data);
+      } catch (error) {
+        console.error("Error fetching teacher details:", error);
+      }
+    };
+
+    fetchTeacher();
+  }, [teacherId]);
+
   const [formData, setFormData] = useState({
     Subject: "",
   });
 
-  const handleInputChange = (e: { target: { name: string; value: unknown } }) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<{
     sender: string;
     text: string;
     time: string;
   } | null>(null);
+
+  if (!teacher) {
+    return <p>Loading...</p>;
+  }
+
+  const handleInputChange = (e: { target: { name: string; value: unknown } }) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
 
   const openModal = (message: { sender: string; text: string; time: string }) => {
     setSelectedMessage(message);

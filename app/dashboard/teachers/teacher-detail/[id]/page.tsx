@@ -1,12 +1,17 @@
+"use client"
 import MaxWidthWrapper from '@/app/components/MaxWidthWrapper'
 import React from 'react'
-import DashboardNavBar from '../../components/DashboardNavBar'
+
 import { ChevronsLeft } from 'lucide-react'
-import DashboardHeader from '../../components/DashboardHeader'
+
 import TeacherDetailPage from './compoenent/TeacherDetailPage'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
+import DashboardNavBar from '@/app/dashboard/components/DashboardNavBar'
+import DashboardHeader from '@/app/dashboard/components/DashboardHeader'
 
-const page = () => {
+const Page = () => {
+  const { id } = useParams() as { id: string }; 
   return (
     <>
       <MaxWidthWrapper>
@@ -24,7 +29,7 @@ const page = () => {
            </div>
 
           </div>
-          <TeacherDetailPage/>
+          <TeacherDetailPage teacherId={id} />
           </div>
 
           </div>
@@ -33,4 +38,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

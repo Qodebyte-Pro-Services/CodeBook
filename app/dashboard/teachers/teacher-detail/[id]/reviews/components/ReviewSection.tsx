@@ -1,10 +1,11 @@
 "use client";
+import Input from "@/app/dashboard/teachers/add-teacher/compoenent/Input";
+import TextAreaInput from "@/app/dashboard/teachers/add-teacher/compoenent/TextAreaInput";
 import { PlusCircle, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import Input from "../../../add-teacher/compoenent/Input";
-import TextAreaInput from "../../../add-teacher/compoenent/TextAreaInput";
+
 
 const ReviewSection = () => {
 

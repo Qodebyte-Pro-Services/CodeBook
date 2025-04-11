@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import Input from "../../../add-teacher/compoenent/Input";
+
 import { Laptop, Trash } from "lucide-react";
 import Image from "next/image";
+import Input from "@/app/dashboard/teachers/add-teacher/compoenent/Input";
 
 const SettingsPAge = () => {
   return (

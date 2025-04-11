@@ -5,10 +5,10 @@ import React, { useState, useEffect } from "react";
 interface ToastProps {
   message: string;
   type: "success" | "error" | "warning" | "info" | "confirm";
-  duration?: number; // Not used for "confirm" type
+  duration?: number; 
   onClose?: () => void;
-  onConfirm?: () => void; // Callback for "Yes" button
-  onCancel?: () => void; // Callback for "No" button
+  onConfirm?: () => void; 
+  onCancel?: () => void; 
 }
 
 const Toast: React.FC<ToastProps> = ({
