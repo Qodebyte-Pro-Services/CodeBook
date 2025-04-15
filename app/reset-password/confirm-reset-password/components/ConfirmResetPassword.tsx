@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import axios from "axios";
 import Input from "@/app/dashboard/teachers/add-teacher/compoenent/Input"; 
 import Toast from "@/app/components/Toast"; 
 
-const ConfirmResetPassword = () => {
+// Create a wrapper component that handles the suspense
+const ConfirmResetPasswordContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
- 
   const uid = searchParams.get("uid");
   const token = searchParams.get("token");
 
@@ -25,7 +25,6 @@ const ConfirmResetPassword = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-  
     if (!newPassword1 || !newPassword2) {
       setPasswordError("Both password fields are required.");
       return;
@@ -59,7 +58,6 @@ const ConfirmResetPassword = () => {
         setToastType("success");
         setShowToast(true);
 
-        
         setTimeout(() => {
           router.push("/Sign-in");
         }, 2000);
@@ -123,6 +121,15 @@ const ConfirmResetPassword = () => {
         />
       )}
     </div>
+  );
+};
+
+// Main component that wraps the content in Suspense
+const ConfirmResetPassword = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConfirmResetPasswordContent />
+    </Suspense>
   );
 };
 
