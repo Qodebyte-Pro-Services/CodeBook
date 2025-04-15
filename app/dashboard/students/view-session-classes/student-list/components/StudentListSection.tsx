@@ -65,7 +65,7 @@ const StudentListSection = () => {
 
 <div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'> 
         
-        <Link href='/dashboard/students/view-students/view-session-classes/' className='flex gap-2  w-1/2 items-center justify-start md:text-md text-[12px] '>
+        <Link href='/dashboard/students/view-session-classes/' className='flex gap-2  w-1/2 items-center justify-start md:text-md text-[12px] '>
               <ChevronsLeft />
               <p>Session Classes</p>
           </Link>

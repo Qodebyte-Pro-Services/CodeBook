@@ -1,9 +1,11 @@
 "use client"
 
-import { Bell, MessageCircleCode, Settings } from 'lucide-react';
+
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import MobileNavToggleButton from './MobileNavToggleButton';
+
+import InteractiveLinks from './InteractiveLinks';
 
 const DashboardHeader = () => {
   const [greeting, setGreeting] = useState('');
@@ -42,19 +44,7 @@ const DashboardHeader = () => {
         <span className="font-semibold sm:text-2xl text-[10px] flex">{greeting}</span>
       </div>
 
-      <div className="flex items-end justify-between gap-3">
-        <div className="bg-[#ECEBF1] text-[#000000] p-2 rounded-full">
-          <Settings />
-        </div>
-
-        <div className="bg-[#ECEBF1] text-[#000000] p-2 rounded-full">
-          <MessageCircleCode />
-        </div>
-
-        <div className="bg-[#ECEBF1] text-[#000000] p-2 rounded-full">
-          <Bell />
-        </div>
-      </div>
+    <InteractiveLinks/>
     </header>
   );
 };

@@ -7,13 +7,34 @@ import { ArrowUp, Bell, ChevronDown, Ellipsis } from 'lucide-react'
 import Calendar from './Calender'
 import EarningsGraph from './EarningsGraph'
 import axios from 'axios'
+import { CircularProgressbar } from 'react-circular-progressbar'
+
+interface DashboardStats {
+  student_count: number;
+  teacher_count: number;
+  staff_count: number;
+  girls_count: number;
+  boys_count: number;
+}
+
+interface Notice {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  title: string;
+  description: string;
+}
+
 
 const DashboardSection = () => {
   const [fullName, setFullName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const [loadingNotices, setLoadingNotices] = useState(true);
 
   useEffect(() => {
-    const fetchAdminDetails = async () => {
+    const fetchData = async () => {
       const adminId = sessionStorage.getItem("adminId");
       const authToken = sessionStorage.getItem("authToken");
 
@@ -24,24 +45,61 @@ const DashboardSection = () => {
       }
 
       try {
-        const response = await axios.get(
+      
+        const adminResponse = await axios.get(
           `https://sch-mgt-03yw.onrender.com/accounts/user/${adminId}/`,
-          {
-            headers: {
-              Authorization: `Token ${authToken}`,
-            },
-          }
+          { headers: { Authorization: `Token ${authToken}` } }
         );
-        setFullName(response.data.full_name); 
+        setFullName(adminResponse.data.full_name);
+
+       
+        const statsResponse = await axios.get(
+          `https://sch-mgt-03yw.onrender.com/dashboard/`,
+          { headers: { Authorization: `Token ${authToken}` } }
+        );
+        setStats(statsResponse.data);
       } catch (error) {
-        console.error("Error fetching admin details:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
+      await fetchNotices();
     };
 
-    fetchAdminDetails();
+    fetchData();
   }, []);
+
+ 
+  const totalStudents = stats ? stats.boys_count + stats.girls_count : 0;
+  const boysPercentage = totalStudents > 0 ? Math.round((stats?.boys_count || 0) / totalStudents * 100) : 0;
+  const girlsPercentage = totalStudents > 0 ? Math.round((stats?.girls_count || 0) / totalStudents * 100) : 0;
+
+ 
+
+  const fetchNotices = async () => {
+    const authToken = sessionStorage.getItem("authToken");
+    if (!authToken) {
+      console.error("Authentication token missing");
+      setLoadingNotices(false);
+      return;
+    }
+  
+    try {
+      const response = await axios.get(
+        "https://sch-mgt-03yw.onrender.com/notice/",
+        {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
+        }
+      );
+      setNotices(response.data);
+    } catch (error) {
+      console.error("Error fetching notices:", error);
+    } finally {
+      setLoadingNotices(false);
+    }
+  };
   return (
     <div className="flex-1 md:p-8 overflow-hidden ">
       <DashboardHeader />
@@ -152,53 +210,103 @@ const DashboardSection = () => {
 
           <div className="flex flex-col items-center p-2 w-full ">
     
-      <div className="flex flex-row justify-center gap-8 mb-6  w-full">
+          <div className="flex flex-row justify-center gap-8 mb-6 w-full">
+    {/* Boys Progress */}
+    <div className="w-full max-w-[120px]">
+    <div style={{ position: 'relative', width: 'your-desired-width', height: 'your-desired-height' }}>
+  <CircularProgressbar
+    value={boysPercentage}
+   
+    styles={{
+      path: { stroke: '#1E90FF' },
+      text: {
+        fontSize: '24px',
+        fontWeight: 'bold',
+        fill: '#000',
         
-        <div className="relative w-full max-w-[120px] mx-auto md:mx-0">
-          <svg className="w-full h-auto" viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r="54" stroke="#E0E0E0" strokeWidth="12" fill="none" />
-            <circle cx="60" cy="60" r="54" stroke="#1E90FF" strokeWidth="12" fill="none" strokeDasharray="339.29" strokeDashoffset="152.68" />
+      },
+      trail: { stroke: '#E0E0E0' }
+    }}
+  />
+  <div
+    style={{
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      fontSize: '24px',
+      fontWeight: 'bold',
+      fill: '#000',
+    }}
+  >
+    {`${boysPercentage}%`}
+  </div>
+</div>
+      <div className="text-center mt-2">
+        <div className='flex w-full justify-center'>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
           </svg>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-            <div className='flex w-full justify-center'>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user">
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-            </div>
-            <p className="xl:text-xl md:text-sm text-2xl font-semibold">53%</p>
-          </div>
-        </div>
-
-      
-        <div className="relative w-full max-w-[120px] mx-auto md:mx-0">
-          <svg className="w-full h-auto" viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r="54" stroke="#E0E0E0" strokeWidth="12" fill="none" />
-            <circle cx="60" cy="60" r="54" stroke="#FFECB3" strokeWidth="12" fill="none" strokeDasharray="339.29" strokeDashoffset="172.94" />
-          </svg>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-          <div className='flex w-full justify-center'>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user">
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-            </div>
-            <p className=" xl:text-xl md:text-sm text-2xl font-semibold">47%</p>
-          </div>
         </div>
       </div>
+    </div>
 
-      
-      <div className=" flex flex-row justify-center gap-4 mb-6">
-        <div className="flex items-center gap-2">
-          <span className="text-blue-500">•</span>
-          <span className=" text-lg md:text-[12px] xl:text-lg font-medium">3,178 (boys)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-yellow-300">•</span>
-          <span className="text-lg md:text-sm xl:text-lg font-medium">2,731 (Girls)</span>
+   
+    <div className="w-full max-w-[120px]">
+     <div style={{ position: 'relative', width: 'your-desired-width', height: 'your-desired-height' }}> 
+     <CircularProgressbar
+        value={girlsPercentage}
+       
+        styles={{
+          path: { stroke: '#FFECB3' },
+          text: { 
+            fontSize: '12px',
+            fontWeight: 'bold',
+            fill: '#000'
+          },
+          trail: { stroke: '#E0E0E0' }
+        }}
+      />
+       <div
+    style={{
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      fontSize: '24px',
+      fontWeight: 'bold',
+      fill: '#000',
+    }}
+  >
+    {`${girlsPercentage}%`}
+  </div>
+     </div>
+      <div className="text-center mt-2">
+        <div className='flex w-full justify-center'>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div className="flex flex-row justify-center gap-4 mb-6">
+    <div className="flex items-center gap-2">
+      <span className="text-blue-500">•</span>
+      <span className="text-lg md:text-[12px] xl:text-lg font-medium">
+        {stats?.boys_count.toLocaleString() || '0'} (boys)
+      </span>
+    </div>
+    <div className="flex items-center gap-2">
+      <span className="text-yellow-300">•</span>
+      <span className="text-lg md:text-sm xl:text-lg font-medium">
+        {stats?.girls_count.toLocaleString() || '0'} (Girls)
+      </span>
+    </div>
+  </div>
 
       <div className="flex  flex-row justify-center gap-4">
         <div className="flex items-center gap-2 border-2 bg-[#F5F4F9] border-[#F5F4F9] p-1 rounded-lg">
@@ -262,48 +370,43 @@ const DashboardSection = () => {
                 
                 <div className='flex  flex-col gap-2 xl:w-[50%] w-full'>
               <div className='w-full flex xl:flex-row flex-col gap-2'>
-              <div className='xl:flex flex md:grid grid-cols-2 flex-col xl:w-1/2 w-full gap-2 '>
-                <div className='bg-[#F8E38D] flex flex-col h-[107px] w-full justify-between rounded-xl'>
-                    <div className='flex items-start justify-between p-3 w-full'>
-                        <h2>Students</h2>
-                        <Link href='/dashboard/students'>
-                        <Ellipsis />
-                        </Link>
-                    </div>
+              <div className='xl:flex flex md:grid grid-cols-2 flex-col xl:w-1/2 w-full gap-2'>
+  <div className='bg-[#F8E38D] flex flex-col h-[107px] w-full justify-between rounded-xl'>
+    <div className='flex items-start justify-between p-3 w-full'>
+      <h2>Students</h2>
+      <Link href='/dashboard/students'>
+        <Ellipsis />
+      </Link>
+    </div>
+    <div className='flex items-end p-3 font-bold text-xl'>
+      <p>{stats?.student_count.toLocaleString() || '0'}</p>
+    </div>
+  </div>
 
-                    <div className='flex items-end p-3 font-bold text-xl' >
-                        <p>5,909</p>
-                    </div>
-                </div>
+  <div className='bg-[#D8F1FF] flex flex-col h-[107px] w-full justify-between rounded-xl'>
+    <div className='flex items-start justify-between p-3 w-full'>
+      <h2>Teacher</h2>
+      <Link href='/dashboard/teachers'>
+        <Ellipsis />
+      </Link>
+    </div>
+    <div className='flex items-end p-3 font-bold text-xl'>
+      <p>{stats?.teacher_count.toLocaleString() || '0'}</p>
+    </div>
+  </div>
 
-                <div className='bg-[#D8F1FF] flex flex-col h-[107px] w-full justify-between rounded-xl'>
-                    <div className='flex items-start justify-between p-3 w-full'>
-                        <h2>Teacher</h2>
-                        <Link href='/dashboard/teachers'>
-                        <Ellipsis />
-                        </Link>
-                    </div>
-
-                    <div className='flex items-end p-3 font-bold text-xl' >
-                        <p>5,909</p>
-                    </div>
-                </div>
-
-                <div className='bg-[#F8E38D] flex flex-col h-[107px] w-full justify-between rounded-xl'>
-                    <div className='flex items-start justify-between p-3 w-full'>
-                <h2 className='text-[12px]'>Non - Teaching 
-                        Staff</h2>
-                        <Link href='/dashboard/non-teaching-staff'>
-                        <Ellipsis />
-                        </Link>
-                    </div>
-
-                    <div className='flex items-end p-3 font-bold text-xl' >
-                        <p>5,909</p>
-                    </div>
-                </div>
-
-                </div>
+  <div className='bg-[#F8E38D] flex flex-col h-[107px] w-full justify-between rounded-xl'>
+    <div className='flex items-start justify-between p-3 w-full'>
+      <h2 className='text-[12px]'>Non-Teaching Staff</h2>
+      <Link href='/dashboard/non-teaching-staff'>
+        <Ellipsis />
+      </Link>
+    </div>
+    <div className='flex items-end p-3 font-bold text-xl'>
+      <p>{stats?.staff_count.toLocaleString() || '0'}</p>
+    </div>
+  </div>
+</div>
 
                 <div className='flex xl:w-[90%] w-full'>
                 <Calendar />
@@ -311,78 +414,45 @@ const DashboardSection = () => {
               </div>
               
 
-              <div className='bg-[#FFFFFF] rounded-md flex flex-col  w-full'>
-                <div className='w-full p-3 flex  justify-between '> 
-                    <h3 className=''>Notice Board</h3>
-                    <Link className='text-blue-500 underline' href="/board">view all</Link>
-                </div>
+              <div className='bg-[#FFFFFF] rounded-md flex flex-col w-full'>
+  <div className='w-full p-3 flex justify-between'> 
+    <h3 className=''>Notice Board</h3>
+    <Link className='text-blue-500 underline' href="/board">view all</Link>
+  </div>
 
-                <div className="flex flex-col gap-2 p-2 w-full overflow-y-scroll max-h-[305px]">
-      <div className="w-full h-[90px] border-2 border-[#F5F4F9] rounded-md flex gap-2 items-center p-2">
-        <div className="w-[30px] h-[41px] bg-[#FFED9F] flex justify-center items-center rounded-md p-2">
-          <Bell className="" />
+  <div className="flex flex-col gap-2 p-2 w-full overflow-y-scroll max-h-[305px]">
+    {loadingNotices ? (
+    
+      Array.from({ length: 3 }).map((_, index) => (
+        <div key={index} className="w-full h-[90px] border-2 border-[#F5F4F9] rounded-md flex gap-2 items-center p-2 animate-pulse">
+          <div className="w-[30px] h-[41px] bg-gray-200 rounded-md"></div>
+          <div className="w-[80%] h-full flex flex-col justify-center gap-2">
+            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div className="h-3 bg-gray-200 rounded w-full"></div>
+          </div>
         </div>
-        <div className="w-[80%] h-full flex flex-col justify-center overflow-hidden">
-  <h3 className="font-bold text-[15px]">Sports Day Announcement</h3>
-  <p className="text-[12px]">
-    The school&apos;s Annual Sports Day will be held on May 12, 2024. Mark your calendars!
-  </p>
-</div>
-      </div>
-
-      <div className="w-full h-[90px] border-2 border-[#F5F4F9] rounded-md flex gap-2 items-center p-2">
-        <div className="w-[30px] h-[41px] bg-[#D6DAFF] flex justify-center items-center rounded-md p-2">
-          <Bell className="" />
+      ))
+    ) : notices.length > 0 ? (
+      notices.map((notice) => (
+        <div key={notice.id} className="w-full h-[90px] border-2 border-[#F5F4F9] rounded-md flex gap-2 items-center p-2">
+          <div className="w-[30px] h-[41px] bg-[#D6DAFF] flex justify-center items-center rounded-md p-2">
+            <Bell className="" />
+          </div>
+          <div className="w-[80%] h-full flex flex-col justify-center overflow-hidden">
+            <h3 className="font-bold text-[15px]">{notice.title}</h3>
+            <p className="text-[12px] line-clamp-2">
+              {notice.description}
+            </p>
+          </div>
         </div>
-        <div className="w-[80%] h-full flex flex-col justify-center overflow-hidden">
-  <h3 className="font-bold text-[15px]">Summer Break Start Date</h3>
-  <p className="text-[12px]">
-    The school&apos;s Annual Sports Day will be held on May 12, 2024. Mark your calendars!
-  </p>
-</div>
+      ))
+    ) : (
+      <div className="w-full h-[90px] flex items-center justify-center text-gray-500">
+        No notices available
       </div>
-
-      <div className="w-full h-[90px] border-2 border-[#F5F4F9] rounded-md flex gap-2 items-center p-2">
-        <div className="w-[30px] h-[41px] bg-[#D6DAFF] flex justify-center items-center rounded-md p-2">
-          <Bell className="" />
-        </div>
-        <div className="w-[80%] h-full flex flex-col justify-center overflow-hidden">
-  <h3 className="font-bold text-[15px]">Summer Break Start Date</h3>
-  <p className="text-[12px]">
-    The school&apos;s Annual Sports Day will be held on May 12, 2024. Mark your calendars!
-  </p>
+    )}
+  </div>
 </div>
-      </div>
-
-      <div className="w-full h-[90px] border-2 border-[#F5F4F9] rounded-md flex gap-2 items-center p-2">
-        <div className="w-[30px] h-[41px] bg-[#D6DAFF] flex justify-center items-center rounded-md p-2">
-          <Bell className="" />
-        </div>
-        <div className="w-[80%] h-full flex flex-col justify-center overflow-hidden">
-  <h3 className="font-bold text-[15px]">Summer Break Start Date</h3>
-  <p className="text-[12px]">
-    The school&apos;s Annual Sports Day will be held on May 12, 2024. Mark your calendars!
-  </p>
-</div>
-      </div>
-
-      <div className="w-full h-[90px] border-2 border-[#F5F4F9] rounded-md flex gap-2 items-center p-2">
-        <div className="w-[30px] h-[41px] bg-[#D6DAFF] flex justify-center items-center rounded-md p-2">
-          <Bell className="" />
-        </div>
-        <div className="w-[80%] h-full flex flex-col justify-center overflow-hidden">
-  <h3 className="font-bold text-[15px]">Summer Break Start Date</h3>
-  <p className="text-[12px]">
-    The school&apos;s Annual Sports Day will be held on May 12, 2024. Mark your calendars!
-  </p>
-</div>
-      </div>
-                 </div>
-
-              
-
-
-                </div>
              
                 </div>
             </div>

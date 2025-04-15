@@ -1,6 +1,6 @@
 "use client";
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { Edit, PlusCircle, Trash, X } from 'lucide-react';
 import Select from '@/app/dashboard/teachers/add-teacher/compoenent/Select';
@@ -32,6 +32,18 @@ interface AttendanceRecord {
   };
 }
 
+interface Leave {
+  id: string;
+  teacher_name: string;
+  created_at: string;
+  updated_at: string;
+  status: boolean;
+  date: string;
+  duration: string;
+  type: string;
+  teacher: string;
+}
+
 interface APIAttendanceRecord {
   id: string;
   day: string;
@@ -40,6 +52,13 @@ interface APIAttendanceRecord {
   status: boolean;
   reason: string | null;
   created_at: string;
+}
+
+interface ToastState {
+  message: string;
+  type: "success" | "error" | "warning" | "info" | "confirm";
+  onConfirm?: () => void;
+  onCancel?: () => void;
 }
 
 interface APIError {
@@ -61,10 +80,9 @@ const AttendanceSection = () => {
   const [teacher, setTeacher] = useState<Teacher | null>(null);
   const [newClockInTime, setNewClockInTime] = useState('');
   const [newAbsentReason, setNewAbsentReason] = useState('');
-  const [toast, setToast] = useState<{
-    message: string;
-    type: "success" | "error" | "warning" | "info" | "confirm";
-  } | null>(null);
+  const [toast, setToast] = useState<ToastState | null>(null);
+  const [leaveData, setLeaveData] = useState<Leave[]>([]);
+  const [loadingLeave, setLoadingLeave] = useState(true);
 
   const openClockOutModal = (record: AttendanceRecord) => {
     setIsClockOutModalOpen(true);
@@ -83,7 +101,7 @@ const AttendanceSection = () => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const closeToast = () => setToast(null);
 
   useEffect(() => {
@@ -119,62 +137,177 @@ const AttendanceSection = () => {
     fetchTeacher();
   }, [teacherId]);
 
-  useEffect(() => {
-    const fetchAttendance = async () => {
-      const authToken = sessionStorage.getItem('authToken');
-      if (!authToken) {
-        setError("Authentication token missing");
-        return;
-      }
+  const fetchAttendance = useCallback(async () => {
+    const authToken = sessionStorage.getItem('authToken');
+    if (!authToken) {
+      setError("Authentication token missing");
+      return;
+    }
   
-      setLoading(true);
-      setError(null);
-      try {
-        const queryParams = new URLSearchParams();
-        queryParams.append('teacher', teacherId as string);
+    setLoading(true);
+    setError(null);
+    try {
+      const queryParams = new URLSearchParams();
+      queryParams.append('teacher', teacherId as string);
   
-        const response = await fetch(
-          `https://sch-mgt-03yw.onrender.com/attendance/teacher/?${queryParams.toString()}`,
-          {
-            headers: {
-              Authorization: `Token ${authToken}`,
-            },
-          }
-        );
-  
-        if (!response.ok) {
-          const errorData: APIError = await response.json();
-          throw new Error(errorData.message || `Failed to fetch attendance: ${response.status}`);
+      const response = await fetch(
+        `https://sch-mgt-03yw.onrender.com/attendance/teacher/?${queryParams.toString()}`,
+        {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
         }
+      );
   
-        const data = await response.json();
-      
-        const transformedData: AttendanceRecord[] = data.map((record: APIAttendanceRecord) => ({
-          id: record.id,
-          day: record.day,
-          checkInTime: record.sign_in_time ? record.sign_in_time.substring(0, 5) : '-',
-          totalHours: record.sign_in_time && record.sign_out_time
-            ? calculateTotalHours(record.sign_in_time, record.sign_out_time)
-            : '-',
-          status: record.status ? "Present" : "Absent",
-          absentReason: record.reason || '-',
-          originalRecord: record,
-        }));
-        setAttendanceData(transformedData);
-      } catch (err) {
-        const error = err as Error;
-        setError(error.message);
-        setToast({
-          message: error.message,
-          type: "error",
-        });
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        const errorData: APIError = await response.json();
+        throw new Error(errorData.message || `Failed to fetch attendance: ${response.status}`);
       }
+  
+      const data = await response.json();
+    
+      const transformedData: AttendanceRecord[] = data.map((record: APIAttendanceRecord) => ({
+        id: record.id,
+        day: record.day,
+        checkInTime: record.sign_in_time ? record.sign_in_time.substring(0, 5) : '-',
+        totalHours: record.sign_in_time && record.sign_out_time
+          ? calculateTotalHours(record.sign_in_time, record.sign_out_time)
+          : '-',
+        status: record.status ? "Present" : "Absent",
+        absentReason: record.reason || '-',
+        originalRecord: record,
+      }));
+      setAttendanceData(transformedData);
+    } catch (err) {
+      const error = err as Error;
+      setError(error.message);
+      setToast({
+        message: error.message,
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [teacherId]);
+
+  
+  const fetchLeaveData = useCallback(async () => {
+    const authToken = sessionStorage.getItem("authToken");
+    if (!authToken || !teacherId) {
+      setLoadingLeave(false);
+      return;
+    }
+  
+    try {
+      const queryParams = new URLSearchParams();
+      queryParams.append('teacher', teacherId as string);
+  
+      const response = await axios.get(
+        `https://sch-mgt-03yw.onrender.com/leave/?${queryParams.toString()}`,
+        {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
+        }
+      );
+      setLeaveData(response.data);
+    } catch (error) {
+      console.error("Error fetching leave data:", error);
+      setToast({
+        message: "Failed to fetch leave records",
+        type: "error",
+      });
+    } finally {
+      setLoadingLeave(false);
+    }
+  }, [teacherId]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchLeaveData();
     };
   
+    fetchData();
+  }, [fetchLeaveData]);
+  
+  useEffect(() => {
     fetchAttendance();
-  }, [teacherId]);
+    
+  }, [fetchAttendance, teacherId]);
+
+  const handleLeaveAction = async (leaveId: string, approve: boolean) => {
+    try {
+      const authToken = sessionStorage.getItem('authToken');
+      if (!authToken) throw new Error("Authentication token missing");
+  
+     
+      await axios.patch(
+        `https://sch-mgt-03yw.onrender.com/leave/${leaveId}/`,
+        { status: approve },
+        {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
+        }
+      );
+  
+      setToast({
+        message: `Leave request ${approve ? 'approved' : 'denied'} successfully`,
+        type: "success",
+      });
+      fetchLeaveData();
+    } catch (error) {
+      console.error("Error:", error);
+      setToast({
+        message: `Failed to ${approve ? 'approve' : 'deny'} leave request`,
+        type: "error",
+      });
+    }
+  };
+  
+  const handleDeleteLeave = async (leaveId: string) => {
+    try {
+      const authToken = sessionStorage.getItem('authToken');
+      if (!authToken) throw new Error("Authentication token missing");
+  
+      const deleteToast: ToastState = {
+        message: "Are you sure you want to delete this leave record?",
+        type: "confirm",
+        onConfirm: async () => {
+          try {
+            await axios.delete(
+              `https://sch-mgt-03yw.onrender.com/leave/${leaveId}/`,
+              {
+                headers: {
+                  Authorization: `Token ${authToken}`,
+                },
+              }
+            );
+            setToast({
+              message: "Leave record deleted successfully",
+              type: "success",
+            });
+            fetchLeaveData();
+          } catch (error) {
+            console.error("Error:", error);
+            setToast({
+              message: "Failed to delete leave record",
+              type: "error",
+            });
+          }
+        },
+        onCancel: () => setToast(null),
+      };
+      setToast(deleteToast);
+    } catch (error) {
+      console.error("Error:", error);
+      setToast({
+        message: "Error preparing delete request",
+        type: "error",
+      });
+    }
+  };
+
 
   const calculateTotalHours = (startTime: string, endTime: string) => {
     const start = new Date(`2000-01-01T${startTime}`);
@@ -237,17 +370,19 @@ const AttendanceSection = () => {
 
   const handleClockOutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       const authToken = sessionStorage.getItem('authToken');
       if (!authToken) throw new Error("Authentication token missing");
   
+      
       const recordToUpdate = attendanceData.find(record => record.day === selectedDay);
-      if (!recordToUpdate?.id) {
+      if (!recordToUpdate) {
         throw new Error("Record not found");
       }
   
       const response = await fetch(
-        `https://sch-mgt-03yw.onrender.com/attendance/${recordToUpdate.id}/`, // Use record.id directly
+        `https://sch-mgt-03yw.onrender.com/attendance/teacher/${recordToUpdate.id}/`,
         {
           method: 'PATCH',
           headers: {
@@ -255,8 +390,8 @@ const AttendanceSection = () => {
             Authorization: `Token ${authToken}`,
           },
           body: JSON.stringify({ 
-            sign_out_time: `${clockOutTime}:00Z`,
-            status: true // Ensure status remains Present
+            sign_out_time: `${clockOutTime}:00`,
+            status: true 
           }),
         }
       );
@@ -272,6 +407,62 @@ const AttendanceSection = () => {
       });
       fetchAttendance();
       closeClockOutModal();
+    } catch (err) {
+      const error = err as Error;
+      setToast({
+        message: error.message,
+        type: "error",
+      });
+    }finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteAttendance = async (recordId: string) => {
+    try {
+      const authToken = sessionStorage.getItem('authToken');
+      if (!authToken) throw new Error("Authentication token missing");
+  
+     
+      const deleteToast: ToastState = {
+        message: "Are you sure you want to delete this attendance record?",
+        type: "confirm",
+        onConfirm: async () => {
+          try {
+            const response = await fetch(
+              `https://sch-mgt-03yw.onrender.com/attendance/teacher/${recordId}/`,
+              {
+                method: 'DELETE',
+                headers: {
+                  Authorization: `Token ${authToken}`,
+                },
+              }
+            );
+  
+            if (!response.ok) {
+              const errorData: APIError = await response.json();
+              throw new Error(errorData.message || 'Failed to delete attendance record');
+            }
+  
+            setToast({
+              message: "Attendance record deleted successfully",
+              type: "success",
+            });
+            fetchAttendance();
+          } catch (err) {
+            const error = err as Error;
+            setToast({
+              message: error.message,
+              type: "error",
+            });
+          }
+        },
+        onCancel: () => {
+          setToast(null);
+        }
+      };
+  
+      setToast(deleteToast);
     } catch (err) {
       const error = err as Error;
       setToast({
@@ -436,6 +627,7 @@ const AttendanceSection = () => {
               <thead>
                 <tr>
                   <th className="px-4 py-2 border-b-gray-300 border-b text-center   text-sm font-medium text-gray-700"></th>
+                  <th className="px-4 py-2 border-b-gray-300 border-b text-center   text-sm font-medium text-gray-700">Attendance id</th>
                   <th className="px-4 py-2 border-b-gray-300 border-b text-center   text-sm font-medium text-gray-700">Days</th>
                    <th className="px-4 py-2 border-b-gray-300 border-b text-center   text-sm font-medium text-gray-700">Check in Time</th>
                   <th className="px-4 py-2 border-b-gray-300 border-b text-center   text-sm font-medium text-gray-700">Total Hours Worked</th>
@@ -450,18 +642,22 @@ const AttendanceSection = () => {
                     <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">
                       <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600" />
                     </td>
+                    <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">{record.id}</td>
                     <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">{record.day}</td>
                     <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">{record.checkInTime}</td>
                     <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">{record.totalHours}</td>
                     <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">{record.status}</td>
                     <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">{record.absentReason}</td>
-                    <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-blue-600 cursor-pointer">
-                      <div className='w-full flex justify-center'>
-                        {record.status === "Present" && (
-                          <Edit onClick={() => openClockOutModal(record)} />
-                        )}
-                      </div>
-                    </td>
+                    <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-blue-600 cursor-pointer flex items-center gap-2">
+      <div className='w-full flex justify-center'>
+        {record.status === "Present" && (
+          <Edit onClick={() => openClockOutModal(record)} />
+        )}
+      </div>
+      <div className='w-full text-red-500 flex justify-center'>
+        <Trash onClick={() => handleDeleteAttendance(record.id)} />
+      </div>
+    </td>
                   </tr>
                 ))}
               </tbody>
@@ -470,87 +666,92 @@ const AttendanceSection = () => {
         </div>
 
 
-        <div className='w-full bg-white rounded-xl   py-2 px-3 '>
-          <p>Leave Request</p>
-
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white   px-2 py-2 rounded-xl ">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 border-b-gray-300 border-b text-center   text-sm font-medium text-gray-700"></th>
-                  <th className="px-4 py-2 border-b-gray-300 border-b text-center   text-sm font-medium text-gray-700">Duration</th>
-                  <th className="px-4 py-2 border-b-gray-300 border-b text-center   text-sm font-medium text-gray-700">Date Applied</th>
-                  <th className="px-4 py-2 border-b-gray-300 border-b text-center   text-sm font-medium text-gray-700">Type</th>
-                  <th className="px-4 py-2 border-b-gray-300 border-b text-center   text-sm font-medium text-gray-700">Status</th>
-                  <th className="px-4 py-2 border-b-gray-300 border-b text-center   text-sm font-medium text-gray-700">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">
-                    <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600" />
-                  </td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">19 March - 27 March</td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">20 March 2025</td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">Sick Leave</td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">
-                    <div className='bg-green-400 py-3 px-3 rounded-xl  flex items-center justify-center'>
-
-                      <p className='text-xs text-white'>Approved</p>
-                    </div>
-                  </td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center    text-sm text-blue-600 cursor-pointer">
-                    <div className='w-full flex justify-center'>
-                      <Trash />
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">
-                    <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600" />
-                  </td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">19 March - 27 March</td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">20 March 2025</td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">Sick Leave</td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">
-                    <div className='bg-red-400 py-3 px-3 rounded-xl  flex items-center justify-center'>
-
-                      <p className='text-xs text-white'>Denied</p>
-                    </div>
-                  </td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center    text-sm text-blue-600 cursor-pointer">
-                    <div className='w-full flex justify-center'>
-                      <Trash />
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">
-                    <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600" />
-                  </td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">19 March - 27 March</td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">20 March 2025</td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">Sick Leave</td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">
-                    <div className='bg-gray-400 py-3 px-3 rounded-xl  flex items-center justify-center'>
-
-                      <p className='text-xs text-white'>Pending</p>
-                    </div>
-                  </td>
-                  <td className="px-4 py-2 border-b-gray-300 border-b text-center     text-sm text-blue-600 cursor-pointer">
-                    <div className='flex w-full justify-center gap-2'>
-                      <button className='bg-blue-400 rounded-xl items-center flex text-white h-[40px] p-3'>Approve</button>
-                      <button className='bg-white border-1 items-center flex border-red-500 rounded-xl text-red-500 h-[40px] p-3'>Deny</button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-        </div>
+        <div className='w-full bg-white rounded-xl py-2 px-3'>
+  <p>Leave Request</p>
+  <div className="overflow-x-auto">
+    <table className="min-w-full bg-white px-2 py-2 rounded-xl">
+      <thead>
+        <tr>
+          <th className="px-4 py-2 border-b-gray-300 border-b text-center text-sm font-medium text-gray-700"></th>
+          <th className="px-4 py-2 border-b-gray-300 border-b text-center text-sm font-medium text-gray-700">Duration</th>
+          <th className="px-4 py-2 border-b-gray-300 border-b text-center text-sm font-medium text-gray-700">Date Applied</th>
+          <th className="px-4 py-2 border-b-gray-300 border-b text-center text-sm font-medium text-gray-700">Type</th>
+          <th className="px-4 py-2 border-b-gray-300 border-b text-center text-sm font-medium text-gray-700">Status</th>
+          <th className="px-4 py-2 border-b-gray-300 border-b text-center text-sm font-medium text-gray-700">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {loadingLeave ? (
+          <tr>
+            <td colSpan={6} className="px-4 py-4 text-center">
+              Loading leave records...
+            </td>
+          </tr>
+        ) : leaveData.length > 0 ? (
+          leaveData.map((leave) => (
+            <tr key={leave.id}>
+              <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">
+                <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600" />
+              </td>
+              <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">
+                {leave.duration}
+              </td>
+              <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">
+                {new Date(leave.created_at).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </td>
+              <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">
+                {leave.type}
+              </td>
+              <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-gray-600">
+                <div className={`py-3 px-3 rounded-xl flex items-center justify-center ${
+                  leave.status === true ? 'bg-green-400' : 
+                  leave.status === false ? 'bg-red-400' : 'bg-gray-400'
+                }`}>
+                  <p className='text-xs text-white'>
+                    {leave.status === true ? 'Approved' : 
+                     leave.status === false ? 'Denied' : 'Pending'}
+                  </p>
+                </div>
+              </td>
+              <td className="px-4 py-2 border-b-gray-300 border-b text-center text-sm text-blue-600 cursor-pointer">
+                {leave.status === null ? (
+                  <div className='flex w-full justify-center gap-2'>
+                    <button 
+                      className='bg-blue-400 rounded-xl items-center flex text-white h-[40px] p-3'
+                      onClick={() => handleLeaveAction(leave.id, true)}
+                    >
+                      Approve
+                    </button>
+                    <button 
+                      className='bg-white border-1 items-center flex border-red-500 rounded-xl text-red-500 h-[40px] p-3'
+                      onClick={() => handleLeaveAction(leave.id, false)}
+                    >
+                      Deny
+                    </button>
+                  </div>
+                ) : (
+                  <div className='w-full flex justify-center'>
+                    <Trash onClick={() => handleDeleteLeave(leave.id)} />
+                  </div>
+                )}
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan={6} className="px-4 py-4 text-center">
+              No leave records found
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+</div>
 
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500/75 transition-opacity bg-opacity-50">
@@ -650,31 +851,30 @@ const AttendanceSection = () => {
                   value={clockOutTime}
                   name="clockOutTime"
                 />
-              <button
-  type="submit"
+            <button 
+  type="submit" 
   className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm"
+  disabled={isSubmitting}
 >
-  Submit
+  {isSubmitting ? "Updating..." : "Submit"}
 </button>
               </form>
             </div>
           </div>
         )}
       {toast && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={closeToast}
-            duration={3000}
-          />
-        )}
+  <Toast
+    message={toast.message}
+    type={toast.type}
+    onClose={closeToast}
+    onConfirm={toast.onConfirm}
+    onCancel={toast.onCancel}
+    duration={3000}
+  />
+)}
       </div>
     </div>
   )
 }
 
 export default AttendanceSection;
-
-function fetchAttendance() {
-  throw new Error('Function not implemented.');
-}
