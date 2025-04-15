@@ -29,13 +29,13 @@ const Calendar = () => {
 
   const days = [];
   for (let i = 0; i < firstDayOfMonth; i++) {
-    days.push(null); // Fill empty days at the start of the month
+    days.push(null); 
   }
   for (let i = 1; i <= daysInMonth; i++) {
-    days.push(i); // Add days of the month
+    days.push(i); 
   }
 
-  // Handle month navigation
+
   const handlePreviousMonth = () => {
     setCurrentDate(new Date(currentYear, currentMonth - 1, 1));
   };
@@ -45,8 +45,8 @@ const Calendar = () => {
   };
 
   return (
-    <div className="bg-white rounded-md p-2 w-full max-w-sm mx-auto shadow-sm">
-      {/* Header with Month Navigation */}
+    <div className="bg-white rounded-md p-2 w-full xl:max-w-sm xl:mx-auto shadow-sm">
+     
       <div className="flex justify-between items-center mb-4">
         <button
           onClick={handlePreviousMonth}
@@ -79,7 +79,7 @@ const Calendar = () => {
         {days.map((day, index) => (
           <div
             key={index}
-            className={`text-center py-2 rounded-full ${
+            className={`text-center py-2 w-10 h-10 rounded-full ${
               day
                 ? 'cursor-pointer hover:bg-gray-100'
                 : 'text-gray-300'

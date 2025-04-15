@@ -11,7 +11,7 @@ const Footer = () => {
   const pathsToMinimize = ["/verify-email", "/sign-up", "/sign-in"];
 
   return (
-    <footer className="bg-[#0A92DD] text-gray-100 flex-grow-0">
+    <footer className="bg-[#0A92DD] text-gray-100  flex-grow-0">
      <MaxWidthWrapper>
      <div className="border-t border-gray-200">
           {pathsToMinimize.includes(pathname) ? null : (

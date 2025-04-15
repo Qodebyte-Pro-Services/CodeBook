@@ -3,9 +3,11 @@ import Link from "next/link";
 import React, { useState } from "react";
 import {  MessageSquareCode, X } from "lucide-react";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 
 const CommunicationSection = () => {
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const { id:teacherId } = useParams();
 
   const openTemplateModal = () => setIsTemplateModalOpen(true);
   const closeTemplateModal = () => setIsTemplateModalOpen(false);
@@ -17,13 +19,13 @@ const CommunicationSection = () => {
         <div className="border-b border-gray-200">
           <nav className="flex -mb-px xl:overflow-hidden overflow-x-scroll justify-between">
             {[
-              { name: "General", href: "/dashboard/teachers/teacher-detail" },
-              { name: "Employment Details", href: "/dashboard/teachers/teacher-detail/employment-details" },
-              { name: "Attendance/Leave record", href: "/dashboard/teachers/teacher-detail/attendance-leave" },
-              { name: "Reviews", href: "/dashboard/teachers/teacher-detail/reviews" },
-              { name: "Communication", href: "/dashboard/teachers/teacher-detail/communication" },
-              { name: "Settings", href: "/dashboard/teachers/teacher-detail/settings" },
-            ].map((tab, index) => (
+               { name: "General", href: `/dashboard/teachers/teacher-detail/${teacherId}` },
+               { name: "Employment Details", href: `/dashboard/teachers/teacher-detail/${teacherId}/employment-details` },
+               { name: "Attendance/Leave record", href: `/dashboard/teachers/teacher-detail/${teacherId}/attendance-leave` },
+               { name: "Reviews", href: `/dashboard/teachers/teacher-detail/${teacherId}/reviews` },
+               { name: "Communication", href: `/dashboard/teachers/teacher-detail/${teacherId}/communication` },
+               { name: "Settings", href: `/dashboard/teachers/teacher-detail/${teacherId}/settings` },
+             ].map((tab, index) => (
               <Link
                 key={index}
                 href={tab.href}

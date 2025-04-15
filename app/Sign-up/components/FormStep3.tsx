@@ -88,10 +88,24 @@ const FormStep3: React.FC<FormStep3Props> = ({ currentStep, onNext, formData, up
       setCompletedSteps(newCompletedSteps);
       onNext();
     } catch (error) {
-      console.error('School Setup Error:', error);
-      setToastMessage('School setup failed. Please try again.');
-      setToastType('error');
-      setShowToast(true);
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        console.warn("School already exists:", error.response.data);
+  
+        setToastMessage("School had already been created. Proceeding to the dashboard.");
+        setToastType("success");
+        setShowToast(true);
+  
+        updateFormData(data);
+        const newCompletedSteps = [...completedSteps];
+        newCompletedSteps[2] = true;
+        setCompletedSteps(newCompletedSteps);
+        onNext();
+      } else {
+        console.error("School Setup Error:", error);
+        setToastMessage("School setup failed. Please try again.");
+        setToastType("error");
+        setShowToast(true);
+      }
     }
   };
 

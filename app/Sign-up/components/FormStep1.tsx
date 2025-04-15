@@ -22,6 +22,7 @@ const FormStep1: React.FC<FormStep1Props> = ({ currentStep, onNext, formData, up
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('warning');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({}); 
 
   const fields = useMemo(
     () => [
@@ -46,34 +47,36 @@ const FormStep1: React.FC<FormStep1Props> = ({ currentStep, onNext, formData, up
     const password = data.password as string;
     const confirmPassword = data.confirmPassword as string;
     const email = data.email as string;
+
+    const errors: Record<string, string> = {};
   
-    if (!password || typeof password !== "string") {
-      setToastMessage("Password is required and must be a string.");
-      setToastType("error");
-      setShowToast(true);
-      return;
+    if (!email || typeof email !== 'string') {
+      errors.email = 'Email is required.';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = 'Please enter a valid email address.';
     }
-  
-    if (password.length < 8) {
-      setToastMessage("Password must be at least 8 characters long.");
-      setToastType("error");
+
+    if (!password || typeof password !== 'string') {
+      errors.password = 'Password is required.';
+    } else if (password.length < 8) {
+      errors.password = 'Password must be at least 8 characters long.';
+    } else if (password === email) {
+      errors.password = 'Password cannot be the same as your email.';
+    }
+
+    if (password !== confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match.';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setToastMessage('Please fix the errors in the form.');
+      setToastType('error');
       setShowToast(true);
       return;
     }
 
-    if (password === email) {
-      setToastMessage("Password cannot be the same as your email.");
-      setToastType("error");
-      setShowToast(true);
-      return;
-    }
-  
-    if (password !== confirmPassword) {
-      setToastMessage("Passwords do not match.");
-      setToastType("error");
-      setShowToast(true);
-      return;
-    }
+    setFieldErrors({});
   
     try {
       const response = await axios.post("https://sch-mgt-03yw.onrender.com/auth/register", {
@@ -98,11 +101,22 @@ const FormStep1: React.FC<FormStep1Props> = ({ currentStep, onNext, formData, up
       newCompletedSteps[0] = true;
       setCompletedSteps(newCompletedSteps);
       onNext();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Registration Error:", error);
-      setToastMessage("Registration failed. Please try again.");
-      setToastType("error");
-      setShowToast(true);
+
+      if (axios.isAxiosError(error) && error.response && error.response.status === 409) {
+        setToastMessage("This email is already in use. Please use a different email.");
+        setToastType("error");
+        setShowToast(true);
+      } else if (axios.isAxiosError(error) && error.response && error.response.data?.email?.[0] === "This email is already in use.") {
+        setToastMessage("This email is already in use. Please use a different email.");
+        setToastType("error");
+        setShowToast(true);
+      } else {
+        setToastMessage("Registration failed. Please try again.");
+        setToastType("error");
+        setShowToast(true);
+      }
     }
   };
 
@@ -150,7 +164,7 @@ const FormStep1: React.FC<FormStep1Props> = ({ currentStep, onNext, formData, up
                 validateStep={validateStep}
                 completedSteps={completedSteps}
               />
-              <Form fields={fields} defaultValues={defaultValues} onSubmit={handleSubmit} />
+              <Form fields={fields} defaultValues={defaultValues} onSubmit={handleSubmit} fieldErrors={fieldErrors} />
             </div>
           </div>
         </div>

@@ -1,8 +1,5 @@
 "use client";
-import {
-  BadgePlus,
-  Calendar1,
-  Edit,
+import {  Calendar1,
   Landmark,
   Mail,
   Phone,
@@ -27,18 +24,41 @@ interface TeacherDetailPageProps {
 
 const TeacherDetailPage: React.FC<TeacherDetailPageProps> = ({ teacherId }) => {
 
+
+  interface AssignedClass {
+    id: string;
+    class_name: string;
+    class_teacher: string;
+    created_at: string;
+    level: string;
+    subjects: string[];
+    updated_at: string;
+  }
+
   interface Teacher {
     id: string;
-    name: string;
+    full_name: string;
     email: string;
-    contact: string;
     address: string;
+    state: string;
+    city:string;
     gender: string;
-    class: string;
+    assign_class: string;
+    assigned_classes: AssignedClass[];
     employedDate: string;
+    profile_picture: string;
+    created_at: string;
+    phone_number: string;
+    contact_name: string;
+    contact_relationship:string;
+    contact_phone_number:string;
+    status:boolean ;
+    sacked:boolean;
+    suspended:boolean;
   }
 
   const [teacher, setTeacher] = useState<Teacher | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTeacher = async () => {
@@ -53,6 +73,8 @@ const TeacherDetailPage: React.FC<TeacherDetailPageProps> = ({ teacherId }) => {
         setTeacher(response.data);
       } catch (error) {
         console.error("Error fetching teacher details:", error);
+      }finally {
+        setLoading(false);
       }
     };
 
@@ -70,8 +92,12 @@ const TeacherDetailPage: React.FC<TeacherDetailPageProps> = ({ teacherId }) => {
     time: string;
   } | null>(null);
 
-  if (!teacher) {
+  if (loading) {
     return <p>Loading...</p>;
+  }
+
+  if (!teacher) {
+    return <p>Failed to load teacher details.</p>;
   }
 
   const handleInputChange = (e: { target: { name: string; value: unknown } }) => {
@@ -140,28 +166,28 @@ const TeacherDetailPage: React.FC<TeacherDetailPageProps> = ({ teacherId }) => {
     
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="border-b border-gray-200">
-            <nav className="flex -mb-px xl:overflow-hidden overflow-x-scroll justify-between">
-            {[
-              { name: "General", href: "/dashboard/teachers/teacher-detail" },
-              { name: "Employment Details", href: "/dashboard/teachers/teacher-detail/employment-details" },
-              { name: "Attendance/Leave record", href: "/dashboard/teachers/teacher-detail/attendance-leave" },
-              { name: "Reviews", href: "/dashboard/teachers/teacher-detail/reviews" },
-              { name: "Communication", href: "/dashboard/teachers/teacher-detail/communication" },
-              { name: "Settings", href: "/dashboard/teachers/teacher-detail/settings" },
-            ].map((tab, index) => (
-              <Link
-              key={index}
-              href={tab.href}
-              className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
-                index === 0
-                ? "border-blue-500 text-blue-600"
-                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-              }`}
-              >
-              {tab.name}
-              </Link>
-            ))}
-            </nav>
+        <nav className="flex -mb-px xl:overflow-hidden overflow-x-scroll justify-between">
+  {[
+    { name: "General", href: `/dashboard/teachers/teacher-detail/${teacherId}` },
+    { name: "Employment Details", href: `/dashboard/teachers/teacher-detail/${teacherId}/employment-details` },
+    { name: "Attendance/Leave record", href: `/dashboard/teachers/teacher-detail/${teacherId}/attendance-leave` },
+    { name: "Reviews", href: `/dashboard/teachers/teacher-detail/${teacherId}/reviews` },
+    { name: "Communication", href: `/dashboard/teachers/teacher-detail/${teacherId}/communication` },
+    { name: "Settings", href: `/dashboard/teachers/teacher-detail/${teacherId}/settings` },
+  ].map((tab, index) => (
+    <Link
+      key={index}
+      href={tab.href}
+      className={`whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm ${
+        index === 0
+          ? "border-blue-500 text-blue-600"
+          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+      }`}
+    >
+      {tab.name}
+    </Link>
+  ))}
+</nav>
         </div>
         <div className="flex flex-col gap-1 px-2 py-2">
           <p className="font-medium text-sm">General</p>
@@ -174,41 +200,102 @@ const TeacherDetailPage: React.FC<TeacherDetailPageProps> = ({ teacherId }) => {
       
         <div className="col-span-2 flex flex-col gap-4">
          
-          <div className="bg-white rounded-lg shadow p-4 flex flex-col gap-4">
-            <div className="flex items-center gap-4">
+          <div className="bg-white rounded-lg shadow  p-4 flex md:flex-row flex-col gap-4">
+            <div className="flex  items-start gap-4">
               <div className="relative w-[100px] h-[100px] rounded-full overflow-hidden">
-                <Image src="/Ellipse-702.png" alt="Profile Image" fill style={{ objectFit: "cover" }} />
+              <Image
+              src={teacher.profile_picture || "/Ellipse-702.png"}
+              alt="Profile Image"
+              fill
+              style={{ objectFit: "cover" }}
+            />
               </div>
-              <div>
-                <h4 className="text-lg font-semibold">Ekoli Qodebyte</h4>
-                <p className="text-sm text-gray-500">Hails from Amechi Awkwunanaw, Enugu, Enugu State</p>
-              </div>
+
+             
+            </div>
+            <div className="flex flex-col gap-3">
+            <div>
+            <div className="flex items-center gap-2">
+  <div
+    className={`flex items-center justify-center w-24 h-8 rounded-full text-sm font-medium ${
+      teacher.sacked
+        ? "bg-red-100 text-red-700"
+        : teacher.suspended
+        ? "bg-yellow-100 text-yellow-700"
+        : teacher.status
+        ? "bg-green-100 text-green-700"
+        : "bg-gray-100 text-gray-700" // Default if none apply
+    }`}
+  >
+    <div
+      className={`w-2 h-2 rounded-full mr-2 ${
+        teacher.sacked
+          ? "bg-red-500"
+          : teacher.suspended
+          ? "bg-yellow-500"
+          : teacher.status
+          ? "bg-green-500"
+          : "bg-gray-500" // Default if none apply
+      }`}
+    ></div>
+    {teacher.sacked ? "Sacked" : teacher.suspended ? "Suspended" : teacher.status ? "Active" : "Inactive"}
+  </div>
+</div>
+                  <div>
+                    <h4 className="text-lg font-semibold">{teacher.full_name}</h4>
+                    <p className="text-sm text-gray-500">Hails from {teacher.city},{teacher.state}</p>
+                  </div>
             </div>
             <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <School size={16} />
-                <p>Class: Primary 3C</p>
+            <div className="flex md:flex-row flex-col md:items-center items-start gap-2">
+  <div className="flex gap-2">
+    <School size={20} />
+    Class: 
+  </div>
+  <p>
+    {teacher.assigned_classes && teacher.assigned_classes.length > 0 
+      ? teacher.assigned_classes[0].class_name 
+      : "N/A"}
+  </p>
+</div>
+              <div className="flex md:flex-row flex-col md:items-center items-end gap-2">
+               <div className="flex gap-2">
+               <Calendar1 size={20} />
+               Employed: 
+               </div>
+               <p>{new Date(teacher.created_at).toLocaleDateString()}</p>
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar1 size={16} />
-                <p>Employed: 8 November 2021</p>
+              <div className="flex md:flex-row flex-col md:items-center items-start  gap-2 ">
+               <div className="flex gap-2">
+               <Mail size={20} />
+               Email: 
+               </div>
+               <p className="xl:text-md lg:text-[13px] ">{teacher.email}</p>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail size={16} />
-                <p>Email: qodebyte347@gmail.com</p>
+              <div className="flex md:flex-row flex-col md:items-center items-end gap-2">
+                <div className="flex gap-2">
+                <University size={20} />
+                Gender: 
+                </div>
+                <p>{teacher.gender}</p>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone size={16} />
-                <p>Contact: +2349059484839</p>
+             
+              <div className="flex md:flex-row flex-col md:items-center items-start  gap-2">
+               <div className="flex gap-2">
+               <Landmark size={20} />
+               Address:
+               </div>
+               <p>{teacher.address}</p>
               </div>
-              <div className="flex items-center gap-2">
-                <Landmark size={16} />
-                <p>Address: 3 Presidential road, Enugu</p>
+              <div className="flex md:flex-row  flex-col md:items-center items-end gap-2">
+                <div className="flex gap-2">
+                <Phone size={20}  />
+                Contact:
+                </div>
+                <p>{teacher.phone_number}</p>
               </div>
-              <div className="flex items-center gap-2">
-                <University size={16} />
-                <p>Gender: Female</p>
-              </div>
+             
+            </div>
             </div>
           </div>
 
@@ -244,24 +331,24 @@ const TeacherDetailPage: React.FC<TeacherDetailPageProps> = ({ teacherId }) => {
             <h5 className="font-semibold text-lg">Emergency Contact Information</h5>
             <div className="flex flex-col gap-2">
           <div className="flex flex-col">
-            <h4 className="text-gray-400">Name</h4>
+            <h4 className="text-gray-400 text-[14px]">Name</h4>
             <div className="flex gap-2">
               <User className="text-gray-300"/>
-              <p className="text-sm text-gray-600">Mr. Qodebyte Eguemokpon</p>
+              <p className="text-sm text-gray-600">{teacher.contact_name}</p>
             </div>
           </div>
           <div className="flex flex-col">
-          <h4 className="text-gray-400">Relationship: </h4>
+          <h4 className="text-gray-400 text-[14px]">Relationship: </h4>
             <div className="flex gap-2">
             <User className="text-gray-300"/>
-            <p className="text-sm text-gray-600">Father</p>
+            <p className="text-sm text-gray-600">{teacher.contact_relationship}</p>
             </div>
           </div>
          <div className="flex flex-col">
-          <h4  className="text-gray-400">Contact</h4>
+          <h4 className="text-gray-400 text-[14px]">Contact</h4>
           <div  className="flex gap-2">
             <PhoneCall  className="text-gray-300"/>
-          <p className="text-sm text-gray-600">+2349059484839</p>
+          <p className="text-sm text-gray-600">{teacher.contact_phone_number}</p>
           </div>
          </div>
             </div>
@@ -273,9 +360,6 @@ const TeacherDetailPage: React.FC<TeacherDetailPageProps> = ({ teacherId }) => {
           <div className="bg-white rounded-lg shadow p-4">
             <div className="flex justify-between items-center mb-1">
               <h5 className="font-semibold text-lg">Subjects</h5>
-              <Link href="#" className="text-blue-500 text-sm">
-                <Edit size={16} />
-              </Link>
             </div>
             <div className="flex flex-col gap-2 max-h-[100px] overflow-y-auto">
               <div className="border-l-4 border-blue-500 pl-4">
@@ -301,7 +385,7 @@ const TeacherDetailPage: React.FC<TeacherDetailPageProps> = ({ teacherId }) => {
           <div className="bg-white rounded-lg shadow p-4">
             <div className="flex justify-between items-center mb-4">
               <h5 className="font-semibold text-lg">Assignments</h5>
-              <BadgePlus className="text-blue-500" size={18} />
+             
             </div>
             <Select
               label=""

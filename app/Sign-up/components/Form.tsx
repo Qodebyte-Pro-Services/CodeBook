@@ -22,6 +22,7 @@ interface FormProps {
   onSubmit: (data: Record<string, unknown>) => Promise<void>;
   submitButtonText?: string;
   defaultValues?: Record<string, unknown>;
+  fieldErrors?: Record<string, string>;
 }
 
 const Form: React.FC<FormProps> = ({
@@ -29,6 +30,7 @@ const Form: React.FC<FormProps> = ({
   onSubmit,
   submitButtonText = "Submit",
   defaultValues = {},
+  fieldErrors = {},
 }) => {
   const [formData, setFormData] = useState<Record<string, unknown>>(defaultValues);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -153,7 +155,7 @@ const Form: React.FC<FormProps> = ({
           {...field}
           value={getValue(field.name)}
           onChange={handleChange}
-          error={field.name ? errors[field.name] : undefined}
+          error={field.name ? fieldErrors[field.name] || errors[field.name] : undefined}
         />
       ))}
       <button

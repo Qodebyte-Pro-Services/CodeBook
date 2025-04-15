@@ -22,11 +22,11 @@ const Select: React.FC<SelectProps> = ({ label, options, value, onChange, name, 
         value={value}
         onChange={onChange}
         name={name} 
-        className="mt-1 block w-full border-blue-400 border-1 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2 outline-blue-500"
+        className="mt-1 block w-full border-blue-400 text-gray-950 border-1 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2 outline-blue-500"
         required={required}
       >
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option className='text-gray-950' key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}

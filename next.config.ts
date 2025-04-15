@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    domains: ['sch-mgt-03yw.onrender.com'], 
+  },
 };
 
 export default nextConfig;

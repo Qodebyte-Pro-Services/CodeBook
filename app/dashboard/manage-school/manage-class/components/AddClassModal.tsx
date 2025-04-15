@@ -1,52 +1,78 @@
 "use client";
 
-import Toast from '@/app/components/Toast';
-import Input from '@/app/dashboard/teachers/add-teacher/compoenent/Input';
-import Select from '@/app/dashboard/teachers/add-teacher/compoenent/Select';
-import React, { useState } from 'react';
+import Toast from "@/app/components/Toast";
+import Input from "@/app/dashboard/teachers/add-teacher/compoenent/Input";
+import Select from "@/app/dashboard/teachers/add-teacher/compoenent/Select";
+import React, { useState } from "react";
+import axios from "axios";
 
 interface AddClassModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: { 
-    schooltype: string; 
-    className: string; 
-    formTeacher?: string; 
+  onSave: (data: {
+    schooltype: string;
+    className: string;
+    formTeacher?: string;
     multipleClassRoom: string;
   }) => void;
 }
 
 const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }) => {
-  const [schooltype, setSchoolType] = useState('');
-  const [className, setClassName] = useState('');
-  const [formTeacher, setFormTeacher] = useState('');
-  const [multipleClassRoom, setMultipleClassRoom] = useState('no');
+  const [schooltype, setSchoolType] = useState("");
+  const [className, setClassName] = useState("");
+  const [formTeacher, setFormTeacher] = useState("");
+  const [multipleClassRoom, setMultipleClassRoom] = useState("no");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
+  const [toastType, setToastType] = useState<"success" | "error" | "warning" | "info">("success");
+  const [loading, setLoading] = useState(false);
 
-  const handleSave = () => {
-    console.log('schooltype:', schooltype);
-  console.log('className:', className);
-  console.log('multipleClassRoom:', multipleClassRoom);
-  console.log('formTeacher:', formTeacher);
-    
-  if (!schooltype || !className || (multipleClassRoom === 'no' && !formTeacher)) {
-    setToastMessage('Please fill in all required fields.');
-    setToastType('error');
-    return;
-  }
+  const handleSave = async () => {
+    if (!schooltype || !className || (multipleClassRoom === "no" && !formTeacher)) {
+      setToastMessage("Please fill in all required fields.");
+      setToastType("error");
+      return;
+    }
 
-  const data = {
-    schooltype,
-    className,
-    multipleClassRoom,
-    ...(multipleClassRoom === 'no' && { formTeacher }),
-  };
+    const authToken = sessionStorage.getItem("authToken");
+    const schoolId = sessionStorage.getItem("schoolId"); 
 
-  onSave(data);
-  setToastMessage('Class added successfully!');
-  setToastType('success');
-  onClose();
+    if (!authToken || !schoolId) {
+      setToastMessage("Authentication or school information is missing.");
+      setToastType("error");
+      return;
+    }
+
+    const data = {
+      schooltype,
+      className,
+      multipleClassRoom,
+      name: className,
+      multiple_classes: multipleClassRoom === "yes",
+      school: schoolId,
+      ...(formTeacher && { head_teacher: formTeacher }), 
+    };
+
+    try {
+      setLoading(true);
+
+      await axios.post("https://sch-mgt-03yw.onrender.com/class/", data, {
+        headers: {
+          Authorization: `Token ${authToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      setToastMessage("Class added successfully!");
+      setToastType("success");
+      onSave({ schooltype, className, formTeacher, multipleClassRoom }); 
+      onClose(); 
+    } catch (error) {
+      console.error("Error adding class:", error);
+      setToastMessage("Failed to add class. Please try again.");
+      setToastType("error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -65,7 +91,8 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Do you wish to add Multiple Class Rooms:  <span className='text-gray-500 text-sm'>eg: primary 1A, 1B  </span> E.T.C?
+            Do you wish to add Multiple Class Rooms:{" "}
+            <span className="text-gray-500 text-sm">eg: primary 1A, 1B</span> E.T.C?
           </label>
           <div className="flex gap-4">
             <label className="inline-flex items-center">
@@ -74,8 +101,8 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
                 className="form-radio"
                 name="multipleClasses"
                 value="yes"
-                checked={multipleClassRoom === 'yes'}
-                onChange={() => setMultipleClassRoom('yes')}
+                checked={multipleClassRoom === "yes"}
+                onChange={() => setMultipleClassRoom("yes")}
               />
               <span className="ml-2">Yes</span>
             </label>
@@ -85,8 +112,8 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
                 className="form-radio"
                 name="multipleClasses"
                 value="no"
-                checked={multipleClassRoom === 'no'}
-                onChange={() => setMultipleClassRoom('no')}
+                checked={multipleClassRoom === "no"}
+                onChange={() => setMultipleClassRoom("no")}
               />
               <span className="ml-2">No</span>
             </label>
@@ -96,15 +123,15 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
         <Select
           label="School Type"
           options={[
-            { value: '#', label: 'Select School Type' },
-            { value: 'nursery', label: 'Nursery' },
-            { value: 'primary', label: 'Primary' },
-            { value: 'secondary', label: 'Secondary' },
+            { value: "#", label: "Select School Type" },
+            { value: "nursery", label: "Nursery" },
+            { value: "primary", label: "Primary" },
+            { value: "secondary", label: "Secondary" },
           ]}
           value={schooltype}
           onChange={(e: { target: { value: React.SetStateAction<string> } }) => setSchoolType(e.target.value)}
         />
-        
+
         <Input
           label="Class Name"
           placeholder="Nursery 1"
@@ -113,13 +140,13 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
           onChange={(e: { target: { value: React.SetStateAction<string> } }) => setClassName(e.target.value)}
         />
 
-        {multipleClassRoom === 'no' && (
+        {multipleClassRoom === "no" && (
           <Select
             label="Form Teacher"
             options={[
-              { value: '#', label: 'Select Form Teacher' },
-              { value: 'mr-qodebyte', label: 'Mr. Qodebyte' },
-              { value: 'mrs-tochukwu', label: 'Mrs. Tochukwu' },
+              { value: "#", label: "Select Form Teacher" },
+              { value: "mr-qodebyte", label: "Mr. Qodebyte" },
+              { value: "mrs-tochukwu", label: "Mrs. Tochukwu" },
             ]}
             value={formTeacher}
             onChange={(e: { target: { value: React.SetStateAction<string> } }) => setFormTeacher(e.target.value)}
@@ -128,9 +155,12 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
 
         <button
           onClick={handleSave}
-          className="w-full bg-blue-500 text-white rounded-md py-2 mt-4 hover:bg-blue-600"
+          className={`w-full bg-blue-500 text-white rounded-md py-2 mt-4 hover:bg-blue-600 ${
+            loading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          disabled={loading}
         >
-          Save
+          {loading ? "Saving..." : "Save"}
         </button>
 
         {toastMessage && (

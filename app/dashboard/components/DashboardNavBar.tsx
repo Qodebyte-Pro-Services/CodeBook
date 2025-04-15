@@ -12,18 +12,18 @@ const DashboardNavBar = () => {
 
 
   return (
-    <nav className=" bg-white  w-64 p-4 rounded-lg relative lg:flex shadow-lg hidden ">
-     <div className='  h-screen flex flex-col  top-5 p-4 left-10 '>
+    <nav className=" bg-white  overflow-y-hidden  w-64 p-4 rounded-lg relative insert-0 lg:flex shadow-lg hidden ">
+     <div className='     flex flex-col  top-5 p-4 left-10 '>
      <ul className="space-y-2">
         {navItems.map((item) => (
           <li key={item.href}>
           <Link
               href={item.href}
-              className={`flex items-center py-2 justify-between rounded hover:bg-gray-100 ${
+              className={`flex items-center py-2 px-2 justify-between rounded hover:bg-gray-100 ${
                 pathname === item.href
                   ? 'bg-blue-100 text-blue-600'
                   : pathname.startsWith(item.href + '/') && item.href !== '/dashboard'
-                  ? 'bg-blue-100 text-blue-600'
+                  ? 'bg-blue-100 text-blue-600 px-3'
                   : ''
               }`}
             >

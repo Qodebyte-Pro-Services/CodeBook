@@ -19,6 +19,9 @@ const FormStep2: React.FC<FormStep2Props> = ({ currentStep, onNext, formData, up
    const [showToast, setShowToast] = useState(false);
    const [toastMessage, setToastMessage] = useState('');
    const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('warning');
+   const [loading, setLoading] = useState(false); 
+   const [timer, setTimer] = useState(0);
+   
  
   const fields = useMemo(() => [
     { name: 'confirmationCode', label: 'Confirmation Code', required: true, placeholder: 'Enter Confirmation Code' },
@@ -97,7 +100,59 @@ const FormStep2: React.FC<FormStep2Props> = ({ currentStep, onNext, formData, up
           />
       <Form fields={fields} defaultValues={defaultValues} onSubmit={handleSubmit} />
 
-      <p className='text-center mt-3 text-md  text-blue-400'>Resend Code</p>
+      <p
+  className={`text-center mt-3 text-md ${
+    loading || timer > 0 ? "text-gray-400 cursor-not-allowed" : "text-blue-400 cursor-pointer"
+  }`}
+  onClick={async () => {
+    if (loading || timer > 0) return; // Prevent clicking while loading or during the timer
+
+    const email = formData.email || sessionStorage.getItem("email");
+
+    if (!email) {
+      setToastMessage("Email not found. Please try again.");
+      setToastType("error");
+      setShowToast(true);
+      return;
+    }
+
+    setLoading(true); // Set loading to true
+    try {
+      await axios.post("https://sch-mgt-03yw.onrender.com/auth/resend-email/", {
+        email,
+      });
+
+      setToastMessage("Confirmation code resent successfully!");
+      setToastType("success");
+      setShowToast(true);
+
+      
+      setTimer(30);
+      const countdown = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(countdown);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (error) {
+      console.error("Error resending confirmation code:", error);
+      setToastMessage("Failed to resend confirmation code. Please try again.");
+      setToastType("error");
+      setShowToast(true);
+    } finally {
+      setLoading(false);
+    }
+  }}
+>
+  {loading
+    ? "Sending..."
+    : timer > 0
+    ? `Resend Code in ${timer}s`
+    : "Resend Code"}
+</p>
               </div>
             </div>
           </div>

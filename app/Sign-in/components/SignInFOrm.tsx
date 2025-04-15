@@ -70,8 +70,9 @@ const SignInForm = () => {
       const userData = await userResponse.json();
   
      
-      const { pk, role, ...rest } = userData;
-      sessionStorage.setItem(`${role}Id`, pk);
+      const { role_id, pk, role, ...rest } = userData;
+      sessionStorage.setItem(`${role}Id`,pk);
+      sessionStorage.setItem(`${role}UserId`,  role_id);
       sessionStorage.setItem(`${role}Role`, role);
       sessionStorage.setItem(`${role}MainData`, JSON.stringify(userData));
       sessionStorage.setItem(`${role}Data`, JSON.stringify(rest ));
@@ -119,6 +120,11 @@ const SignInForm = () => {
               </span>
             </h4>
             <Form fields={fields} defaultValues={defaultValues} onSubmit={handleSubmit} />
+            <h5 className='text-gray-950 text-md font-medium mt-2'>Forgot password? <span className='text-blue-500 text-sm'>
+              <Link href="/reset-password">
+              Reset Password
+              </Link>
+              </span></h5>
           </div>
         </div>
       </div>

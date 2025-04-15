@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { ChevronsLeft, Save } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { ChevronsLeft, Loader, Save } from "lucide-react";
 import Input from "./Input";
 import Select from "./Select";
 import Toast from "@/app/components/Toast";
@@ -9,14 +9,36 @@ import UploadImage from "./UploadInput";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { lgasByState } from "@/utils/nigeriaStatesLocalData";
 
 interface ToastState {
   message: string;
   type: "success" | "error" | "warning" | "info";
 }
+interface Classroom {
+  id: string;
+  class_name: string;
+}
+
+interface ClassData {
+  id: string;
+  name: string;
+  multiple_classes: boolean;
+  classrooms?: Classroom[];
+}
 
 const AddTeacherForm = () => {
   const router = useRouter();
+  const [states, setStates] = useState<{ state: string; cities: string[] }[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [selectedState, setSelectedState] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({}); 
+  const [classes, setClasses] = useState<ClassData[]>([]);
+  const [classRooms, setClassRooms] = useState<Classroom[]>([]);
+  const [selectedClass, setSelectedClass] = useState("");
+  const [showClassRooms, setShowClassRooms] = useState(false);
+ 
+
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -36,14 +58,114 @@ const AddTeacherForm = () => {
      jobTitle:  "",
       jobDuration:  "",
        jobRefContact:  "",
+       contactName: "",
+       contactPhoneNumber: "",
+       contactRelationShip: "",
+       assignedClass: "",
+       assignedClassRoom: "",
+
   });
 
   const [toast, setToast] = useState<ToastState | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [loadingClassrooms, setLoadingClassrooms] = useState(false);
 
   const handleInputChange = (e: { target: { name: string; value: unknown } }) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: "" })); 
   };
+
+
+  const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedClassId = e.target.value;
+    setSelectedClass(selectedClassId);
+    setFormData({ ...formData, assignedClass: selectedClassId });
+  
+    
+    const selectedClassData = classes.find((cls) => cls.id === selectedClassId);
+    
+  
+    if (selectedClassData?.multiple_classes) {
+      setShowClassRooms(true);
+    
+      if (selectedClassData.classrooms) {
+        setClassRooms(selectedClassData.classrooms);
+      } else {
+        fetchClassRooms(selectedClassId); 
+      }
+    } else {
+      setShowClassRooms(false);
+      setFormData((prev) => ({ ...prev, assignedClassRoom: "" })); 
+    }
+  };
+
+  const handleClassRoomChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({ ...formData, assignedClassRoom: e.target.value });
+  };
+
+  const fetchClasses = async () => {
+    const authToken = sessionStorage.getItem("authToken");
+    if (!authToken) {
+      setToast({
+        message: "Authentication token is missing. Please log in again.",
+        type: "error",
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.get("https://sch-mgt-03yw.onrender.com/class/", {
+        headers: {
+          Authorization: `Token ${authToken}`,
+        },
+      });
+      setClasses(response.data);
+    } catch (error) {
+      console.error("Error fetching classes:", error);
+      setToast({
+        message: "Failed to fetch classes. Please try again.",
+        type: "error",
+      });
+    }
+  };
+
+  const fetchClassRooms = async (classId: string) => {
+    const authToken = sessionStorage.getItem("authToken");
+    if (!authToken) return;
+    
+    setLoadingClassrooms(true);
+    try {
+      const response = await axios.get(
+        `https://sch-mgt-03yw.onrender.com/class/classroom/`,
+        {
+          headers: { Authorization: `Token ${authToken}` },
+          params: {
+            level__id: classId  
+          }
+        }
+      );
+      setClassRooms(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data?.detail || "Failed to fetch classrooms";
+        setToast({ message, type: "error" });
+      } else {
+        setToast({
+          message: "An unexpected error occurred",
+          type: "error"
+        });
+      }
+      setClassRooms([]);
+    } finally {
+      setLoadingClassrooms(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchClasses();
+  }, []);
+
 
   const handleFileChange = (file: File | null) => {
     setFormData({ ...formData, profilePicture: file });
@@ -59,6 +181,8 @@ const AddTeacherForm = () => {
       });
       return;
     }
+
+    setLoading(true); 
 
     try {
       
@@ -81,6 +205,11 @@ const AddTeacherForm = () => {
       formDataToSend.append("job_title", formData.jobTitle);
       formDataToSend.append("duration", formData.jobDuration);
       formDataToSend.append("reference_contact", formData.jobRefContact);
+      formDataToSend.append("contact_name",formData.contactName );
+      formDataToSend.append("conatct_relationship",formData.contactRelationShip );
+      formDataToSend.append("contact_phone_number",formData.contactPhoneNumber );
+      formDataToSend.append("assign_class", selectedClass);
+      formDataToSend.append("assign_class_room", formData.assignedClassRoom);
       
       if (formData.profilePicture) {
         formDataToSend.append("profile_picture", formData.profilePicture);
@@ -119,6 +248,11 @@ const AddTeacherForm = () => {
          jobTitle:  "", 
          jobDuration:  "",
           jobRefContact:  "", 
+          contactName: "",
+          contactRelationShip: "",
+          contactPhoneNumber: "",
+          assignedClass: "",
+          assignedClassRoom: "",
       });
 
       
@@ -128,16 +262,74 @@ const AddTeacherForm = () => {
     } catch (error) {
       console.error("Error adding teacher:", error);
 
-     
-      setToast({
-        message: "Failed to add teacher. Please try again.",
-        type: "error",
-      });
+      if (axios.isAxiosError(error) && error.response && error.response.status === 409) {
+        setFieldErrors({ email: "This email is already in use. Please use a different email." }); 
+        setToast({
+          message: "This email is already in use. Please use a different email.",
+          type: "error",
+        });
+      } else if (axios.isAxiosError(error) && error.response?.data?.message === "This email is already in use") {
+        setFieldErrors({ email: "This email is already in use. Please use a different email." }); 
+        setToast({
+          message: "This email is already in use. Please use a different email.",
+          type: "error",
+        });
+      } else {
+        setToast({
+          message: "Failed to add teacher. Please try again.",
+          type: "error",
+        });
+      }
+    }finally {
+      setLoading(false);
     }
   };
 
   const handleToastClose = () => {
     setToast(null);
+  };
+
+  useEffect(() => {
+   
+    const fetchStatesAndCities = () => {
+      const formattedStates = Object.entries(lgasByState).map(([state, cities]) => ({
+      state,
+      cities,
+      }));
+      setStates(formattedStates);
+    };
+    fetchStatesAndCities();
+  }, []);
+
+  interface State {
+    state: string;
+    cities: string[];
+  }
+
+  interface StateChangeEvent {
+    target: {
+      value: string;
+    };
+  }
+
+  const handleStateChange = (e: StateChangeEvent) => {
+    const state = e.target.value;
+    setSelectedState(state);
+    setFormData({ ...formData, state });
+
+    const stateData = states.find((s: State) => s.state === state);
+    setCities(stateData ? stateData.cities : []);
+  };
+
+  interface CityChangeEvent {
+    target: {
+      value: string;
+    };
+  }
+
+  const handleCityChange = (e: CityChangeEvent) => {
+    const city = e.target.value;
+    setFormData({ ...formData, city });
   };
 
   return (
@@ -154,10 +346,22 @@ const AddTeacherForm = () => {
 
         <button
           onClick={handleSave}
-          className="flex items-center gap-2 rounded-lg md:px-4 md:py-2 py-0 px-0 text-[12px] md:text-md"
+          className={`flex items-center gap-2 rounded-lg md:px-4 md:py-2 py-0 px-0 text-[12px] md:text-md ${
+            loading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          disabled={loading}
         >
-          <Save className="text-blue-500" />
-          <p className="text-[10px] md:text-md">Save</p>
+          {loading ? (
+            <>
+              <Loader className="animate-spin text-blue-500" />
+              <p className="text-[10px] md:text-md">Saving...</p>
+            </>
+          ) : (
+            <>
+              <Save className="text-blue-500" />
+              <p className="text-[10px] md:text-md">Save</p>
+            </>
+          )}
         </button>
       </div>
 
@@ -221,33 +425,37 @@ const AddTeacherForm = () => {
           <h2 className="text-lg font-semibold mb-4 mt-8">Contact Information</h2>
 
           <div className="flex gap-4 mb-4">
-            <div className="w-1/2">
-              <Select
-                label="State"
-                options={[
-                  { label: "Select State", value: "" },
-                  { label: "State 1", value: "state1" },
-                  { label: "State 2", value: "state2" },
-                ]}
-                name="state"
-                value={formData.state}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="w-1/2">
-              <Select
-                label="City"
-                options={[
-                  { label: "Select City", value: "" },
-                  { label: "City 1", value: "city1" },
-                  { label: "City 2", value: "city2" },
-                ]}
-                name="city"
-                value={formData.city}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
+      <div className="w-1/2">
+        <Select
+          label="State"
+          options={[
+            { label: "Select State", value: "" }, 
+            ...states.map((state, index) => ({
+              label: state.state,
+              value: state.state || `state-${index}`, 
+            })),
+          ]}
+          name="state"
+          value={selectedState}
+          onChange={handleStateChange}
+        />
+      </div>
+      <div className="w-1/2">
+        <Select
+          label="City"
+          options={[
+            { label: "Select City", value: "default-city" }, 
+            ...cities.map((city, index) => ({
+              label: city,
+              value: city || `city-${index}`, 
+            })),
+          ]}
+          name="city"
+          value={formData.city}
+          onChange={handleCityChange}
+        />
+      </div>
+    </div>
 
           <Input
             label="Phone"
@@ -264,6 +472,7 @@ const AddTeacherForm = () => {
             name="email"
             value={formData.email}
             onChange={handleInputChange}
+            error={fieldErrors.email}
           />
           <Input
             label="Address"
@@ -273,6 +482,33 @@ const AddTeacherForm = () => {
             value={formData.address}
             onChange={handleInputChange}
           />
+          <h2 className="text-lg font-semibold mb-4">Emergency Contact Information</h2>
+          <Input
+            label="Name of Contact"
+            placeholder="Enter the Name of the Contact"
+            type="text"
+            name="contactName"
+            value={formData.contactName}
+            onChange={handleInputChange}
+          />
+          <Input
+            label="RelationShip With Contact"
+            placeholder="Enter the RelationShip With Contact"
+            type="text"
+            name="contactRelationShip"
+            value={formData.contactRelationShip}
+            onChange={handleInputChange}
+          />
+
+        <Input
+            label="Contact PhoneNumber"
+            placeholder="Enter the PhoneNumber of the Contact"
+            type="text"
+            name="contactPhoneNumber"
+            value={formData.contactPhoneNumber}
+            onChange={handleInputChange}
+          />
+
         </div>
         <div className="lg:w-1/2 w-full p-4 rounded-lg">
           <UploadImage onChange={handleFileChange} />
@@ -348,6 +584,51 @@ const AddTeacherForm = () => {
             value={formData.jobRefContact}
             onChange={handleInputChange}
           />
+
+    <h2 className="text-lg font-semibold mb-4 mt-8">Assign ClassRoom</h2>
+
+    <Select
+  label="Classes"
+  options={[
+    { label: "Select Class", value: "" },
+    ...classes.map((cls) => ({
+      label: cls.name,
+      value: cls.id,
+    })),
+  ]}
+  name="assignedClass"
+  value={selectedClass}
+  onChange={handleClassChange}
+/>
+
+{showClassRooms && (
+   loadingClassrooms ? (
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        Class Rooms
+      </label>
+      <div className="mt-1 p-2 border border-gray-300 rounded-md animate-pulse">
+        Loading classrooms...
+      </div>
+    </div>
+  ) :  classRooms.length > 0 ? (
+    <Select
+      label="Class Rooms"
+      options={[
+        { label: "Select Classroom", value: "" },
+        ...classRooms.map((room) => ({
+          label: room.class_name,
+          value: room.id,
+        })),
+      ]}
+      name="assignedClassRoom"
+      value={formData.assignedClassRoom}
+      onChange={handleClassRoomChange}
+    />
+  )  : (
+    <div>No classrooms available for this class</div>
+  )
+)}
 
         </div>
       </div>

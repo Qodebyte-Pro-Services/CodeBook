@@ -1,12 +1,47 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import DashboardHeader from './DashboardHeader'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowUp, Bell, ChevronDown, Ellipsis } from 'lucide-react'
 import Calendar from './Calender'
 import EarningsGraph from './EarningsGraph'
+import axios from 'axios'
 
 const DashboardSection = () => {
+  const [fullName, setFullName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAdminDetails = async () => {
+      const adminId = sessionStorage.getItem("adminId");
+      const authToken = sessionStorage.getItem("authToken");
+
+      if (!adminId || !authToken) {
+        console.error("Admin ID or Auth Token is missing.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          `https://sch-mgt-03yw.onrender.com/accounts/user/${adminId}/`,
+          {
+            headers: {
+              Authorization: `Token ${authToken}`,
+            },
+          }
+        );
+        setFullName(response.data.full_name); 
+      } catch (error) {
+        console.error("Error fetching admin details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdminDetails();
+  }, []);
   return (
     <div className="flex-1 md:p-8 overflow-hidden ">
       <DashboardHeader />
@@ -15,7 +50,9 @@ const DashboardSection = () => {
                 <div className='flex flex-col gap-2 xl:w-[60%] w-full '>
                 <div className="flex justify-between w-full p-3  items-center  bg-[#FFFFFF] rounded-xl ">
                 <div className='flex flex-col gap-3 w-full p-2 '>
-                <h1 className="md:text-2xl text-lg font-semibold">Welcome, Qodebyte</h1>
+                <h1 className="md:text-2xl text-lg font-semibold">
+                  Welcome, {loading ? "Loading..." : fullName || "Admin"}
+                </h1>
                 <p className='text-sm text-gray-400'>
                 Manage your school operations with ease. 
                 Stay updated on academics, attendance, finances, and more—all in one place.
