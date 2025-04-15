@@ -443,6 +443,7 @@ const DashboardSection = () => {
             <p className="text-[12px] line-clamp-2">
               {notice.description}
             </p>
+            <span>{new Date(notice.created_at).toLocaleDateString()}</span>
           </div>
         </div>
       ))
