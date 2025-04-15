@@ -1,28 +1,29 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const PasswordResetMessage = () => {
   const router = useRouter();
+  const [resetEmail, setResetEmail] = useState("");
 
   useEffect(() => {
-    
+   
+    if (typeof window !== "undefined") {
+      setResetEmail(sessionStorage.getItem("resetEmail") || "");
+      
+      const timeout = setTimeout(() => {
+        sessionStorage.removeItem("resetEmail"); 
+        router.push("/Sign-in");
+      }, 300000); 
 
-  
-    const timeout = setTimeout(() => {
-      sessionStorage.removeItem("resetEmail"); 
-      router.push("/Sign-in");
-    }, 300000); 
-
-    return () => clearTimeout(timeout); 
+      return () => clearTimeout(timeout);
+    }
   }, [router]);
 
-  const resetEmail = sessionStorage.getItem("resetEmail");
-
   return (
-    <div className="flex w-full justify-center  py-[1.5rem]">
+    <div className="flex w-full justify-center py-[1.5rem]">
       <div className="lg:w-[70%] xl:h-[854px] w-full h-auto flex lg:flex-row rounded-[20px] bg-white">
         <div className="lg:flex hidden lg:w-1/2 bg-[#DAF2FF] w-0 h-full rounded-bl-[20px] shadow-bl-2xl items-center justify-center overflow-hidden">
           <div className="w-[500px] h-[450px] relative py-auto">
@@ -35,7 +36,7 @@ const PasswordResetMessage = () => {
               Check Your Email
             </h1>
             <h4 className="text-gray-950 font-medium md:text-lg text-md">
-              We’ve sent a password reset link to <span className="font-bold">{resetEmail}</span>.
+              We&apos;ve sent a password reset link to <span className="font-bold">{resetEmail}</span>.
               Please check your inbox or spam folder.
             </h4>
             <div className="relative w-[200px] h-[200px] mx-auto mt-3">
