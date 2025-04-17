@@ -1,6 +1,6 @@
 "use client"
 import Pagination from '@/app/dashboard/teachers/components/Pagination'
-import { ChevronsLeft, Edit, Trash } from 'lucide-react'
+import { ChevronsLeft, Edit, PlusCircle, Trash } from 'lucide-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
 
@@ -63,7 +63,7 @@ const StudentListSection = () => {
   return (
     <>
 
-<div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'> 
+      <div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'> 
         
         <Link href='/dashboard/students/view-session-classes/' className='flex gap-2  w-1/2 items-center justify-start md:text-md text-[12px] '>
               <ChevronsLeft />
@@ -88,8 +88,41 @@ const StudentListSection = () => {
               />
             </div>
           </form>  
+
+          <Link href="" className='flex gap-2 text-blue-400 md:text-sm text-[10px] underline'>
+            <PlusCircle/>
+            <p>Add Student</p>
+          </Link>
      </div>
       </div>
+      <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 py-2 gap-3'>
+      <div className='h-[120px] bg-blue-300 rounded-xl flex flex-col justify-center pl-4 py-3'>
+      <h6>Total Students</h6>
+      <span>200</span>
+      </div>
+
+      <div className='h-[120px] bg-yellow-200 rounded-xl flex flex-col justify-center pl-4 py-3'>
+      <h6>Boys</h6>
+      <span>20</span>
+      </div>
+
+      <div className='h-[120px] bg-blue-300 rounded-xl flex flex-col justify-center pl-4 py-3'>
+      <h6>Girls</h6>
+      <span>20</span>
+      </div>
+
+
+      <div className='h-[120px] bg-yellow-200 rounded-xl flex flex-col justify-center pl-4 py-3'>
+      <h6>Graduated</h6>
+      <span>20</span>
+      </div>
+
+      <div className='h-[120px] bg-blue-300 rounded-xl flex flex-col justify-center pl-4 py-3'>
+      <h6>Expelled</h6>
+      <span>20</span>
+      </div>
+      </div>
+
       <div className="overflow-x-auto mt-4">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">

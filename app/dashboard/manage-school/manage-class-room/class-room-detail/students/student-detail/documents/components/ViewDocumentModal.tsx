@@ -5,7 +5,7 @@ import React from "react";
 interface ViewDocumentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  document: { id: number; documentName: string; fileName: string;   status: string; } | null;
+  document: { id: number; documentName: string; fileName: string; status:string } | null;
 }
 
 const ViewDocumentModal: React.FC<ViewDocumentModalProps> = ({ isOpen, onClose, document }) => {

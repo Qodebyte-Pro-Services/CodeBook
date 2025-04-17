@@ -35,7 +35,7 @@ const StudentDetailPage = () => {
     <>
        <div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'> 
         
-        <Link href='/dashboard/students/view-session-classes/student-list' className='flex gap-2  w-1/2 items-center justify-start md:text-md text-[12px] '>
+        <Link href='/dashboard/manage-school/manage-class-room/class-room-detail/students' className='flex gap-2  w-1/2 items-center justify-start md:text-md text-[12px] '>
               <ChevronsLeft />
               <p>Student List</p>
           </Link>
@@ -54,11 +54,11 @@ const StudentDetailPage = () => {
         <div className="border-b border-gray-200">
         <nav className="flex -mb-px xl:overflow-hidden overflow-x-scroll justify-between">
   {[
-    { name: "General", href: `/dashboard/students/view-session-classes/student-list/student-detail` },
-    { name: "Grades / Performance", href: `/dashboard/students/view-session-classes/student-list/student-detail/grade-performance` },
-    { name: "Fee Management", href: `/dashboard/students/view-session-classes/student-list/student-detail/fee-management` },
-    { name: "Student Accessment / Review", href: `/dashboard/students/view-session-classes/student-list/student-detail/acessment-reviews` },
-    { name: "Documents", href: `/dashboard/students/view-session-classes/student-list/student-detail/documents` },
+    { name: "General", href: `/dashboard/manage-school/manage-class-room/class-room-detail/students/student-detail` },
+    { name: "Grades / Performance", href: `/dashboard/manage-school/manage-class-room/class-room-detail/students/student-detail/grade-performance` },
+    { name: "Fee Management", href: `/dashboard/manage-school/manage-class-room/class-room-detail/students/student-detail/fee-management` },
+    { name: "Student Accessment / Review", href: `/dashboard/manage-school/manage-class-room/class-room-detail/students/student-detail/acessment-reviews` },
+    { name: "Documents", href: `/dashboard/manage-school/manage-class-room/class-room-detail/students/student-detail/documents` },
   
   ].map((tab, index) => (
     <Link
