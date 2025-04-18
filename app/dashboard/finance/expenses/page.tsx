@@ -1,17 +1,17 @@
 import MaxWidthWrapper from '@/app/components/MaxWidthWrapper'
 import React from 'react'
-import DashboardNavBar from '../components/DashboardNavBar'
-import FinanceComponent from './components/FinanceComponent'
+import DashboardNavBar from '../../components/DashboardNavBar'
+import ExpenseMgt from './components/ExpenseMgt'
 
-const FinanceSection = () => {
+const page = () => {
   return (
     <MaxWidthWrapper>
     <div className='flex py-2 px-2 text-gray-950 overflow-hidden'>
     <DashboardNavBar />
-    <FinanceComponent/>
+    <ExpenseMgt/>
     </div>
   </MaxWidthWrapper> 
   )
 }
 
-export default FinanceSection
+export default page

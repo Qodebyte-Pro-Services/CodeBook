@@ -55,7 +55,7 @@ const Toast: React.FC<ToastProps> = ({
 
   return (
     <div
-      className={`fixed top-4 right-4 p-4 rounded-md ${getBackgroundColor()} shadow-md`}
+      className={`fixed  md:top-4  top-20 right-4 p-4 rounded-md ${getBackgroundColor()} shadow-md`}
     >
       <div>{message}</div>
       {type === "confirm" && (

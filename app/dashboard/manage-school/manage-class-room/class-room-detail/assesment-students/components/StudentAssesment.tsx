@@ -73,9 +73,6 @@ const StudentAssesment = () => {
               />
             </div>
           </form>
-
-
-        
         </div>
       </div>
 

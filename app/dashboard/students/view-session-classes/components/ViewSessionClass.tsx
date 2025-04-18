@@ -14,9 +14,7 @@ const ViewSessionClass = () => {
               <p>View Session</p>
           </Link>
         </div>
-
-        <div className='flex flex-col gap-5 w-full'>
-      <div className='bg-white px-2 py-2 rounded-xl md:w-1/2 w-full'>
+ <div className='bg-white px-2 py-2 rounded-xl md:w-1/2 w-full'>
       <Select
                   label="School Type"
                   options={[
@@ -25,18 +23,20 @@ const ViewSessionClass = () => {
                   value=""
                   onChange={(value) => console.log(value)}
                 />
-      </div>
-            <Link href='/dashboard/students/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
+ </div>
+        <div className='grid xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-5 w-full'>
+     
+            <Link href='/dashboard/students/view-session-classes/student-list' className='flex justify-between items-center  bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
                 <p>Nursery 1</p>
                 <ChevronsRight />
             </Link>
 
-            <Link href='/dashboard/students/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
+            <Link href='/dashboard/students/view-session-classes/student-list' className='flex justify-between items-center  bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
             <p>Nursery 1</p>
                 <ChevronsRight />
             </Link>
 
-            <Link href='/dashboard/students/view-session-classes/student-list' className='flex justify-between items-center md:w-1/2 w-full bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
+            <Link href='/dashboard/students/view-session-classes/student-list' className='flex justify-between items-center  bg-[#FFFFFF] h-[55px] py-2 px-4 rounded-lg'>
             <p>Nursery 1</p>
                 <ChevronsRight />
             </Link>

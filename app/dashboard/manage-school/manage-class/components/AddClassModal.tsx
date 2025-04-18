@@ -36,7 +36,7 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
     const authToken = sessionStorage.getItem("authToken");
     const schoolId = sessionStorage.getItem("schoolId"); 
 
-    if (!authToken || !schoolId) {
+    if (!authToken) {
       setToastMessage("Authentication or school information is missing.");
       setToastType("error");
       return;
@@ -48,7 +48,7 @@ const AddClassModal: React.FC<AddClassModalProps> = ({ isOpen, onClose, onSave }
       multipleClassRoom,
       name: className,
       multiple_classes: multipleClassRoom === "yes",
-      school: schoolId,
+      school: schoolId || "",
       ...(formTeacher && { head_teacher: formTeacher }), 
     };
 

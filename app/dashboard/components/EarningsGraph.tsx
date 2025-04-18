@@ -85,7 +85,7 @@ const EarningsGraph = () => {
 
   return (
     <div className="bg-white rounded-md p-4 w-full">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex md:flex-row flex-col  md:justify-between md:items-center mb-4">
         <div className="flex items-center">
           <h2 className="text-lg font-semibold mr-2">Earnings</h2>
           <select className="border border-gray-300 rounded-md p-1 text-sm">
