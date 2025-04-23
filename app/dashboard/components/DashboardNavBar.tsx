@@ -12,8 +12,8 @@ const DashboardNavBar = () => {
 
 
   return (
-    <nav className=" bg-white  overflow-y-hidden  w-64 p-4 rounded-lg relative insert-0 lg:flex shadow-lg hidden ">
-     <div className='     flex flex-col  top-5 p-4 left-10 '>
+    <nav className=" bg-white  overflow-hidden  h-screen  w-64 p-4  top-5  left-2 rounded-lg flex-col  lg:flex shadow-lg hidden ">
+     <>
      <ul className="space-y-2">
         {navItems.map((item) => (
           <li key={item.href}>
@@ -23,7 +23,7 @@ const DashboardNavBar = () => {
                 pathname === item.href
                   ? 'bg-blue-100 text-blue-600'
                   : pathname.startsWith(item.href + '/') && item.href !== '/dashboard'
-                  ? 'bg-blue-100 text-blue-600 px-3'
+                  ? 'bg-blue-100 text-blue-600 px-3 overflow-hidden'
                   : ''
               }`}
             >
@@ -37,7 +37,7 @@ const DashboardNavBar = () => {
           </li>
         ))}
       </ul>
-     </div>
+     </>
     </nav>
   );
 };

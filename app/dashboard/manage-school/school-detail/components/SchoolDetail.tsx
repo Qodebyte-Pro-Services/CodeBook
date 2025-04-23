@@ -1,4 +1,5 @@
 "use client";
+import DashboardHeader from '@/app/dashboard/components/DashboardHeader';
 import { ChevronLeft, Edit, LocateIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,12 +13,13 @@ const SchoolDetail = () => {
     { name: 'Classes', href: '/dashboard/manage-school/manage-class'},
        { name: 'School-Subjects', href: '/dashboard/manage-school/manage-class-subjects' },
    { name: 'Timetable', href: '/dashboard/manage-school/timetable' },
-    { name: 'Fee Mangement', href: '/dashboard/manage-school/fee-management' },
+                  // { name: 'Fee Mangement', href: '/dashboard/manage-school/fee-management' },
     { name: 'Grading', href: '/dashboard/manage-school/grading' },
   ];
 
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-3">
+        <DashboardHeader/>
       <div className="w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll">
       <Link
             href="/dashboard"

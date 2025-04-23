@@ -1,4 +1,5 @@
 "use client"
+import DashboardHeader from '@/app/dashboard/components/DashboardHeader'
 import Select from '@/app/dashboard/teachers/add-teacher/compoenent/Select'
 import Pagination from '@/app/dashboard/teachers/components/Pagination'
 import { ChevronDown, ChevronsLeft, ChevronUp, PlusCircle } from 'lucide-react'
@@ -216,7 +217,8 @@ const renderTableRows = () => {
 
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-3">
+    <div className="w-full lg:w-[75%] px-4 sm:px-6 lg:px-4 py-8 flex flex-col gap-3">
+        <DashboardHeader/>
     <h4>Finance</h4>
     <div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'>
     <Link href='/dashboard' className='flex gap-2  w-1/2 items-center justify-start md:text-md text-[12px] '>

@@ -6,7 +6,7 @@ import PayRollMgt from './components/PayRollMgt'
 const page = () => {
   return (
     <MaxWidthWrapper>
-    <div className='flex py-2 px-2 text-gray-950 overflow-hidden'>
+    <div className='flex py-2 px-1 text-gray-950 overflow-hidden'>
     <DashboardNavBar />
     <PayRollMgt/>
     </div>

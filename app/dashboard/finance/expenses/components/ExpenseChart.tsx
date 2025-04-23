@@ -13,7 +13,6 @@ import {
   ChartOptions,
 } from 'chart.js';
 
-// Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -24,7 +23,7 @@ ChartJS.register(
 );
 
 const ExpenseChart = () => {
-  // Data from chart2.png
+ 
   const data = {
     labels: ['Jun', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
     datasets: [
@@ -32,14 +31,14 @@ const ExpenseChart = () => {
         label: 'Expenses',
         data: [80000, 38000, 38000, 38000, 38000, 38000, 38000, 38000],
         backgroundColor: [
-          '#3B82F6', // Blue for 60%
-          '#3B82F6', // Blue for 40%
-          '#3B82F6', // Blue for 20%
-          '#3B82F6', // Blue for 10%
-          '#E5E7EB', // Gray for 0%
-          '#E5E7EB', // Gray for 0%
-          '#E5E7EB', // Gray for 0%
-          '#E5E7EB', // Gray for 0%
+          '#3B82F6', 
+          '#3B82F6', 
+          '#3B82F6',
+          '#3B82F6', 
+          '#E5E7EB', 
+          '#E5E7EB',
+          '#E5E7EB', 
+          '#E5E7EB',
         ],
         borderColor: [
           '#2563EB',
@@ -56,7 +55,6 @@ const ExpenseChart = () => {
     ],
   };
 
-  // Percentage values from chart2.png
   const percentages = ['60%', '40%', '20%', '10%', '0%', '0%', '0%', '0%'];
 
   const options: ChartOptions<'bar'> = {
@@ -68,7 +66,6 @@ const ExpenseChart = () => {
       tooltip: {
         callbacks: {
           label: function(context: TooltipItem<'bar'>) {
-            // Type assertion for context.raw
             const value = context.raw as number;
             return `N${value.toLocaleString()} (${percentages[context.dataIndex]})`;
           }

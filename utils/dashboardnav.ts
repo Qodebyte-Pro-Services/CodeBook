@@ -1,4 +1,4 @@
-import { House, GraduationCap, Boxes, BadgeDollarSign, Calendar, Cog } from 'lucide-react';
+import { House, GraduationCap, Boxes, BadgeDollarSign, Calendar, Cog, MessagesSquare } from 'lucide-react';
 
 export const navItems = [
     { href: '/dashboard',  label: 'Dashboard', icon: House },
@@ -9,5 +9,6 @@ export const navItems = [
     { href: '/dashboard/finance', label: 'Finance', icon: BadgeDollarSign },
     { href: '/dashboard/calendar', label: 'Calendar', icon: Calendar },
     { href: '/dashboard/time-table', label: 'Time Table', icon: Calendar },
+    {href: '/dashboard/messages', label: 'Messages', icon: MessagesSquare },
     { href: '/dashboard/settings', label: 'Settings', icon: Cog  },
   ];

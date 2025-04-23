@@ -51,7 +51,7 @@ const CommunicationSection = () => {
       <div className="flex-col md:flex-row flex gap-4 ">
  
        <div className="grid-cols-1 grid md:w-3/4 w-full gap-4">
-       <div className="bg-white shadow rounded-lg p-4 overflow-y-scroll max-h-[400px]">
+       <div className="bg-white shadow rounded-lg p-4 overflow-y-scroll max-h-[500px]">
           <h3 className="font-medium text-sm mb-4">Emails/Notices</h3>
           <input
             type="text"
@@ -71,30 +71,6 @@ const CommunicationSection = () => {
               </p>
               <p className="text-xs text-gray-500">19 March 2025</p>
               <button className="text-blue-500 text-xs">Reply</button>
-            </div>
-          ))}
-        </div>
-
-
-        <div className="bg-white shadow rounded-lg p-4 overflow-y-scroll max-h-[400px]">
-          <h3 className="font-medium text-sm mb-4">Meeting Notes</h3>
-          <input
-            type="text"
-            placeholder="Search by title or date"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm mb-4"
-          />
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex flex-col gap-2 mb-4">
-              <div className="flex gap-2 items-center">
-              <Image src="/ImageWork.png" alt="" width={40} height={40} className="rounded-full" />
-              <p className="font-medium text-sm">Requesting Classroom resources</p>
-              </div>
-              <p className="text-sm text-gray-600">
-                Good morning, Could I please request some more construction
-                paper, dry-erase markers for my class? We&apos;re running low.
-                Thanks!
-              </p>
-              <p className="text-xs text-gray-500">19 March 2025</p>
             </div>
           ))}
         </div>

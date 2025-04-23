@@ -1,10 +1,12 @@
 "use client"
-import { ChevronDown, ChevronsLeftIcon, ChevronUp } from 'lucide-react'
+import { ChevronDown, ChevronsLeftIcon, ChevronUp, Eye, Pen, Trash } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import ExpenseChart from './ExpenseChart'
 import ExpensePieChart from './ExpensePieChart'
+import DashboardHeader from '@/app/dashboard/components/DashboardHeader'
+import Pagination from '@/app/dashboard/teachers/components/Pagination'
 
 const ExpenseMgt = () => {
   const expenseData = {
@@ -18,8 +20,48 @@ const ExpenseMgt = () => {
       { name: 'Others', value: 470040, color: '#A78BFA' },
     ],
   };
+
+  const initialExpenseData = [
+    {
+      expenseRecord: 'Salaries',
+      amount: 82640,
+      description: 'Monthly salaries for staff',
+      date: '2023-01-15',
+      categoty: 'Salaries',
+      paymentMode: 'Bank Transfer',
+      recipient: 'John Doe',
+    }
+  ]
+
+  const [expenseRecords, setExpenseRecords] = React.useState(initialExpenseData);
+      const [searchTerm, setSearchTerm] = useState('');
+       const [currentPage, setCurrentPage] = useState(1);
+      const expenseRecordsPerPage = 5;
+       const indexOfLastExpenseRecord = currentPage * expenseRecordsPerPage;
+        const indexOfFirstExpenseRecord = indexOfLastExpenseRecord - expenseRecordsPerPage;
+        const currentExpenseRecords = expenseRecords.slice(indexOfFirstExpenseRecord, indexOfLastExpenseRecord);
+        const totalPages = Math.ceil(expenseRecords.length / expenseRecordsPerPage);
+
+        const handleSearchChange =  (e: {target: {value: string; }; }) => {
+          const term = e.target.value.toLowerCase();
+          setSearchTerm(term);
+        const filteredRecords = initialExpenseData.filter(
+          (record) =>
+            record.expenseRecord.toLowerCase().includes(term) ||
+            record.description.toLowerCase().includes(term) ||
+            record.categoty.toLowerCase().includes(term) ||
+            record.paymentMode.toLowerCase().includes(term) ||
+            record.recipient.toLowerCase().includes(term)
+        )
+        setExpenseRecords(filteredRecords);
+        }
+
+           const handlePageChange = (page: React.SetStateAction<number>) => {
+                                      setCurrentPage(page);
+                                    };
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-3">
+    <div className="w-full lg:w-[75%] px-4 sm:px-6 lg:px-4 py-8 flex flex-col gap-3">
+    <DashboardHeader/>
     <h4>Finance</h4>
     <div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'>
     <Link href='/dashboard' className='flex gap-2  w-1/2 items-center justify-start md:text-md text-[12px] '>
@@ -112,10 +154,101 @@ const ExpenseMgt = () => {
     </div>
         
 
-        <div className='grid md:grid-cols-2 grid-cols-1 gap-2'>
-          <ExpenseChart/>
-          <ExpensePieChart {...expenseData} />
-        </div>
+    <div className='grid xl:grid-cols-2 grid-cols-1 gap-2'>
+      <ExpenseChart/>
+      <ExpensePieChart {...expenseData} />
+    </div>
+
+    <div  className=' overflow-x-auto  bg-white rounded-xl py-2 px-2'>
+    <div className='flex md:flex-row flex-col justify-between md:items-center w-full'>
+              <div className='flex gap-2 items-center  w-full  md:w-1/2'>
+              <h6>Expense Records</h6>
+                <form className="md:mx-auto w-1/2"> 
+                    <div className="relative">
+                    <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg className="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 0 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                    <input 
+                        type="search" 
+                        id="default-search" 
+                        className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white outline-none" 
+                        placeholder="Search by, student name Name or School Id and gender" 
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        required 
+                    />
+                    </div>
+                </form>
+              </div>
+            <div className='flex  w-full  md:w-1/2  '>
+            <Link href='/dashboard/finance/expenses/add-expense' className='bg-blue-500 text-white py-2 px-4 rounded-lg w-full flex justify-center items-center gap-2'>
+            <p className='text-white'>Add New Expense</p>
+            </Link>
+                </div>
+    </div>
+
+    <table className="min-w-full divide-y divide-gray-200">
+          
+          <thead >
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expense title</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Mode</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipient</th>
+    
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+            </tr>
+          </thead>
+          <tbody className=" divide-y divide-gray-200">
+          {currentExpenseRecords.map((record, index) => (
+              <tr className='pr-1' key={index}>
+                <td className="px-6 py-4 text-center whitespace-nowrap">
+                  <input type="checkbox" className="form-checkbox" />
+                </td>
+                <td className="px-6 py-4 text-center whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{record.expenseRecord}</div>
+                </td>
+                <td className="px-6 py-4 text-center whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{record.description}</div>
+                </td>
+                <td className="px-6 py-4 text-center whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{record.categoty}</div>
+                </td>
+                <td className="px-6 py-4 text-center whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{record.date}</div>
+                </td>
+                <td className="px-6 py-4 text-center whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{record.amount}</div>
+                </td>
+                <td className="px-6 py-4 text-center whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{record.paymentMode}</div>
+                </td>
+                <td className="px-6 py-4 text-center whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{record.recipient}</div>
+                </td>
+                <td className="px-6 py-4 text-center whitespace-nowrap">
+                  <div className="text-sm text-gray-900 flex items-center gap-2">
+                    <button className='flex items-center justify-center border-0'><Eye/></button>
+                    <button className='flex items-center justify-center border-0'><Pen/></button>
+                    <button className='flex items-center justify-center border-0'><Trash/></button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+    </div>
+    <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
       
     </div>
