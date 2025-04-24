@@ -30,14 +30,25 @@ const BudgetPieChart: React.FC<BudgetSummaryProps> = ({
               <button className="flex items-center text-sm text-gray-600">
                 {month} <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
               </button>
-              
+              <svg
+              className="ml-1 h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              ></path>
+            </svg>
             </div>
           </div>
     
           <div className="relative w-48 h-48 mx-auto flex items-center justify-center">
             <CircularProgressbarWithChildren
               value={100} 
-             
               styles={buildStyles({
                 textColor: '#000',
                 textSize: '16px',
@@ -80,15 +91,25 @@ const BudgetPieChart: React.FC<BudgetSummaryProps> = ({
           </div>
     
           <div className="mt-6">
-            <h4 className="text-md font-medium mb-2">Summary</h4>
+            <h4 className="text-md font-medium mb-2">Buget Break Down</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
-              {categories.map((category) => (
-                <div key={category.name} className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: category.color }}></div>
-                  <span>{category.name}</span>
-                  <span className="font-medium text-gray-800">{(category.value / total * 100).toFixed(2)}%</span>
-                </div>
-              ))}
+            {categories.map((category) => (
+            <div
+              key={category.name}
+              className="flex items-center justify-between bg-gray-50 p-3 rounded-lg shadow-sm"
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-4 h-4 rounded-full"
+                  style={{ backgroundColor: category.color }}
+                ></div>
+                <span className="text-sm font-medium text-gray-700">{category.name}</span>
+              </div>
+              <span className="text-sm font-semibold text-gray-800">
+                {(category.value / total * 100).toFixed(2)}%
+              </span>
+            </div>
+          ))}
             </div>
           </div>
         </div>

@@ -179,7 +179,7 @@ const UserAcessComp = () => {
 
           <div className="flex flex-col gap-4">
             {users.map((user) => (
-              <div key={user.id} className="bg-white rounded-lg lg:w-1/3 md:w-1/2 w-full  shadow p-4">
+              <div key={user.id} className="bg-white rounded-lg lg:w-2/3 md:w-1/2 w-full  shadow p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full overflow-hidden">

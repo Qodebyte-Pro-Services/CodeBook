@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -23,13 +23,12 @@ ChartJS.register(
 );
 
 const ExpenseChart = () => {
- 
   const data = {
-    labels: ['Jun', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
     datasets: [
       {
         label: 'Expenses',
-        data: [80000, 38000, 38000, 38000, 38000, 38000, 38000, 38000],
+        data: [80000, 38000, 45000, 60000, 75000, 50000, 65000, 70000],
         backgroundColor: [
           '#3B82F6', 
           '#3B82F6', 
@@ -65,36 +64,58 @@ const ExpenseChart = () => {
       },
       tooltip: {
         callbacks: {
-          label: function(context: TooltipItem<'bar'>) {
+          label: function (context: TooltipItem<'bar'>) {
             const value = context.raw as number;
             return `N${value.toLocaleString()} (${percentages[context.dataIndex]})`;
-          }
-        }
+          },
+        },
       },
     },
     scales: {
       y: {
         beginAtZero: true,
         ticks: {
-          callback: function(value: string | number) {
+          callback: function (value: string | number) {
             const numericValue = typeof value === 'string' ? parseFloat(value) : value;
-            return `N${(numericValue/1000).toFixed(0)}K`;
-          }
-        }
+            return `N${(numericValue / 1000).toFixed(0)}K`;
+          },
+        },
+        grid: {
+          color: '#E5E7EB',
+        },
       },
       x: {
         grid: {
           display: false,
-        }
-      }
+        },
+        ticks: {
+          color: '#6B7280',
+        },
+      },
     },
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow">
-      <h2 className="text-lg font-semibold mb-4">Total Expenses</h2>
-      <div className="h-64">
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">Total Expenses</h2>
+      <div className="h-72">
         <Bar data={data} options={options} />
+      </div>
+      <div className="mt-6">
+        <h4 className="text-lg font-medium text-gray-700 mb-2">Monthly Breakdown</h4>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {data.labels.map((label, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center bg-gray-50 p-3 rounded-lg shadow-sm"
+            >
+              <span className="text-sm font-medium text-gray-600">{label}</span>
+              <span className="text-lg font-semibold text-gray-800">
+                N{(data.datasets[0].data[index] / 1000).toFixed(0)}K
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

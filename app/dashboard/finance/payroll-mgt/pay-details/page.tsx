@@ -1,14 +1,14 @@
 import MaxWidthWrapper from '@/app/components/MaxWidthWrapper'
+import DashboardNavBar from '@/app/dashboard/components/DashboardNavBar'
 import React from 'react'
-import DashboardNavBar from '../../components/DashboardNavBar'
-import BudgetingMgt from './components/BudgetingMgt'
+import PayDetails from './components/PayDetails'
 
 const page = () => {
   return (
     <MaxWidthWrapper>
-    <div className='flex py-2 px-1  text-gray-950 overflow-hidden'>
+    <div className='flex py-2 px-1 text-gray-950 overflow-hidden'>
     <DashboardNavBar />
-    <BudgetingMgt/>
+  <PayDetails/>
     </div>
   </MaxWidthWrapper> 
   )

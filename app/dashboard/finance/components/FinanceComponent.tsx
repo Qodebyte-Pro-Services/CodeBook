@@ -1,5 +1,5 @@
 "use client"
-import { Bell, ChevronDown, ChevronsLeft, ChevronUp, PlusCircle, Trash } from 'lucide-react'
+import { Bell, ChevronDown, ChevronsLeft, ChevronUp, PlusCircle, Trash, X } from 'lucide-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import Select from '../../teachers/add-teacher/compoenent/Select'
@@ -7,6 +7,8 @@ import Image from 'next/image'
 import EarningsGraph from '../../components/EarningsGraph'
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
 import Pagination from '../../teachers/components/Pagination'
+import Input from '../../teachers/add-teacher/compoenent/Input'
+import TextAreaInput from '../../teachers/add-teacher/compoenent/TextAreaInput'
 
 
 
@@ -39,6 +41,11 @@ interface Debtors {
     date: string;
 }
   
+
+interface Category {
+    name: string;
+    createdAt: string;
+}
 
 const FinanceComponent = () => {
     const percentage = 60; 
@@ -73,15 +80,33 @@ const FinanceComponent = () => {
         }
     ]
 
-
+    const initialCategories: Category[] = [
+        { name: 'TextBooks', createdAt: '15/04/2025' },
+        { name: 'Stationery', createdAt: '10/04/2025' },
+        { name: 'Maintenance', createdAt: '05/04/2025' }
+    ];
 
     const [tableType, setTableType] = useState<TableType>('expenses');
     const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
     const [payments, setPayments] = useState<Payment[]>(initialPayments);
     const [debtors, setDebtors] = useState<Debtors[]>(initialDebtors);
-
+    const [categories, setCategories] = useState<Category[]>(initialCategories);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
+    const [showCategoriesModal, setShowCategoriesModal] = useState(false);
+    const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
+    const [newCategoryName, setNewCategoryName] = useState('');
+
+    const [newExpense, setNewExpense] = useState<Omit<Expense, 'amount'> & { amount: string }>({
+        category: '',
+        transactionId: '',
+        amount: '',
+        description: '',
+        date: new Date().toISOString().split('T')[0]
+    });
+
+
     const itemsPerPage = 10;
 
     const currentItems = tableType === 'expenses'
@@ -137,6 +162,35 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
+    };
+    const handleAddExpense = () => {
+        const formattedExpense = {
+            ...newExpense,
+            amount: `N${Number(newExpense.amount).toLocaleString()}.00`
+        };
+        setExpenses([...expenses, formattedExpense]);
+        setShowAddExpenseModal(false);
+        setNewExpense({
+            category: '',
+            transactionId: '',
+            amount: '',
+            description: '',
+            date: new Date().toISOString().split('T')[0]
+        });
+    };
+
+    const handleAddCategory = () => {
+        const newCategory = {
+            name: newCategoryName,
+            createdAt: new Date().toLocaleDateString('en-GB')
+        };
+        setCategories([...categories, newCategory]);
+        setNewCategoryName('');
+        setShowAddCategoryModal(false);
+    };
+
+    const handleDeleteCategory = (index: number) => {
+        setCategories(categories.filter((_, i) => i !== index));
     };
 
     const renderTableRows = () => {
@@ -269,8 +323,178 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     };
 
 
+    const AddExpenseModal = () => (
+        <div className="fixed inset-0 bg-gray-500/75 transition-opacity bg-opacity-50 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Add New Expense</h3>
+                    <button onClick={() => setShowAddExpenseModal(false)} className="text-gray-500 hover:text-gray-700">
+                        <X size={20} />
+                    </button>
+                </div>
+                <div className="space-y-4">
+                    <div>
+                     
+                        <Select
+                            label="Category"
+                            options={categories.map((cat) => ({ label: cat.name, value: cat.name }))}
+                            name="category"
+                            value={newExpense.category}
+                            onChange={(e) => setNewExpense({ ...newExpense, category: e.target.value })}
+                            />
+                    </div>
+                    <div>
+                       
+                        <Input
+                            type="text"
+                            label='Transaction ID'
+                            placeholder='Enter transaction ID'
+                            value={newExpense.transactionId}
+                            onChange={(e) => setNewExpense({...newExpense, transactionId: e.target.value})}
+                        />
+                    </div>
+                    <div>
+                       
+                        <Input
+                            type="text"
+                            label='Amount'
+                            placeholder='Enter amount'
+                            value={newExpense.amount}
+                            onChange={(e) => setNewExpense({...newExpense, amount: e.target.value})}
+                        />
+                    </div>
+                    <div>
+                      
+                        <Input
+                            type="date"
+                            label='Date'
+                            placeholder=''
+                            value={newExpense.date}
+                            onChange={(e) => setNewExpense({...newExpense, date: e.target.value})}
+                        />
+                    </div>
+                    <div>
+                      
+                        <TextAreaInput
+                            label='Description'
+                            placeholder='Enter description'
+                            rows={3}
+                            value={newExpense.description}
+                            onChange={(e) => setNewExpense({...newExpense, description: e.target.value})}
+                        />
+                    </div>
+                    <div className="flex justify-end space-x-3 pt-2">
+                        <button
+                            onClick={() => setShowAddExpenseModal(false)}
+                            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleAddExpense}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700"
+                        >
+                            Add Expense
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    const CategoriesModal = () => (
+        <div className="fixed inset-0 bg-gray-500/75 transition-opacity bg-opacity-50 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Expense Categories</h3>
+                    <div className="flex space-x-3">
+                        <button
+                            onClick={() => {
+                                setShowAddCategoryModal(true);
+                                setShowCategoriesModal(false);
+                            }}
+                            className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 flex items-center"
+                        >
+                            <PlusCircle size={16} className="mr-1" />
+                            Add Category
+                        </button>
+                        <button onClick={() => setShowCategoriesModal(false)} className="text-gray-500 hover:text-gray-700">
+                            <X size={20} />
+                        </button>
+                    </div>
+                </div>
+                <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                            {categories.map((category, index) => (
+                                <tr key={index}>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{category.name}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{category.createdAt}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <button
+                                            onClick={() => handleDeleteCategory(index)}
+                                            className="text-red-500 hover:text-red-700"
+                                        >
+                                            <Trash size={16} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    );
+
+    const AddCategoryModal = () => (
+        <div className="fixed inset-0 bg-gray-500/75 transition-opacity bg-opacity-50 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Add New Category</h3>
+                    <button onClick={() => setShowAddCategoryModal(false)} className="text-gray-500 hover:text-gray-700">
+                        <X size={20} />
+                    </button>
+                </div>
+                <div className="space-y-4">
+                    <div>
+                        <Input
+                            type="text"
+                            label='Category Name'
+                            value={newCategoryName}
+                            onChange={(e) => setNewCategoryName(e.target.value)}
+                            placeholder="Enter category name"
+                        />
+                    </div>
+                    <div className="flex justify-end space-x-3 pt-2">
+                        <button
+                            onClick={() => setShowAddCategoryModal(false)}
+                            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleAddCategory}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700"
+                        >
+                            Add Category
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-3">
+    <div className=" w-full xl:w-full lg:w-[75%] px-4 sm:px-6 lg:px-4 py-8 flex flex-col gap-3">
         <h4>Finance</h4>
         <div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'>
         <Link href='/dashboard' className='flex gap-2  w-1/2 items-center justify-start md:text-md text-[12px] '>
@@ -284,7 +508,7 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           <nav className="flex -mb-px xl:overflow-hidden overflow-x-scroll justify-between">
             {[
              { name: "Overview", href: `/dashboard/finance` },
-             { name: "PayRoll Management", href: `/dashboard/finance/payroll-mgt` },
+             { name: "Payroll Management", href: `/dashboard/finance/payroll-mgt` },
              { name: "Student Fees", href: `/dashboard/finance/student-fees` },
              { name: "Expenses", href: `/dashboard/finance/expenses` },
              { name: "Budgeting", href: `/dashboard/finance/budgeting` },
@@ -482,9 +706,22 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                                     onChange={handleTableTypeChange}
                                 />
            </div>
-                        <div className='flex text-sm w-1/2 justify-end  text-blue-400 gap-2'>
-                <PlusCircle/>
-                Add Expense
+                        <div className='flex text-sm w-1/2 justify-end gap-2'>
+                        <div className='flex gap-2 w-full'>
+                <button
+                    onClick={() => setShowAddExpenseModal(true)}
+                    className='flex text-sm h-10 text-blue-400 gap-2 items-center px-4 py-2 bg-white rounded-md border border-blue-400 hover:bg-blue-50'
+                >
+                    <PlusCircle size={16} />
+                    Add Expense
+                </button>
+                <button
+                    onClick={() => setShowCategoriesModal(true)}
+                    className='flex h-10 text-sm text-blue-400 gap-2 items-center px-4 py-2 bg-white rounded-md border border-blue-400 hover:bg-blue-50'
+                >
+                    View Categories
+                </button>
+            </div>
                 </div>
             </div>
                 </div>
@@ -507,6 +744,9 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+        {showAddExpenseModal && <AddExpenseModal />}
+            {showCategoriesModal && <CategoriesModal />}
+            {showAddCategoryModal && <AddCategoryModal />}
     </div>
   )
 }

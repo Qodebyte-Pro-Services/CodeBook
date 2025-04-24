@@ -31,7 +31,7 @@ const DashboardHeader = () => {
   }, []);
 
   return (
-    <header className="bg-white h-[70px] sm:p-6 p-1 shadow-md rounded-md mb-8 flex justify-between gap-3 sm:gap-0 mr-2 sm:mr-0 items-center">
+    <header className="bg-white h-[70px] sm:p-6 p-1 shadow-md rounded-md mb-3 flex justify-between gap-3 sm:gap-0 mr-2 sm:mr-0 items-center">
          <MobileNavToggleButton/>
       <div className="flex items-center">
         <Image

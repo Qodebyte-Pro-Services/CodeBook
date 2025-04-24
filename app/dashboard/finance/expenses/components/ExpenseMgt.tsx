@@ -1,5 +1,5 @@
 "use client"
-import { ChevronDown, ChevronsLeftIcon, ChevronUp, Eye, Pen, Trash } from 'lucide-react'
+import { ChevronDown, ChevronsLeftIcon, ChevronUp, Eye, Pen, PlusCircle, Trash, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
@@ -7,6 +7,9 @@ import ExpenseChart from './ExpenseChart'
 import ExpensePieChart from './ExpensePieChart'
 import DashboardHeader from '@/app/dashboard/components/DashboardHeader'
 import Pagination from '@/app/dashboard/teachers/components/Pagination'
+import TextAreaInput from '@/app/dashboard/teachers/add-teacher/compoenent/TextAreaInput'
+import Input from '@/app/dashboard/teachers/add-teacher/compoenent/Input'
+import Select from '@/app/dashboard/teachers/add-teacher/compoenent/Select'
 
 const ExpenseMgt = () => {
   const expenseData = {
@@ -34,6 +37,14 @@ const ExpenseMgt = () => {
   ]
 
   const [expenseRecords, setExpenseRecords] = React.useState(initialExpenseData);
+  const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
+  const [newExpense, setNewExpense] = useState({
+    category: "",
+    transactionId: "",
+    amount: "",
+    description: "",
+    date: new Date().toISOString().split("T")[0],
+  });
       const [searchTerm, setSearchTerm] = useState('');
        const [currentPage, setCurrentPage] = useState(1);
       const expenseRecordsPerPage = 5;
@@ -59,8 +70,123 @@ const ExpenseMgt = () => {
            const handlePageChange = (page: React.SetStateAction<number>) => {
                                       setCurrentPage(page);
                                     };
+
+                                    const handleAddExpense = () => {
+                                      const formattedExpense = {
+                                        expenseRecord: newExpense.category,
+                                        amount: Number(newExpense.amount),
+                                        description: newExpense.description,
+                                        date: newExpense.date,
+                                        categoty: newExpense.category,
+                                        paymentMode: "Unknown", 
+                                        recipient: "Unknown", 
+                                      };
+                                      setExpenseRecords([...expenseRecords, formattedExpense]);
+                                      setShowAddExpenseModal(false);
+                                      setNewExpense({
+                                        category: "",
+                                        transactionId: "",
+                                        amount: "",
+                                        description: "",
+                                        date: new Date().toISOString().split("T")[0],
+                                      });
+                                    };
+                                  
+                                    const AddExpenseModal = () => (
+                                      <div className="fixed inset-0 bg-gray-500/75 transition-opacity bg-opacity-50 flex items-center justify-center z-50">
+                                        <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                                          <div className="flex justify-between items-center mb-4">
+                                            <h3 className="text-lg font-semibold">Add New Expense</h3>
+                                            <button
+                                              onClick={() => setShowAddExpenseModal(false)}
+                                              className="text-gray-500 hover:text-gray-700"
+                                            >
+                                              <X size={20} />
+                                            </button>
+                                          </div>
+                                          <div className="space-y-4">
+                                            <div>
+                                              <Select
+                                                label="Category"
+                                                options={[
+                                                  { label: "Salaries", value: "Salaries" },
+                                                  { label: "Maintenance", value: "Maintenance" },
+                                                  { label: "School Supplies", value: "School Supplies" },
+                                                  { label: "Transport", value: "Transport" },
+                                                  { label: "Others", value: "Others" },
+                                                ]}
+                                                name="category"
+                                                value={newExpense.category}
+                                                onChange={(e) =>
+                                                  setNewExpense({ ...newExpense, category: e.target.value })
+                                                }
+                                              />
+                                            </div>
+                                            <div>
+                                              <Input
+                                                type="text"
+                                                label="Transaction ID"
+                                                placeholder="Enter transaction ID"
+                                                value={newExpense.transactionId}
+                                                onChange={(e) =>
+                                                  setNewExpense({ ...newExpense, transactionId: e.target.value })
+                                                }
+                                              />
+                                            </div>
+                                            <div>
+                                              <Input
+                                                type="text"
+                                                label="Amount"
+                                                placeholder="Enter amount"
+                                                value={newExpense.amount}
+                                                onChange={(e) =>
+                                                  setNewExpense({ ...newExpense, amount: e.target.value })
+                                                }
+                                              />
+                                            </div>
+                                            <div>
+                                              <Input
+                                                type="date"
+                                                label="Date"
+                                                placeholder=""
+                                                value={newExpense.date}
+                                                onChange={(e) =>
+                                                  setNewExpense({ ...newExpense, date: e.target.value })
+                                                }
+                                              />
+                                            </div>
+                                            <div>
+                                              <TextAreaInput
+                                                label="Description"
+                                                placeholder="Enter description"
+                                                rows={3}
+                                                value={newExpense.description}
+                                                onChange={(e) =>
+                                                  setNewExpense({ ...newExpense, description: e.target.value })
+                                                }
+                                              />
+                                            </div>
+                                            <div className="flex justify-end space-x-3 pt-2">
+                                              <button
+                                                onClick={() => setShowAddExpenseModal(false)}
+                                                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium"
+                                              >
+                                                Cancel
+                                              </button>
+                                              <button
+                                                onClick={handleAddExpense}
+                                                className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700"
+                                              >
+                                                Add Expense
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    );
+                                  
   return (
-    <div className="w-full lg:w-[75%] px-4 sm:px-6 lg:px-4 py-8 flex flex-col gap-3">
+    <div className="w-full xl:w-full lg:w-[75%] px-4 sm:px-6 lg:px-4 py-8 flex flex-col gap-3">
     <DashboardHeader/>
     <h4>Finance</h4>
     <div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'>
@@ -182,10 +308,14 @@ const ExpenseMgt = () => {
                     </div>
                 </form>
               </div>
-            <div className='flex  w-full  md:w-1/2  '>
-            <Link href='/dashboard/finance/expenses/add-expense' className='bg-blue-500 text-white py-2 px-4 rounded-lg w-full flex justify-center items-center gap-2'>
-            <p className='text-white'>Add New Expense</p>
-            </Link>
+                <div className='flex  w-full  justify-end md:w-1/2  '>
+            <button
+          onClick={() => setShowAddExpenseModal(true)}
+          className="bg-blue-500 text-white py-2 px-4 rounded-lg flex justify-center items-center gap-2"
+        >
+          <PlusCircle size={16} />
+          <p className="text-white">Add New Expense</p>
+        </button>
                 </div>
     </div>
 
@@ -201,7 +331,6 @@ const ExpenseMgt = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Mode</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipient</th>
-    
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
             </tr>
           </thead>
@@ -250,7 +379,7 @@ const ExpenseMgt = () => {
         onPageChange={handlePageChange}
       />
     </div>
-      
+    {showAddExpenseModal && <AddExpenseModal />}
     </div>
   )
 }

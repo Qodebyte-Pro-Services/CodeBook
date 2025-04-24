@@ -6,7 +6,7 @@ import React from 'react'
 
 const StudentTuition = () => {
   return (
-    <div className="w-full lg:w-[75%] px-4 sm:px-6 lg:px-4 py-8 flex flex-col gap-3">
+    <div className="w-full lg:w-[85%] px-4 sm:px-6 lg:px-4 py-8 flex flex-col gap-3">
         <DashboardHeader/>
     <h4>Finance</h4>
     <div className='w-full bg-[#FFFFFF] h-[55px] py-2 px-4 flex rounded-lg justify-between gap-2 overflow-X-scroll'>
