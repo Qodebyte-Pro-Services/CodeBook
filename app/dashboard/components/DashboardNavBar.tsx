@@ -12,7 +12,7 @@ const DashboardNavBar = () => {
 
 
   return (
-    <nav className=" bg-white  overflow-hidden  h-screen  w-64 p-4  top-5  left-2 rounded-lg flex-col  lg:flex shadow-lg hidden ">
+    <nav className=" bg-white  overflow-hidden  min-h-screen  w-64 p-4  top-5  left-2 rounded-lg flex-col  lg:flex shadow-lg hidden ">
      <>
      <ul className="space-y-2">
         {navItems.map((item) => (
