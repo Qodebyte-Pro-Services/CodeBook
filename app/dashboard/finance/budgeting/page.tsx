@@ -9,7 +9,7 @@ const page = () => {
     <MaxWidthWrapper>
     <div className='flex py-2 px-1 text-gray-950 overflow-hidden'>
     <DashboardNavBar />
-   <div>
+   <div className='flex flex-col w-full'>
     <DashboardHeader/>
     <BudgetingMgt/>
    </div>

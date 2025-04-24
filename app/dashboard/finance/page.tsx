@@ -7,9 +7,9 @@ import DashboardHeader from '../components/DashboardHeader'
 const FinanceSection = () => {
   return (
     <MaxWidthWrapper>
-    <div className='flex py-2 px-2 text-gray-950 gap-2 overflow-hidden'>
+    <div className='flex py-2 px-2 text-gray-950 gap-2  overflow-hidden'>
     <DashboardNavBar />
-    <div>
+    <div className='flex flex-col w-full'>
       <DashboardHeader/>
        <FinanceComponent/>
     </div>

@@ -58,7 +58,7 @@ const StudentMgt = () => {
 
           <div className="grid gap-1  w-full ">
           <div className="bg-gray-100 rounded-t-md px-4 py-3 font-semibold text-gray-700">
-                Work Schedule
+                School Hours
               </div>
               <div className="px-4 py-3 rounded-b-xl grid bg-white">
               <div className=' flex justify-between items-center'>
